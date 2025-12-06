@@ -49,48 +49,49 @@ const B2BForm: React.FC<B2BFormProps> = ({ isOpen, onClose }) => {
   const frequencies = ['Разово', 'Еженедельно', '2 раза в неделю', 'Ежедневно'];
   const interestOptions = ['Фруктовые боксы', 'Подарочные наборы', 'Фрукты для офиса', 'Другое'];
 
-  // Uniform input classes - reduced padding slightly for better fit
-  const inputClasses = "w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-brand-accent outline-none transition-all font-medium text-brand-text placeholder-gray-400 text-sm";
-  const selectClasses = "w-full px-4 py-3 rounded-xl bg-gray-50 border-2 border-transparent focus:bg-white focus:border-brand-accent outline-none transition-all font-medium text-brand-text appearance-none cursor-pointer text-sm";
+  // Uniform input classes with improved styling
+  const inputClasses = "w-full px-5 py-4 rounded-2xl glass border-2 border-orange-200/30 focus:border-orange-500 focus:shadow-soft outline-none transition-all font-medium text-brown-900 placeholder-brown-400 text-base";
+  const selectClasses = "w-full px-5 py-4 rounded-2xl glass border-2 border-orange-200/30 focus:border-orange-500 focus:shadow-soft outline-none transition-all font-medium text-brown-900 appearance-none cursor-pointer text-base";
 
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center p-4 overflow-y-auto">
-      <div className="absolute inset-0 bg-brand-text/60 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
+      <div className="absolute inset-0 bg-brown-900/70 backdrop-blur-md transition-opacity" onClick={onClose}></div>
       
-      <div className="relative bg-white rounded-[2rem] w-full max-w-2xl shadow-2xl p-6 md:p-8 animate-fade-in-up border border-white/20 my-4 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <div className="relative glass rounded-[3rem] w-full max-w-3xl shadow-deep-2xl p-8 md:p-12 animate-fade-in-up border-3 border-orange-200/40 my-4 max-h-[92vh] overflow-y-auto custom-scrollbar">
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 bg-gray-50 rounded-full hover:bg-brand-accent hover:text-white transition-colors z-10"
+          className="absolute top-6 right-6 p-3 glass-dark rounded-full hover:bg-orange-500 hover:text-white transition-all duration-300 z-10 border-2 border-orange-200/30 hover:border-orange-500 hover:scale-110 hover:rotate-90"
         >
-          <X size={20} />
+          <X size={22} strokeWidth={2.5} />
         </button>
 
         {status === 'success' ? (
-          <div className="flex flex-col items-center justify-center text-center py-20">
-            <div className="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6 animate-bounce">
-              <CheckCircle2 size={48} />
+          <div className="flex flex-col items-center justify-center text-center py-24">
+            <div className="w-28 h-28 bg-gradient-to-br from-lime-500 to-lime-600 text-white rounded-full flex items-center justify-center mb-8 shadow-deep-xl animate-bounce">
+              <CheckCircle2 size={56} strokeWidth={2.5} />
             </div>
-            <h3 className="text-3xl font-extrabold text-brand-text mb-4">Заявка принята!</h3>
-            <p className="text-brand-text-soft font-medium text-lg max-w-sm">
+            <h3 className="text-4xl font-black text-brown-900 mb-5 tracking-tight">Заявка принята!</h3>
+            <p className="text-brown-600 font-medium text-xl max-w-md leading-relaxed">
               Мы уже готовим для вас индивидуальное предложение. Менеджер свяжется в ближайшее время.
             </p>
           </div>
         ) : (
           <>
-            <div className="mb-6 text-center md:text-left">
-              <div className="inline-flex items-center gap-2 text-brand-accent font-bold uppercase tracking-wider text-xs mb-2 bg-orange-50 px-3 py-1 rounded-full">
-                <Building2 size={14} />
+            <div className="mb-10 text-center">
+              <div className="inline-flex items-center gap-3 px-7 py-4 rounded-full bg-gradient-to-r from-orange-500 via-peach-500 to-honey-500 text-white font-black uppercase text-xs tracking-[0.15em] shadow-deep shadow-orange-400/50 mb-6 border-3 border-white/30">
+                <Building2 size={16} strokeWidth={2.5} />
                 <span>Корпоративным клиентам</span>
               </div>
-              <h3 className="text-2xl md:text-3xl font-extrabold text-brand-text leading-tight">Коммерческое предложение</h3>
+              <h3 className="text-3xl md:text-4xl font-black text-brown-900 tracking-tight leading-tight">Коммерческое предложение</h3>
+              <p className="text-brown-600 font-medium mt-3 text-lg">Заполните форму, и мы свяжемся с вами</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
               
               {/* Main Info */}
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-bold text-brand-text-soft uppercase tracking-wider mb-1.5 ml-1">Компания</label>
+                  <label className="block text-sm font-black text-brown-900 uppercase tracking-wider mb-3 ml-1">Компания</label>
                   <input 
                     required
                     name="company"
@@ -101,7 +102,7 @@ const B2BForm: React.FC<B2BFormProps> = ({ isOpen, onClose }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-brand-text-soft uppercase tracking-wider mb-1.5 ml-1">Контактное лицо</label>
+                  <label className="block text-sm font-black text-brown-900 uppercase tracking-wider mb-3 ml-1">Контактное лицо</label>
                   <input 
                     required
                     name="name"
@@ -113,21 +114,21 @@ const B2BForm: React.FC<B2BFormProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-bold text-brand-text-soft uppercase tracking-wider mb-1.5 ml-1">Телефон</label>
+                  <label className="block text-sm font-black text-brown-900 uppercase tracking-wider mb-3 ml-1">Телефон</label>
                   <input 
                     required
                     type="tel"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    placeholder="+7 (999) 000-00-00" // Restored full placeholder
+                    placeholder="+7 (999) 000-00-00"
                     className={inputClasses}
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-brand-text-soft uppercase tracking-wider mb-1.5 ml-1">Email</label>
+                  <label className="block text-sm font-black text-brown-900 uppercase tracking-wider mb-3 ml-1">Email</label>
                   <input 
                     required
                     type="email"
@@ -140,11 +141,11 @@ const B2BForm: React.FC<B2BFormProps> = ({ isOpen, onClose }) => {
                 </div>
               </div>
 
-              {/* Details - Removed bg-brand-bg to match other fields */}
-              <div className="grid md:grid-cols-2 gap-4 pt-2">
+              {/* Details */}
+              <div className="grid md:grid-cols-2 gap-6">
                  <div className="relative">
-                    <label className="flex items-center gap-2 text-xs font-bold text-brand-text-soft uppercase tracking-wider mb-1.5 ml-1">
-                       <Users size={14} className="text-brand-accent"/> Размер команды
+                    <label className="flex items-center gap-2 text-sm font-black text-brown-900 uppercase tracking-wider mb-3 ml-1">
+                       <Users size={16} strokeWidth={2.5} className="text-orange-500"/> Размер команды
                     </label>
                     <div className="relative">
                       <select 
@@ -152,17 +153,17 @@ const B2BForm: React.FC<B2BFormProps> = ({ isOpen, onClose }) => {
                         value={formData.teamSize} 
                         onChange={handleChange}
                         required
-                        className={`${selectClasses} ${!formData.teamSize ? 'text-gray-400' : 'text-brand-text'}`}
+                        className={`${selectClasses} ${!formData.teamSize ? 'text-brown-400' : 'text-brown-900'}`}
                       >
                         <option value="" disabled>Выбрать...</option>
-                        {teamSizes.map(s => <option key={s} value={s} className="text-brand-text">{s} чел.</option>)}
+                        {teamSizes.map(s => <option key={s} value={s} className="text-brown-900">{s} чел.</option>)}
                       </select>
-                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={16} />
+                      <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-brown-400 pointer-events-none" size={18} strokeWidth={2.5} />
                     </div>
                  </div>
                  <div className="relative">
-                    <label className="flex items-center gap-2 text-xs font-bold text-brand-text-soft uppercase tracking-wider mb-1.5 ml-1">
-                       <CalendarClock size={14} className="text-brand-accent"/> Периодичность
+                    <label className="flex items-center gap-2 text-sm font-black text-brown-900 uppercase tracking-wider mb-3 ml-1">
+                       <CalendarClock size={16} strokeWidth={2.5} className="text-orange-500"/> Периодичность
                     </label>
                     <div className="relative">
                       <select 
@@ -170,20 +171,20 @@ const B2BForm: React.FC<B2BFormProps> = ({ isOpen, onClose }) => {
                         value={formData.frequency} 
                         onChange={handleChange}
                         required
-                        className={`${selectClasses} ${!formData.frequency ? 'text-gray-400' : 'text-brand-text'}`}
+                        className={`${selectClasses} ${!formData.frequency ? 'text-brown-400' : 'text-brown-900'}`}
                       >
                         <option value="" disabled>Выбрать...</option>
-                        {frequencies.map(f => <option key={f} value={f} className="text-brand-text">{f}</option>)}
+                        {frequencies.map(f => <option key={f} value={f} className="text-brown-900">{f}</option>)}
                       </select>
-                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={16} />
+                      <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-brown-400 pointer-events-none" size={18} strokeWidth={2.5} />
                     </div>
                  </div>
               </div>
 
-              {/* Interests - Dropdown with default placeholder */}
+              {/* Interests */}
               <div>
-                <label className="flex items-center gap-2 text-xs font-bold text-brand-text-soft uppercase tracking-wider mb-1.5 ml-1">
-                   <Package size={14} className="text-brand-accent"/> Что вас интересует?
+                <label className="flex items-center gap-2 text-sm font-black text-brown-900 uppercase tracking-wider mb-3 ml-1">
+                   <Package size={16} strokeWidth={2.5} className="text-orange-500"/> Что вас интересует?
                 </label>
                 <div className="relative">
                   <select 
@@ -191,40 +192,51 @@ const B2BForm: React.FC<B2BFormProps> = ({ isOpen, onClose }) => {
                     value={formData.interest} 
                     onChange={handleChange}
                     required
-                    className={`${selectClasses} ${!formData.interest ? 'text-gray-400' : 'text-brand-text'}`}
+                    className={`${selectClasses} ${!formData.interest ? 'text-brown-400' : 'text-brown-900'}`}
                   >
                     <option value="" disabled>Выбрать...</option>
                     {interestOptions.map(opt => (
-                      <option key={opt} value={opt} className="text-brand-text">{opt}</option>
+                      <option key={opt} value={opt} className="text-brown-900">{opt}</option>
                     ))}
                   </select>
-                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={16} />
+                  <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-brown-400 pointer-events-none" size={18} strokeWidth={2.5} />
                 </div>
               </div>
 
-              {/* Comment - Reduced height slightly */}
+              {/* Comment */}
               <div>
-                <label className="flex items-center gap-2 text-xs font-bold text-brand-text-soft uppercase tracking-wider mb-1.5 ml-1">
-                   <MessageSquare size={14} className="text-brand-accent"/> Комментарий
+                <label className="flex items-center gap-2 text-sm font-black text-brown-900 uppercase tracking-wider mb-3 ml-1">
+                   <MessageSquare size={16} strokeWidth={2.5} className="text-orange-500"/> Комментарий
                 </label>
                 <textarea 
                   name="comment"
                   value={formData.comment}
                   onChange={handleChange}
                   placeholder="Ваши пожелания, бюджет или особые требования..."
-                  className={`${inputClasses} h-20 resize-none`}
+                  className={`${inputClasses} h-28 resize-none`}
                 />
               </div>
 
               <button 
                 type="submit" 
                 disabled={status === 'loading'}
-                className="w-full py-4 bg-brand-accent text-white rounded-xl font-bold text-lg hover:bg-brand-accent-dark transition-all shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 hover:brightness-110 flex items-center justify-center gap-3 mt-2"
+                className="w-full py-6 bg-gradient-to-r from-orange-500 via-peach-500 to-honey-500 text-white rounded-2xl font-black text-xl hover:scale-105 transition-all duration-300 shadow-deep-xl hover:shadow-deep-2xl flex items-center justify-center gap-3 border-3 border-white/30 group relative overflow-hidden"
               >
-                {status === 'loading' ? <Loader2 className="animate-spin" /> : <>Получить предложение <Send size={20} /></>}
+                {status === 'loading' ? (
+                  <>
+                    <Loader2 className="animate-spin" size={24} strokeWidth={2.5} />
+                    <span>Отправка...</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></span>
+                    <span className="relative z-10">Получить предложение</span>
+                    <Send size={22} strokeWidth={2.5} className="relative z-10" />
+                  </>
+                )}
               </button>
               
-              <p className="text-[10px] text-center text-gray-400 font-medium mt-2">
+              <p className="text-xs text-center text-brown-500/70 font-medium mt-4">
                 Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
               </p>
             </form>

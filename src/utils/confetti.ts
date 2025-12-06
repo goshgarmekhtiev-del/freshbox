@@ -1,4 +1,4 @@
-import React from 'react';
+import type React from 'react';
 
 export const fireConfetti = (e?: React.MouseEvent | React.TouchEvent | null) => {
   // If no event is provided, just return

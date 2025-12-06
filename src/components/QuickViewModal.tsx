@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Product } from '../types';
+import type { Product } from '../types';
 import { X, Plus, Minus, ShoppingBag, Flame, Star, Leaf } from 'lucide-react';
 
 interface QuickViewModalProps {

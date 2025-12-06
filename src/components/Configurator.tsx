@@ -1,8 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
-import { BoxSize, BoxType, Product } from '../types';
+import { BoxSize, BoxType } from '../types';
+import type { Product } from '../types';
 import { CONFIGURATOR_IMAGES } from '../constants';
 import { Sparkles, ArrowRight, Package, Box, Container } from 'lucide-react';
+import { useReveal } from '../utils/useReveal';
 
 interface ConfiguratorProps {
   onAddCustom: (product: Product, e: React.MouseEvent) => void;
@@ -12,6 +14,8 @@ const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
   const [size, setSize] = useState<BoxSize>(BoxSize.MEDIUM);
   const [type, setType] = useState<BoxType>(BoxType.CLASSIC);
   const [comment, setComment] = useState('');
+  
+  const { ref: configRef, isVisible: configVisible } = useReveal({ threshold: 0.2 });
   
   // Image state
   const [currentImage, setCurrentImage] = useState(CONFIGURATOR_IMAGES[BoxType.CLASSIC]);
@@ -61,7 +65,7 @@ const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
   return (
     <section id="configurator" className="py-24 bg-white reveal">
       <div className="container mx-auto px-4 md:px-8">
-        <div className="grid lg:grid-cols-12 gap-12 items-center">
+        <div ref={configRef as React.RefObject<HTMLDivElement>} className={`grid lg:grid-cols-12 gap-12 items-center reveal reveal-fade-up ${configVisible ? 'reveal-visible' : ''}`}>
           
           {/* Form Side */}
           <div className="lg:col-span-7 order-2 lg:order-1">

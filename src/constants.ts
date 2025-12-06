@@ -1,5 +1,6 @@
 
-import { Product, Review, FAQItem, BoxType } from './types';
+import { BoxType } from './types';
+import type { Product, Review, FAQItem } from './types';
 
 // Updated images: brighter, high contrast, juicy
 // EXPORTING this object so we can use it in Hero.tsx

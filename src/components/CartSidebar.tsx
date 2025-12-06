@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { CartItem } from '../types';
-import { X, Trash2, Plus, Minus, ShoppingBag, Truck, ArrowRight, Check, RotateCcw } from 'lucide-react';
+import type { CartItem } from '../types';
+import { X, Trash2, Plus, Minus, ShoppingBag, Truck, ArrowRight } from 'lucide-react';
 
 interface CartSidebarProps {
   isOpen: boolean;

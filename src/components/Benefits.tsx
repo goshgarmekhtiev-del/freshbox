@@ -1,8 +1,11 @@
 
 import React from 'react';
 import { Truck, ShieldCheck, Heart, Sun } from 'lucide-react';
+import { useStaggeredReveal } from '../utils/useReveal';
 
 const Benefits: React.FC = () => {
+  const benefitReveals = useStaggeredReveal(4, 150, 100);
+
   const benefits = [
     {
       icon: <Sun size={32} strokeWidth={3} />,
@@ -34,7 +37,11 @@ const Benefits: React.FC = () => {
       <div className="container mx-auto px-4 md:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {benefits.map((benefit, index) => (
-            <div key={index} className="flex flex-col items-center text-center group bg-white/5 p-6 rounded-3xl border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-sm">
+            <div 
+              key={index} 
+              ref={benefitReveals[index].ref as React.RefObject<HTMLDivElement>}
+              className={`flex flex-col items-center text-center group bg-white/5 p-6 rounded-3xl border border-white/10 hover:bg-white/10 transition-colors backdrop-blur-sm reveal reveal-fade-up ${benefitReveals[index].isVisible ? 'reveal-visible' : ''}`}
+            >
               <div className="w-20 h-20 rounded-2xl bg-brand-accent-light text-brand-text flex items-center justify-center mb-6 shadow-xl shadow-brand-green/50 group-hover:scale-110 transition-transform duration-300">
                 {benefit.icon}
               </div>

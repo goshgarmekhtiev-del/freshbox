@@ -15,7 +15,7 @@ import CartSidebar from './components/CartSidebar';
 import QuickViewModal from './components/QuickViewModal';
 import SocialProof from './components/SocialProof';
 import FruitBackground from './components/FruitBackground';
-import { Product, CartItem, NotificationData } from './types';
+import type { Product, CartItem, NotificationData } from './types';
 import { ArrowUp } from 'lucide-react';
 import { fireConfetti } from './utils/confetti';
 

@@ -2,8 +2,11 @@
 import React from 'react';
 import { REVIEWS } from '../constants';
 import { Quote, Star } from 'lucide-react';
+import { useStaggeredReveal } from '../utils/useReveal';
 
 const Reviews: React.FC = () => {
+  const reviewReveals = useStaggeredReveal(REVIEWS.length, 100, 150);
+
   return (
     <section id="reviews" className="py-24 bg-gradient-to-b from-brand-bg to-white reveal">
       <div className="container mx-auto px-4 md:px-8">
@@ -13,8 +16,12 @@ const Reviews: React.FC = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {REVIEWS.map((review) => (
-            <div key={review.id} className="bg-white/70 backdrop-blur-xl p-8 rounded-[2.5rem] flex flex-col group border border-white shadow-xl hover:shadow-2xl hover:shadow-brand-accent/10 hover:-translate-y-2 transition-all duration-300">
+          {REVIEWS.map((review, index) => (
+            <div 
+              key={review.id} 
+              ref={reviewReveals[index].ref as React.RefObject<HTMLDivElement>}
+              className={`bg-white/70 backdrop-blur-xl p-8 rounded-[2.5rem] flex flex-col group border border-white shadow-xl hover:shadow-2xl hover:shadow-brand-accent/10 hover:-translate-y-2 transition-all duration-300 reveal reveal-fade-up ${reviewReveals[index].isVisible ? 'reveal-visible' : ''}`}
+            >
               <div className="flex justify-between items-start mb-6">
                  <div className="flex gap-1 text-brand-yellow">
                     {[1,2,3,4,5].map(i => <Star key={i} size={18} fill="currentColor" stroke="none" />)}

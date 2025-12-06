@@ -1,8 +1,11 @@
 
 import React from 'react';
 import { MousePointerClick, Truck, Gift, ShoppingBag } from 'lucide-react';
+import { useStaggeredReveal } from '../utils/useReveal';
 
 const HowItWorks: React.FC = () => {
+  const stepReveals = useStaggeredReveal(4, 200, 120);
+
   const steps = [
     { 
       num: '1', 
@@ -43,7 +46,11 @@ const HowItWorks: React.FC = () => {
           <div className="hidden md:block absolute top-10 left-0 w-full h-3 bg-white shadow-sm rounded-full"></div>
           
           {steps.map((step, idx) => (
-            <div key={idx} className="flex flex-col items-center text-center relative z-10 group cursor-default">
+            <div 
+              key={idx} 
+              ref={stepReveals[idx].ref as React.RefObject<HTMLDivElement>}
+              className={`flex flex-col items-center text-center relative z-10 group cursor-default reveal reveal-scale-in ${stepReveals[idx].isVisible ? 'reveal-visible' : ''}`}
+            >
               <div className="w-24 h-24 bg-white border-8 border-brand-bg rounded-full flex items-center justify-center text-brand-text mb-8 shadow-xl group-hover:bg-brand-accent group-hover:text-white group-hover:scale-110 transition-all duration-300 group-hover:rotate-12">
                 {step.icon}
               </div>

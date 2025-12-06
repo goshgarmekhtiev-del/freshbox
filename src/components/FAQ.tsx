@@ -2,14 +2,17 @@
 import React, { useState } from 'react';
 import { FAQS } from '../constants';
 import { ChevronDown, MessageCircleQuestion } from 'lucide-react';
+import { useReveal, useStaggeredReveal } from '../utils/useReveal';
 
 const FAQ: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const { ref: headerRef, isVisible: headerVisible } = useReveal({ threshold: 0.3 });
+  const faqReveals = useStaggeredReveal(FAQS.length, 150, 80);
 
   return (
     <section id="faq" className="py-24 bg-white reveal">
       <div className="container mx-auto px-4 md:px-8 max-w-4xl">
-        <div className="text-center mb-16">
+        <div ref={headerRef as React.RefObject<HTMLDivElement>} className={`text-center mb-16 reveal reveal-fade-in ${headerVisible ? 'reveal-visible' : ''}`}>
           <div className="inline-flex items-center justify-center w-16 h-16 bg-brand-accent/10 rounded-full text-brand-accent mb-6 animate-bounce-slow">
              <MessageCircleQuestion size={32} />
           </div>
@@ -20,8 +23,9 @@ const FAQ: React.FC = () => {
         <div className="space-y-4">
           {FAQS.map((item, index) => (
             <div 
-              key={index} 
-              className={`rounded-3xl transition-all duration-300 overflow-hidden border-2 ${openIndex === index ? 'bg-orange-50 border-brand-accent/30 shadow-lg scale-[1.02]' : 'bg-brand-bg border-transparent hover:bg-gray-100'}`}
+              key={index}
+              ref={faqReveals[index].ref as React.RefObject<HTMLDivElement>}
+              className={`rounded-3xl transition-all duration-300 overflow-hidden border-2 reveal reveal-slide-up ${faqReveals[index].isVisible ? 'reveal-visible' : ''} ${openIndex === index ? 'bg-orange-50 border-brand-accent/30 shadow-lg scale-[1.02]' : 'bg-brand-bg border-transparent hover:bg-gray-100'}`}
             >
               <button
                 className="w-full p-6 md:p-8 text-left flex items-center justify-between gap-4 focus:outline-none"

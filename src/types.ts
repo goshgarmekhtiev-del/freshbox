@@ -26,17 +26,21 @@ export interface FAQItem {
   answer: string;
 }
 
-export enum BoxSize {
-  SMALL = 'Малый (S)',
-  MEDIUM = 'Средний (M)',
-  LARGE = 'Большой (L)'
-}
+export const BoxSize = {
+  SMALL: 'Малый (S)',
+  MEDIUM: 'Средний (M)',
+  LARGE: 'Большой (L)'
+} as const;
 
-export enum BoxType {
-  CLASSIC = 'Классика',
-  EXOTIC = 'Экзотика',
-  MIX = 'Микс'
-}
+export type BoxSize = typeof BoxSize[keyof typeof BoxSize];
+
+export const BoxType = {
+  CLASSIC: 'Классика',
+  EXOTIC: 'Экзотика',
+  MIX: 'Микс'
+} as const;
+
+export type BoxType = typeof BoxType[keyof typeof BoxType];
 
 export interface NotificationData {
   name: string;
