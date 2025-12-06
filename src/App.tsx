@@ -141,7 +141,6 @@ const App: React.FC = () => {
         <Hero />
         <ProblemSolution />
         <WhyFreshBox />
-        <Catalog onAdd={(p, e) => addToCart(p, 1, e)} onQuickView={setQuickViewProduct} />
         
         {/* Below-fold: Lazy-loaded sections (load on scroll) */}
         <Suspense fallback={
@@ -149,12 +148,13 @@ const App: React.FC = () => {
             <div className="w-12 h-12 border-4 border-brand-accent border-t-transparent rounded-full animate-spin"></div>
           </div>
         }>
-          <Configurator onAddCustom={(p, e) => addToCart(p, 1, e)} />
           <Benefits />
           <HowItWorks />
           <Reviews />
           <B2B />
           <FAQ />
+          <Catalog onAdd={(p, e) => addToCart(p, 1, e)} onQuickView={setQuickViewProduct} />
+          <Configurator onAddCustom={(p, e) => addToCart(p, 1, e)} />
           <OrderForm 
             cart={cart} 
             onSubmit={handleOrderSubmit} 
@@ -162,14 +162,11 @@ const App: React.FC = () => {
             onUpdateQty={updateQuantity}
             onRemove={removeFromCart}
           />
+          <Footer />
         </Suspense>
       </main>
 
-      <Suspense fallback={
-        <div className="min-h-[300px] bg-gradient-to-br from-brand-text via-brand-text-soft to-brand-green" />
-      }>
-        <Footer />
-      </Suspense>
+      {/* Global UI Elements */}
       <SocialProof customNotification={lastOrder} />
 
       <CartSidebar 
