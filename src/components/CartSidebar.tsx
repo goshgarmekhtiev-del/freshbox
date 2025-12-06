@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import type { CartItem } from '../types';
 import { X, Trash2, Plus, Minus, ShoppingBag, Truck, ArrowRight } from 'lucide-react';
+import { useFocusTrap } from '../utils/useFocusTrap';
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -44,6 +45,7 @@ const AnimatedPrice: React.FC<{ value: number }> = ({ value }) => {
 
 const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemove, onUpdateQty }) => {
   const [itemToRemove, setItemToRemove] = useState<string | null>(null);
+  const modalRef = useFocusTrap({ isOpen, onClose });
   
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   
@@ -65,33 +67,48 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
 
   return (
     <div className="fixed inset-0 z-[60] overflow-hidden">
-      <div className="absolute inset-0 bg-brand-text/60 backdrop-blur-sm transition-opacity duration-300" onClick={onClose}></div>
-      <div className="absolute inset-y-0 right-0 w-full max-w-md bg-[#FAFAF9] shadow-2xl flex flex-col transform transition-transform duration-300 border-l border-white animate-fade-in-up">
+      <div 
+        className="absolute inset-0 bg-brand-text/60 backdrop-blur-sm transition-opacity duration-300" 
+        onClick={onClose}
+        aria-hidden="true"
+      ></div>
+      <div 
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cart-title"
+        aria-describedby="cart-description"
+        className="absolute inset-y-0 right-0 w-full max-w-md bg-[#FAFAF9] shadow-[--shadow-elevated] flex flex-col transform transition-transform duration-300 border-l border-white animate-fade-in-up"
+      >
         
         {/* Header */}
-        <div className="p-6 bg-white shadow-sm z-10">
+        <div className="p-6 bg-white shadow-[--shadow-soft] z-10">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-extrabold text-brand-text flex items-center gap-2">
-              <ShoppingBag className="text-brand-accent" /> Корзина
+            <h2 id="cart-title" className="text-2xl font-extrabold text-brand-text flex items-center gap-2">
+              <ShoppingBag size={24} strokeWidth={2.5} className="text-brand-accent" /> Корзина
             </h2>
-            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition-colors text-brand-text/50 hover:text-brand-text">
-              <X size={28} />
+            <button 
+              onClick={onClose} 
+              aria-label="Закрыть корзину"
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors text-brand-text/50 hover:text-brand-text"
+            >
+              <X size={28} strokeWidth={2.5} />
             </button>
           </div>
 
           {/* Free Shipping Progress Bar */}
           {cart.length > 0 && (
-            <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 transition-all duration-300">
+            <div className="bg-gray-50 rounded-[--radius-ui] p-4 border border-gray-100 transition-all duration-300">
               {remainingForFreeShipping > 0 ? (
-                <p className="text-sm font-bold text-brand-text mb-2">
+                <p id="cart-description" className="text-sm font-bold text-brand-text mb-2">
                   До бесплатной доставки: <span className="text-brand-accent"><AnimatedPrice value={remainingForFreeShipping} /> ₽</span>
                 </p>
               ) : (
-                <p className="text-sm font-bold text-brand-green mb-2 flex items-center gap-2">
-                  <Truck size={16} /> Бесплатная доставка активирована!
+                <p id="cart-description" className="text-sm font-bold text-brand-green mb-2 flex items-center gap-2">
+                  <Truck size={16} strokeWidth={2.5} /> Бесплатная доставка активирована!
                 </p>
               )}
-              <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+              <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden" role="progressbar" aria-valuemin={0} aria-valuemax={FREE_SHIPPING_THRESHOLD} aria-valuenow={total}>
                 <div 
                   className="h-full bg-gradient-to-r from-brand-accent to-brand-yellow transition-all duration-500 ease-out"
                   style={{ width: `${progress}%` }}
@@ -105,8 +122,8 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           {cart.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center space-y-6">
-              <div className="w-24 h-24 bg-brand-accent/10 rounded-full flex items-center justify-center animate-bounce-slow">
-                 <ShoppingBag size={48} className="text-brand-accent" />
+              <div className="w-20 h-20 bg-brand-accent/10 rounded-full flex items-center justify-center">
+                 <ShoppingBag size={40} strokeWidth={2.5} className="text-brand-accent" />
               </div>
               <div>
                 <h3 className="text-xl font-extrabold text-brand-text mb-2">Здесь пока пусто</h3>
@@ -125,14 +142,14 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
             cart.map((item) => (
               <div 
                 key={item.id} 
-                className={`group flex gap-4 p-4 rounded-3xl shadow-sm border transition-all duration-300 ${
+                className={`group flex gap-4 p-4 rounded-[--radius-card] shadow-[--shadow-soft] border transition-all duration-300 ${
                   itemToRemove === item.id 
                     ? 'bg-red-50 border-red-200' 
                     : 'bg-white border-gray-100 hover:border-brand-accent/30 hover:shadow-md'
                 }`}
               >
-                <div className="w-24 h-24 rounded-2xl overflow-hidden bg-gray-50 shrink-0 relative">
-                  <img src={item.image} alt={item.name} className={`w-full h-full object-cover transition-transform duration-500 ${itemToRemove === item.id ? 'grayscale opacity-50' : 'group-hover:scale-110'}`} />
+                <div className="w-24 h-24 rounded-[--radius-ui] overflow-hidden bg-gray-50 shrink-0 relative">
+                  <img src={item.image} alt={`Миниатюра товара в корзине — ${item.name}`} className={`w-full h-full object-cover transition-transform duration-500 ${itemToRemove === item.id ? 'grayscale opacity-50' : 'group-hover:scale-110'}`} />
                 </div>
                 
                 <div className="flex-1 flex flex-col justify-between">
@@ -143,9 +160,10 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                       {itemToRemove !== item.id && (
                         <button 
                           onClick={() => setItemToRemove(item.id)}
+                          aria-label={`Удалить ${item.name} из корзины`}
                           className="text-gray-300 hover:text-red-500 transition-colors -mt-1 -mr-1 p-2"
                         >
-                          <Trash2 size={18} />
+                          <Trash2 size={18} strokeWidth={2.5} />
                         </button>
                       )}
                     </div>
@@ -160,7 +178,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                       <div className="flex gap-2">
                         <button 
                           onClick={() => setItemToRemove(null)}
-                          className="px-3 py-1.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-50"
+                          className="px-3 py-1.5 bg-white border border-gray-200 rounded-[--radius-ui] text-xs font-bold text-gray-600 hover:bg-gray-50"
                         >
                           Отмена
                         </button>
@@ -169,9 +187,9 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                             onRemove(item.id);
                             setItemToRemove(null);
                           }}
-                          className="px-3 py-1.5 bg-red-500 text-white rounded-xl text-xs font-bold hover:bg-red-600 shadow-sm flex items-center gap-1"
+                          className="px-3 py-1.5 bg-red-500 text-white rounded-[--radius-ui] text-xs font-bold hover:bg-red-600 shadow-sm flex items-center gap-1"
                         >
-                          Да <Trash2 size={12} />
+                          Да <Trash2 size={12} strokeWidth={2.5} />
                         </button>
                       </div>
                     </div>
@@ -180,22 +198,24 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                       <div className="flex items-center gap-1 bg-gray-50 rounded-full p-1 border border-gray-100">
                         <button 
                           onClick={() => onUpdateQty(item.id, -1)}
+                          aria-label={`Уменьшить количество ${item.name}`}
                           className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm text-brand-text hover:text-brand-accent transition-colors disabled:opacity-50 active:scale-90"
                           disabled={item.quantity <= 1}
                         >
-                          <Minus size={14} strokeWidth={3} />
+                          <Minus size={14} strokeWidth={2.5} />
                         </button>
                         
                         {/* Animated Quantity Key for pop effect - Faster animation */}
-                        <span key={item.quantity} className="text-sm font-extrabold w-8 text-center text-brand-text animate-[pulse_0.2s_ease-in-out]">
+                        <span key={item.quantity} className="text-sm font-extrabold w-8 text-center text-brand-text animate-[pulse_0.2s_ease-in-out]" aria-live="polite" aria-atomic="true">
                           {item.quantity}
                         </span>
                         
                         <button 
                            onClick={() => onUpdateQty(item.id, 1)}
+                           aria-label={`Увеличить количество ${item.name}`}
                            className="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm text-brand-text hover:text-brand-accent transition-colors active:scale-90"
                         >
-                          <Plus size={14} strokeWidth={3} />
+                          <Plus size={14} strokeWidth={2.5} />
                         </button>
                       </div>
                       <span className="font-black text-lg text-brand-text">
@@ -220,9 +240,9 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
             </div>
             <button 
               onClick={scrollToOrder}
-              className="w-full py-4 bg-gradient-to-r from-brand-accent to-brand-accent-dark text-white font-extrabold text-lg rounded-2xl transition-all shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 hover:brightness-110 flex items-center justify-center gap-2 group"
+              className="w-full py-4 bg-gradient-to-r from-brand-accent to-brand-accent-dark text-white font-extrabold text-lg rounded-[--radius-ui] transition-all shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 hover:brightness-110 flex items-center justify-center gap-2 group"
             >
-              Оформить заказ <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              Оформить заказ <ArrowRight size={20} strokeWidth={2.5} className="group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         )}

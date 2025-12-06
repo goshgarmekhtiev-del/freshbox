@@ -1,23 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ProblemSolution from './components/ProblemSolution';
 import Catalog from './components/Catalog';
-import Configurator from './components/Configurator';
-import Benefits from './components/Benefits';
-import HowItWorks from './components/HowItWorks';
-import Reviews from './components/Reviews';
-import B2B from './components/B2B';
-import FAQ from './components/FAQ';
-import OrderForm from './components/OrderForm';
-import Footer from './components/Footer';
 import CartSidebar from './components/CartSidebar';
 import QuickViewModal from './components/QuickViewModal';
 import SocialProof from './components/SocialProof';
-import FruitBackground from './components/FruitBackground';
+import DecorativeBackground from './components/DecorativeBackground';
 import type { Product, CartItem, NotificationData } from './types';
 import { ArrowUp } from 'lucide-react';
 import { fireConfetti } from './utils/confetti';
+
+// Lazy load heavy components that are below the fold
+// These components load ONLY when user scrolls to them, reducing initial bundle size
+const Configurator = lazy(() => import(/* webpackChunkName: "configurator" */ './components/Configurator'));
+const Benefits = lazy(() => import(/* webpackChunkName: "benefits" */ './components/Benefits'));
+const HowItWorks = lazy(() => import(/* webpackChunkName: "how-it-works" */ './components/HowItWorks'));
+const Reviews = lazy(() => import(/* webpackChunkName: "reviews" */ './components/Reviews'));
+const B2B = lazy(() => import(/* webpackChunkName: "b2b" */ './components/B2B'));
+const FAQ = lazy(() => import(/* webpackChunkName: "faq" */ './components/FAQ'));
+const OrderForm = lazy(() => import(/* webpackChunkName: "order-form" */ './components/OrderForm'));
+const Footer = lazy(() => import(/* webpackChunkName: "footer" */ './components/Footer'));
 
 const App: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -123,29 +126,44 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-brand-bg text-brand-text font-sans selection:bg-brand-accent selection:text-white overflow-x-hidden">
-      <FruitBackground />
+      {/* Premium Decorative Background - NO scroll dependencies */}
+      <DecorativeBackground />
+      
       <Navbar cartCount={cartCount} onOpenCart={() => setIsCartOpen(true)} />
       
       <main className="relative z-10">
+        {/* Above-fold: Critical content loaded immediately */}
         <Hero />
         <ProblemSolution />
         <Catalog onAdd={(p, e) => addToCart(p, 1, e)} onQuickView={setQuickViewProduct} />
-        <Configurator onAddCustom={(p, e) => addToCart(p, 1, e)} />
-        <Benefits />
-        <HowItWorks />
-        <Reviews />
-        <B2B />
-        <FAQ />
-        <OrderForm 
-          cart={cart} 
-          onSubmit={handleOrderSubmit} 
-          onOrderComplete={handleOrderComplete}
-          onUpdateQty={updateQuantity}
-          onRemove={removeFromCart}
-        />
+        
+        {/* Below-fold: Lazy-loaded sections (load on scroll) */}
+        <Suspense fallback={
+          <div className="min-h-[400px] flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-lime-50">
+            <div className="w-12 h-12 border-4 border-brand-accent border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        }>
+          <Configurator onAddCustom={(p, e) => addToCart(p, 1, e)} />
+          <Benefits />
+          <HowItWorks />
+          <Reviews />
+          <B2B />
+          <FAQ />
+          <OrderForm 
+            cart={cart} 
+            onSubmit={handleOrderSubmit} 
+            onOrderComplete={handleOrderComplete}
+            onUpdateQty={updateQuantity}
+            onRemove={removeFromCart}
+          />
+        </Suspense>
       </main>
 
-      <Footer />
+      <Suspense fallback={
+        <div className="min-h-[300px] bg-gradient-to-br from-brand-text via-brand-text-soft to-brand-green" />
+      }>
+        <Footer />
+      </Suspense>
       <SocialProof customNotification={lastOrder} />
 
       <CartSidebar 

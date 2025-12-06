@@ -1,10 +1,11 @@
-
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { PRODUCTS } from '../constants';
 import type { Product } from '../types';
 import { Zap } from 'lucide-react';
 import CatalogFilters from './CatalogFilters';
 import CatalogGrid from './CatalogGrid';
+import SkeletonCard from './SkeletonCard';
+import { SectionAccent, Button } from './ui';
 
 interface CatalogProps {
   onAdd: (product: Product, e: React.MouseEvent) => void; 
@@ -14,14 +15,36 @@ interface CatalogProps {
 const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [sortOption, setSortOption] = useState('popularity');
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate initial loading (in real app, this would be data fetching)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 800); // 800ms skeleton display
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Show skeleton when category/sort changes (simulate re-fetching)
+  useEffect(() => {
+    if (!isLoading) {
+      setIsLoading(true);
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, 400); // 400ms for filter changes
+      
+      return () => clearTimeout(timer);
+    }
+  }, [activeCategory, sortOption]);
 
   const categories = [
     { id: 'all', label: 'Все боксы' },
-    { id: 'new', label: 'Новинки ✨' },
-    { id: 'hit', label: 'Хиты 🔥' },
-    { id: 'exotic', label: 'Экзотика 🌴' },
-    { id: 'detox', label: 'Detox 🍏' },
-    { id: 'office', label: 'В офис 💼' },
+    { id: 'new', label: 'Новинки' },
+    { id: 'hit', label: 'Хиты' },
+    { id: 'exotic', label: 'Экзотика' },
+    { id: 'detox', label: 'Detox' },
+    { id: 'office', label: 'В офис' },
   ];
 
   const sortOptions = [
@@ -53,30 +76,22 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
   }, [activeCategory, sortOption]);
 
   return (
-    <section id="catalog" className="py-24 md:py-40 bg-gradient-to-br from-orange-50 via-peach-50 to-lime-50 reveal relative overflow-hidden">
-      
-      {/* Premium Gradient Orbs - Warm Tones */}
-      <div className="absolute top-20 right-0 w-[700px] h-[700px] bg-gradient-to-br from-orange-400/25 via-peach-300/20 to-transparent rounded-full blur-3xl pointer-events-none animate-pulse-glow"></div>
-      <div className="absolute bottom-40 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-peach-400/20 via-honey-300/15 to-transparent rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-to-r from-lime-300/15 via-honey-200/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
-
-      <div className="container mx-auto px-6 md:px-12 lg:px-20 xl:px-24 relative z-10">
-        
-        {/* Section Header - Premium with Design System */}
-        <div className="text-center mb-20 space-y-8">
-          <div className="inline-flex items-center gap-3 px-7 py-4 rounded-full bg-gradient-to-r from-orange-500 via-peach-500 to-honey-500 text-white font-black uppercase text-xs tracking-[0.15em] shadow-deep shadow-orange-400/50 border-3 border-white/30">
+    <SectionAccent id="catalog" paddingY="large" className="reveal">
+      {/* Section Header - Premium with Design System */}
+      <div className="text-center mb-20 space-y-8">
+          <div className="inline-flex items-center gap-3 px-7 py-4 rounded-full bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow text-white font-black uppercase text-xs tracking-[0.15em] shadow-deep shadow-brand-accent/50 border-3 border-white/30">
             <Zap size={18} className="fill-white" strokeWidth={2.5} />
             <span>Fresh Selection</span>
           </div>
           
-          <h2 className="text-6xl md:text-8xl font-black text-brown-900 tracking-tighter leading-[0.9]">
+          <h2 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-brand-text">
             Premium
-            <span className="block mt-4 text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-peach-500 to-honey-400">
+            <span className="block mt-4 text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">
               Fruit Boxes
             </span>
           </h2>
           
-          <p className="text-2xl text-brown-600 font-medium max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg font-medium text-brand-text-soft leading-relaxed max-w-3xl mx-auto">
             Handpicked fresh fruits, delivered with love
           </p>
         </div>
@@ -92,30 +107,36 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
         />
 
         {/* Premium Product Grid - Clean 2-3 Column Layout */}
-        <CatalogGrid 
-          products={filteredProducts} 
-          onAdd={onAdd} 
-          onQuickView={onQuickView} 
-        />
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12 mb-16">
+            <SkeletonCard count={6} />
+          </div>
+        ) : (
+          <CatalogGrid 
+            products={filteredProducts} 
+            onAdd={onAdd} 
+            onQuickView={onQuickView} 
+          />
+        )}
         
         {/* Empty State - Premium */}
         {filteredProducts.length === 0 && (
           <div className="text-center py-32">
-            <div className="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-orange-200 via-peach-200 to-honey-200 rounded-full mb-8 shadow-medium">
-              <span className="text-7xl">🍊</span>
+            <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-brand-accent-light via-brand-accent-light to-brand-yellow rounded-full mb-8 shadow-medium">
+              <span className="text-5xl">🍊</span>
             </div>
-            <p className="text-5xl font-black text-brown-900 mb-4">Nothing here</p>
-            <p className="text-xl text-brown-600 mb-8">Try a different category</p>
-            <button 
-              onClick={() => setActiveCategory('all')} 
-              className="px-10 py-5 bg-gradient-to-r from-orange-500 via-peach-500 to-honey-500 text-white rounded-full font-black text-lg shadow-deep hover:shadow-deep-xl transition-all duration-300 hover:scale-110"
+            <p className="text-2xl md:text-3xl font-bold leading-snug tracking-tight text-brand-text mb-4">Nothing here</p>
+            <p className="text-lg font-medium text-brand-text-soft leading-relaxed mb-8">Try a different category</p>
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={() => setActiveCategory('all')}
             >
               Show All Boxes
-            </button>
+            </Button>
           </div>
         )}
-      </div>
-    </section>
+    </SectionAccent>
   );
 };
 

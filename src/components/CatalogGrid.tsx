@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Product } from '../types';
 import { useStaggeredReveal } from '../utils/useReveal';
-import CatalogCard from '../components/CatalogCard';
+import CatalogCard from './CatalogCard';
 
 interface CatalogGridProps {
   products: Product[];
@@ -14,12 +14,12 @@ const CatalogGrid: React.FC<CatalogGridProps> = ({ products, onAdd, onQuickView 
   const productReveals = useStaggeredReveal(products.length, 100, 80);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
       {products.map((product, index) => (
         <div 
           key={product.id}
           ref={productReveals[index].ref as React.RefObject<HTMLDivElement>}
-          className={`group glass rounded-[3rem] p-8 shadow-medium hover:shadow-deep-xl transition-all duration-500 hover:-translate-y-6 hover:scale-105 border-3 border-orange-200/40 hover:border-orange-400/60 flex flex-col relative overflow-hidden reveal reveal-fade-up ${productReveals[index].isVisible ? 'reveal-visible' : ''}`}
+          className={`group bg-white rounded-[--radius-card] p-6 shadow-sm hover:shadow-medium transition-all duration-500 hover:-translate-y-2 flex flex-col relative overflow-hidden reveal reveal-fade-up ${productReveals[index].isVisible ? 'reveal-visible' : ''}`}
         >
           <CatalogCard 
             product={product} 

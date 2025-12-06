@@ -12,6 +12,7 @@ export const JUICY_IMAGES = {
   box4: 'https://images.unsplash.com/photo-1523049673856-382f672323e2?auto=format&fit=crop&w=800&q=80', // Very colorful exotic
   box5: 'https://images.unsplash.com/photo-1615486511262-c7b5c3f448b0?auto=format&fit=crop&w=800&q=80', // Berries bright
   box6: 'https://images.unsplash.com/photo-1541344999755-99af61186343?auto=format&fit=crop&w=800&q=80', // Apple/Green/Fresh
+  // Avatars - optimized for small size (150px)
   avatar1: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80', // Bright smile
   avatar2: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80', // Bright smile
   avatar3: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80', // Bright smile

@@ -39,7 +39,7 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount, onOpenCart }) => {
           className="flex items-center gap-3 cursor-pointer group" 
           onClick={() => window.scrollTo(0, 0)}
         >
-          <div className="text-5xl" role="img" aria-label="orange">🍊</div>
+          <div className="text-3xl" role="img" aria-label="orange">🍊</div>
           <span className="text-4xl font-black text-brown-900 tracking-tighter hover:scale-105 transition-transform duration-300">
             Fresh<span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-peach-500 to-honey-400">.</span>Box
           </span>
@@ -76,11 +76,11 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount, onOpenCart }) => {
           <button 
             id="cart-trigger" 
             onClick={onOpenCart}
-            className="relative px-6 py-4 bg-gradient-to-r from-orange-500 via-peach-500 to-honey-400 text-white rounded-full hover:scale-110 transition-all duration-300 shadow-deep hover:shadow-deep-xl group border-2 border-white/30"
+            className="relative px-6 py-4 bg-gradient-to-r from-orange-500 via-peach-500 to-honey-400 text-white rounded-full hover:scale-105 hover:brightness-110 active:scale-95 transition-all duration-300 shadow-[--shadow-soft] hover:shadow-[--shadow-elevated] group border-2 border-white/30"
           >
-            <ShoppingBasket size={22} strokeWidth={2.5} className="group-hover:rotate-12 transition-transform duration-300" />
+            <ShoppingBasket size={22} strokeWidth={2.5} className="transition-transform duration-300" />
             {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-lime-500 text-white text-xs font-black w-7 h-7 flex items-center justify-center rounded-full border-3 border-white shadow-deep animate-bounce">
+              <span className="absolute -top-2 -right-2 bg-lime-500 text-white text-xs font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-white shadow-[--shadow-soft]">
                 {cartCount}
               </span>
             )}

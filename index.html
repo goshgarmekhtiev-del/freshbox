@@ -1,10 +1,169 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>freshbox</title>
+    
+    <!-- SEO Meta Tags -->
+    <title>FreshBox — Доставка фруктовых боксов за 2 часа по Москве | Премиум фрукты</title>
+    <meta name="description" content="Премиальные фруктовые боксы с доставкой за 2 часа по Москве. Свежие, сочные фрукты ежедневно. Для дома и офиса. Заказывайте онлайн — доставим сегодня!">
+    <meta name="keywords" content="фруктовые боксы, доставка фруктов Москва, фрукты с доставкой, свежие фрукты, доставка за 2 часа, премиум фрукты, фрукты в офис">
+    <meta name="author" content="FreshBox">
+    <link rel="canonical" href="https://freshbox.ru" />
+    
+    <!-- OpenGraph Meta Tags (Social Media) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="FreshBox — Доставка фруктовых боксов за 2 часа по Москве" />
+    <meta property="og:description" content="Премиальные фруктовые боксы с доставкой за 2 часа по Москве. Свежие, сочные фрукты ежедневно. Для дома и офиса." />
+    <meta property="og:image" content="https://freshbox.ru/hero.png" />
+    <meta property="og:url" content="https://freshbox.ru" />
+    <meta property="og:site_name" content="FreshBox" />
+    <meta property="og:locale" content="ru_RU" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="FreshBox — Доставка фруктовых боксов за 2 часа по Москве" />
+    <meta name="twitter:description" content="Премиальные фруктовые боксы с доставкой за 2 часа по Москве. Свежие, сочные фрукты ежедневно." />
+    <meta name="twitter:image" content="https://freshbox.ru/hero.png" />
+    
+    <!-- Preconnect to external domains for faster resource loading -->
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+    <link rel="preconnect" href="https://sinygofavafuuahhgwll.supabase.co" crossorigin>
+    
+    <!-- DNS Prefetch for additional performance -->
+    <link rel="dns-prefetch" href="https://images.unsplash.com">
+    <link rel="dns-prefetch" href="https://sinygofavafuuahhgwll.supabase.co">
+    
+    <!-- Preload critical Hero image (LCP element) -->
+    <link rel="preload" as="image" href="/hero.png" fetchpriority="high">
+    
+    <!-- JSON-LD Structured Data: Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "FreshBox",
+      "url": "https://freshbox.ru",
+      "logo": "https://freshbox.ru/logo.png",
+      "description": "Премиальные фруктовые боксы с доставкой за 2 часа по Москве",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Москва",
+        "addressCountry": "RU"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+7-495-123-45-67",
+        "contactType": "Отдел продаж",
+        "availableLanguage": "Russian"
+      },
+      "sameAs": [
+        "https://instagram.com/freshbox",
+        "https://vk.com/freshbox"
+      ]
+    }
+    </script>
+    
+    <!-- JSON-LD Structured Data: LocalBusiness -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "FreshBox",
+      "image": "https://freshbox.ru/hero.png",
+      "@id": "https://freshbox.ru",
+      "url": "https://freshbox.ru",
+      "telephone": "+7-495-123-45-67",
+      "priceRange": "₽₽",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Тверская улица, 1",
+        "addressLocality": "Москва",
+        "postalCode": "125009",
+        "addressCountry": "RU"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 55.7558,
+        "longitude": 37.6173
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday"
+        ],
+        "opens": "09:00",
+        "closes": "21:00"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "347"
+      }
+    }
+    </script>
+    
+    <!-- JSON-LD Structured Data: Product Catalog -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "itemListElement": [
+        {
+          "@type": "Product",
+          "position": 1,
+          "name": "Фруктовый бокс Classic",
+          "description": "Классический набор свежих фруктов на каждый день",
+          "image": "https://freshbox.ru/products/classic.jpg",
+          "offers": {
+            "@type": "Offer",
+            "url": "https://freshbox.ru#catalog",
+            "priceCurrency": "RUB",
+            "price": "2490",
+            "availability": "https://schema.org/InStock",
+            "priceValidUntil": "2025-12-31"
+          }
+        },
+        {
+          "@type": "Product",
+          "position": 2,
+          "name": "Фруктовый бокс Tropical",
+          "description": "Экзотические тропические фрукты премиум класса",
+          "image": "https://freshbox.ru/products/tropical.jpg",
+          "offers": {
+            "@type": "Offer",
+            "url": "https://freshbox.ru#catalog",
+            "priceCurrency": "RUB",
+            "price": "3290",
+            "availability": "https://schema.org/InStock",
+            "priceValidUntil": "2025-12-31"
+          }
+        },
+        {
+          "@type": "Product",
+          "position": 3,
+          "name": "Фруктовый бокс Premium",
+          "description": "Роскошный набор редких фруктов для ценителей",
+          "image": "https://freshbox.ru/products/premium.jpg",
+          "offers": {
+            "@type": "Offer",
+            "url": "https://freshbox.ru#catalog",
+            "priceCurrency": "RUB",
+            "price": "4990",
+            "availability": "https://schema.org/InStock",
+            "priceValidUntil": "2025-12-31"
+          }
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>

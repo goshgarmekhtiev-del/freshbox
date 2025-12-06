@@ -91,6 +91,9 @@ const SocialProof: React.FC<SocialProofProps> = ({ customNotification }) => {
 
   return (
     <div 
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
       className={`fixed bottom-6 left-4 md:bottom-8 md:left-8 z-50 transition-all duration-500 ${
         visible 
           ? 'translate-y-0 opacity-100' 
@@ -115,12 +118,14 @@ const SocialProof: React.FC<SocialProofProps> = ({ customNotification }) => {
           <div className="w-14 h-14 rounded-full overflow-hidden border-3 border-white shadow-medium ring-2 ring-orange-200/50 group-hover:ring-orange-300 transition-all duration-300">
             <img 
               src={getAvatarUrl(data.name)} 
-              alt={data.name}
+              alt={`Аватар покупателя FreshBox — ${data.name} из ${data.city}`}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover"
             />
           </div>
           {/* Status indicator */}
-          <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-lime-500 rounded-full border-2 border-white shadow-soft animate-pulse"></div>
+          <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-lime-500 rounded-full border-2 border-white shadow-soft"></div>
         </div>
         
         {/* Content */}
@@ -148,7 +153,7 @@ const SocialProof: React.FC<SocialProofProps> = ({ customNotification }) => {
           
           {/* Time ago */}
           <div className="flex items-center gap-1.5 text-brown-500/70">
-            <Clock size={11} strokeWidth={2} />
+            <Clock size={11} strokeWidth={2.5} />
             <span className="text-xs font-medium">{timeAgo}</span>
           </div>
         </div>
