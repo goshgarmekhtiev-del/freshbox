@@ -1,4 +1,5 @@
 import React from 'react';
+import Container from './Container';
 
 interface SectionAccentProps {
   children: React.ReactNode;
@@ -22,7 +23,7 @@ const SectionAccent: React.FC<SectionAccentProps> = ({
   containerClassName = '',
   paddingY = 'normal',
 }) => {
-  const pyClass = paddingY === 'large' ? 'py-24 md:py-40' : 'py-24 md:py-32';
+  const pyClass = paddingY === 'large' ? 'py-20 md:py-32 lg:py-40' : 'py-16 md:py-24 lg:py-32';
 
   return (
     <section
@@ -37,9 +38,9 @@ const SectionAccent: React.FC<SectionAccentProps> = ({
         </>
       )}
 
-      <div className={`container mx-auto px-6 md:px-12 lg:px-20 xl:px-24 relative z-10 ${containerClassName}`}>
+      <Container className={containerClassName}>
         {children}
-      </div>
+      </Container>
     </section>
   );
 };

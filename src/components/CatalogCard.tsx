@@ -1,7 +1,7 @@
-import React from 'react';
-import type { Product } from '../types';
-import { Plus, Flame, Sparkles, Eye, ShoppingBag, Star } from 'lucide-react';
-import { ResponsiveImage } from './ui';
+import React, { useState } from 'react';
+import type { Product } from '@/types';
+import { Plus, Flame, Sparkles, Eye, ShoppingBag, Star, Check } from 'lucide-react';
+import { ResponsiveImage } from '@/components/ui';
 
 interface CatalogCardProps {
   product: Product;
@@ -10,6 +10,17 @@ interface CatalogCardProps {
 }
 
 const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }) => {
+  const [isAdded, setIsAdded] = useState(false);
+
+  const handleAdd = (e: React.MouseEvent) => {
+    setIsAdded(true);
+    onAdd(e);
+
+    // Reset button state after animation
+    setTimeout(() => {
+      setIsAdded(false);
+    }, 2000);
+  };
   return (
     <div className="relative flex flex-col h-full">
       {/* Glassmorphism Light Effect - Design System Colors */}
@@ -28,7 +39,7 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
           }
         }}
         aria-label={`Открыть быстрый просмотр ${product.name}`}
-        className="relative aspect-[4/5] rounded-[--radius-card] overflow-hidden mb-6 bg-gradient-to-br from-brand-accent-light/60 via-brand-accent-light/40 to-brand-yellow/50 cursor-pointer shadow-[--shadow-soft] group-hover:shadow-[--shadow-elevated]"
+        className="relative aspect-[4/5] rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-brand-accent-light/60 via-brand-accent-light/40 to-brand-yellow/50 cursor-pointer shadow-lg shadow-black/5 group-hover:shadow-xl group-hover:shadow-black/10"
       >
         <ResponsiveImage
           src={product.image}
@@ -36,7 +47,7 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
           autoOptimize
           loading="lazy"
           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
+          className="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
         />
         
         {/* Warm Gradient Overlay */}
@@ -46,7 +57,7 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
            <button 
              onClick={(e) => { e.stopPropagation(); onQuickView(); }}
-             className="px-8 py-4 glass border-2 border-white/80 rounded-full flex items-center gap-3 text-brand-text font-black text-base shadow-[--shadow-elevated] scale-75 group-hover:scale-100 transition-all duration-300"
+             className="px-8 py-4 glass border-2 border-white/80 rounded-full flex items-center gap-3 text-brand-text font-black text-base shadow-xl shadow-black/10 scale-75 group-hover:scale-100 transition-all duration-300"
            >
             <Eye size={20} strokeWidth={3} />
             <span className="tracking-wide">Quick View</span>
@@ -55,7 +66,7 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
 
         {/* Premium Tag Badge */}
         {product.tag && (
-          <div className="absolute top-6 right-6 glass text-brand-text px-6 py-3 rounded-full text-sm font-black uppercase tracking-[0.1em] shadow-[--shadow-soft] flex items-center gap-2.5 z-10 border-3 border-white/70">
+          <div className="absolute top-6 right-6 glass text-brand-text px-6 py-3 rounded-full text-sm font-black uppercase tracking-[0.1em] shadow-lg shadow-black/10 flex items-center gap-2.5 z-10 border-3 border-white/70">
             {product.tag.includes('Новинка') ? 
               <Sparkles size={16} className="text-brand-accent" fill="currentColor" strokeWidth={2.5} /> : 
               <Flame size={16} className="text-brand-accent" fill="currentColor" strokeWidth={2.5} />
@@ -81,7 +92,7 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
         </p>
         
         {/* Ingredients */}
-        <div className="flex items-start gap-2 bg-gradient-to-r from-brand-accent-light/80 via-brand-accent-light/60 to-brand-yellow/50 rounded-[--radius-ui] p-3 border border-brand-accent/50">
+        <div className="flex items-start gap-2 bg-gradient-to-r from-brand-accent-light/80 via-brand-accent-light/60 to-brand-yellow/50 rounded-xl p-3 border border-brand-accent/50">
           <Star size={16} className="text-brand-accent fill-brand-accent shrink-0 mt-0.5" strokeWidth={2.5} />
           <span className="text-xs font-semibold text-brand-text-soft leading-relaxed line-clamp-2" title={product.ingredients}>
             {product.ingredients}
@@ -95,14 +106,30 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
             {product.price} ₽
           </div>
           
-          {/* CTA Button */}
+          {/* CTA Button - Premium Orange with Animation */}
           <button 
-            onClick={onAdd} 
-            className="px-5 py-3 rounded-full bg-brand-accent text-white flex items-center gap-2 font-bold text-base shadow-[--shadow-soft] hover:shadow-[--shadow-elevated] transition-all duration-300 hover:bg-brand-accent-dark active:scale-95 overflow-hidden relative"
+            onClick={handleAdd} 
+            disabled={isAdded}
+            className={`px-5 py-3 rounded-full text-white flex items-center gap-2 font-bold text-base shadow-lg transition-all duration-300 active:scale-95 overflow-hidden relative ${
+              isAdded 
+                ? 'bg-brand-green shadow-brand-green/30' 
+                : 'bg-brand-accent shadow-brand-accent/30 hover:shadow-xl hover:shadow-brand-accent/40 hover:bg-brand-accent-dark'
+            }`}
           >
             <ShoppingBag size={18} strokeWidth={2.5} className="relative z-10" />
-            <span className="relative z-10">В корзину</span>
-            <Plus size={18} strokeWidth={2.5} className="relative z-10" />
+            <span className="relative z-10">
+              {isAdded ? 'Добавлено' : 'В корзину'}
+            </span>
+            {isAdded ? (
+              <Check size={18} strokeWidth={2.5} className="relative z-10 animate-scale-in" />
+            ) : (
+              <Plus size={18} strokeWidth={2.5} className="relative z-10" />
+            )}
+            
+            {/* Success ripple effect */}
+            {isAdded && (
+              <span className="absolute inset-0 bg-brand-green animate-ping opacity-75"></span>
+            )}
           </button>
         </div>
       </div>

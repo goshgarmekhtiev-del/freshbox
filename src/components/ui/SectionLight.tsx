@@ -1,4 +1,5 @@
 import React from 'react';
+import Container from './Container';
 
 interface SectionLightProps {
   children: React.ReactNode;
@@ -23,7 +24,7 @@ const SectionLight: React.FC<SectionLightProps> = ({
   return (
     <section
       id={id}
-      className={`py-24 bg-brand-bg relative overflow-hidden ${className}`}
+      className={`py-16 md:py-24 bg-brand-bg relative overflow-hidden ${className}`}
     >
       {/* Optional: Subtle blobs for depth */}
       {withBlobs && (
@@ -33,9 +34,9 @@ const SectionLight: React.FC<SectionLightProps> = ({
         </>
       )}
 
-      <div className={`container mx-auto px-4 md:px-8 relative z-10 ${containerClassName}`}>
+      <Container className={containerClassName}>
         {children}
-      </div>
+      </Container>
     </section>
   );
 };

@@ -2,27 +2,27 @@
 import { BoxType } from './types';
 import type { Product, Review, FAQItem } from './types';
 
-// Updated images: brighter, high contrast, juicy
+// Updated images: brighter, high contrast, juicy - WebP optimized
 // EXPORTING this object so we can use it in Hero.tsx
 export const JUICY_IMAGES = {
   // ВАЖНО: Положите ваше изображение с именем "hero.png" в папку "public" вашего проекта
   box1: '/hero.png', 
-  box2: 'https://images.unsplash.com/photo-1519996541103-1c9696fa994f?auto=format&fit=crop&w=800&q=80', // Fresh Green
-  box3: 'https://images.unsplash.com/photo-1596547659530-5b583f707f18?auto=format&fit=crop&w=800&q=80', // Citrus mix
-  box4: 'https://images.unsplash.com/photo-1523049673856-382f672323e2?auto=format&fit=crop&w=800&q=80', // Very colorful exotic
-  box5: 'https://images.unsplash.com/photo-1615486511262-c7b5c3f448b0?auto=format&fit=crop&w=800&q=80', // Berries bright
-  box6: 'https://images.unsplash.com/photo-1541344999755-99af61186343?auto=format&fit=crop&w=800&q=80', // Apple/Green/Fresh
-  // Avatars - optimized for small size (150px)
-  avatar1: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80', // Bright smile
-  avatar2: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80', // Bright smile
-  avatar3: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80', // Bright smile
+  box2: 'https://images.unsplash.com/photo-1519996541103-1c9696fa994f?auto=format&fit=crop&w=800&q=80&fm=webp', // Fresh Green
+  box3: 'https://images.unsplash.com/photo-1596547659530-5b583f707f18?auto=format&fit=crop&w=800&q=80&fm=webp', // Citrus mix
+  box4: 'https://images.unsplash.com/photo-1523049673856-382f672323e2?auto=format&fit=crop&w=800&q=80&fm=webp', // Very colorful exotic
+  box5: 'https://images.unsplash.com/photo-1615486511262-c7b5c3f448b0?auto=format&fit=crop&w=800&q=80&fm=webp', // Berries bright
+  box6: 'https://images.unsplash.com/photo-1541344999755-99af61186343?auto=format&fit=crop&w=800&q=80&fm=webp', // Apple/Green/Fresh
+  // Avatars - optimized for small size (150px) with WebP
+  avatar1: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80&fm=webp', // Bright smile
+  avatar2: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80&fm=webp', // Bright smile
+  avatar3: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80&fm=webp', // Bright smile
 };
 
-// Images for the Configurator based on type
+// Images for the Configurator based on type - WebP optimized
 export const CONFIGURATOR_IMAGES: Record<string, string> = {
-  [BoxType.CLASSIC]: 'https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?auto=format&fit=crop&w=800&q=80', // Apples/Pears
-  [BoxType.EXOTIC]: 'https://images.unsplash.com/photo-1595475207225-428b62bda831?auto=format&fit=crop&w=800&q=80', // Pineapple/Mango
-  [BoxType.MIX]: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=800&q=80', // Mix
+  [BoxType.CLASSIC]: 'https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?auto=format&fit=crop&w=800&q=80&fm=webp', // Apples/Pears
+  [BoxType.EXOTIC]: 'https://images.unsplash.com/photo-1595475207225-428b62bda831?auto=format&fit=crop&w=800&q=80&fm=webp', // Pineapple/Mango
+  [BoxType.MIX]: 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?auto=format&fit=crop&w=800&q=80&fm=webp', // Mix
 };
 
 // Fake data for Social Proof notifications

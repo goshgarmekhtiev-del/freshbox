@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, CheckCircle2, Building2, Send, Loader2, Users, CalendarClock, Package, MessageSquare, ChevronDown } from 'lucide-react';
-import { useFocusTrap } from '../utils/useFocusTrap';
+import { useFocusTrap } from '@/hooks';
 
 interface B2BFormProps {
   isOpen: boolean;

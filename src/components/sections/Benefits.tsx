@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { Truck, ShieldCheck, Heart, Sun } from 'lucide-react';
-import { useStaggeredReveal } from '../utils/useReveal';
-import { SectionDark } from './ui';
+import { useStaggeredReveal } from '@/hooks';
+import { SectionDark } from '@/components/ui';
 
 const Benefits: React.FC = () => {
   const benefitReveals = useStaggeredReveal(4, 150, 100);
@@ -32,7 +32,7 @@ const Benefits: React.FC = () => {
 
   return (
     <SectionDark className="reveal">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
         {benefits.map((benefit, index) => (
           <div 
             key={index} 
@@ -42,8 +42,8 @@ const Benefits: React.FC = () => {
             <div className="w-20 h-20 rounded-[--radius-ui] bg-brand-accent-light text-brand-text flex items-center justify-center mb-6 shadow-[--shadow-soft] group-hover:scale-110 transition-transform duration-300">
               {benefit.icon}
             </div>
-            <h3 className="text-2xl md:text-3xl font-bold leading-snug tracking-tight mb-3">{benefit.title}</h3>
-            <p className="text-sm font-medium text-white/90 leading-relaxed">{benefit.text}</p>
+            <h3 className="text-brand-h3 mb-4">{benefit.title}</h3>
+            <p className="text-brand-small text-white/90">{benefit.text}</p>
           </div>
         ))}
       </div>

@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import type { CartItem } from '../types';
+import type { CartItem } from '@/types';
 import { X, Trash2, Plus, Minus, ShoppingBag, Truck, ArrowRight } from 'lucide-react';
-import { useFocusTrap } from '../utils/useFocusTrap';
+import { useFocusTrap } from '@/hooks';
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -90,7 +90,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
             <button 
               onClick={onClose} 
               aria-label="Закрыть корзину"
-              className="p-2 hover:bg-gray-100 rounded-full transition-colors text-brand-text/50 hover:text-brand-text"
+              className="p-2 hover:bg-brand-accent-light/30 rounded-full transition-colors text-brand-text/50 hover:text-brand-text"
             >
               <X size={28} strokeWidth={2.5} />
             </button>
@@ -98,7 +98,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
 
           {/* Free Shipping Progress Bar */}
           {cart.length > 0 && (
-            <div className="bg-gray-50 rounded-[--radius-ui] p-4 border border-gray-100 transition-all duration-300">
+            <div className="bg-brand-bg rounded-[--radius-ui] p-4 border border-brand-accent/20 transition-all duration-300">
               {remainingForFreeShipping > 0 ? (
                 <p id="cart-description" className="text-sm font-bold text-brand-text mb-2">
                   До бесплатной доставки: <span className="text-brand-accent"><AnimatedPrice value={remainingForFreeShipping} /> ₽</span>
@@ -108,7 +108,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                   <Truck size={16} strokeWidth={2.5} /> Бесплатная доставка активирована!
                 </p>
               )}
-              <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden" role="progressbar" aria-valuemin={0} aria-valuemax={FREE_SHIPPING_THRESHOLD} aria-valuenow={total}>
+              <div className="h-2 w-full bg-brand-bg rounded-full overflow-hidden" role="progressbar" aria-valuemin={0} aria-valuemax={FREE_SHIPPING_THRESHOLD} aria-valuenow={total}>
                 <div 
                   className="h-full bg-gradient-to-r from-brand-accent to-brand-yellow transition-all duration-500 ease-out"
                   style={{ width: `${progress}%` }}
@@ -148,7 +148,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                     : 'bg-white border-gray-100 hover:border-brand-accent/30 hover:shadow-md'
                 }`}
               >
-                <div className="w-24 h-24 rounded-[--radius-ui] overflow-hidden bg-gray-50 shrink-0 relative">
+                <div className="w-24 h-24 rounded-[--radius-ui] overflow-hidden bg-brand-bg shrink-0 relative">
                   <img src={item.image} alt={`Миниатюра товара в корзине — ${item.name}`} className={`w-full h-full object-cover transition-transform duration-500 ${itemToRemove === item.id ? 'grayscale opacity-50' : 'group-hover:scale-110'}`} />
                 </div>
                 
@@ -161,14 +161,14 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                         <button 
                           onClick={() => setItemToRemove(item.id)}
                           aria-label={`Удалить ${item.name} из корзины`}
-                          className="text-gray-300 hover:text-red-500 transition-colors -mt-1 -mr-1 p-2"
+                          className="text-brand-text-soft/50 hover:text-red-500 transition-colors -mt-1 -mr-1 p-2"
                         >
                           <Trash2 size={18} strokeWidth={2.5} />
                         </button>
                       )}
                     </div>
                     {itemToRemove !== item.id && (
-                      <p className="text-xs font-bold text-brand-text-soft bg-gray-50 inline-block px-2 py-1 rounded-md mb-2">{item.price} ₽ / шт</p>
+                      <p className="text-xs font-bold text-brand-text-soft bg-brand-bg inline-block px-2 py-1 rounded-md mb-2">{item.price} ₽ / шт</p>
                     )}
                   </div>
 
@@ -178,7 +178,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                       <div className="flex gap-2">
                         <button 
                           onClick={() => setItemToRemove(null)}
-                          className="px-3 py-1.5 bg-white border border-gray-200 rounded-[--radius-ui] text-xs font-bold text-gray-600 hover:bg-gray-50"
+                          className="px-3 py-1.5 bg-white border border-brand-accent/20 rounded-[--radius-ui] text-xs font-bold text-brand-text-soft hover:bg-brand-accent-light/20"
                         >
                           Отмена
                         </button>
@@ -195,7 +195,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                     </div>
                   ) : (
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1 bg-gray-50 rounded-full p-1 border border-gray-100">
+                      <div className="flex items-center gap-1 bg-brand-bg rounded-full p-1 border border-brand-accent/20">
                         <button 
                           onClick={() => onUpdateQty(item.id, -1)}
                           aria-label={`Уменьшить количество ${item.name}`}

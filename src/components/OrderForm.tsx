@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import type { CartItem, NotificationData } from '../types';
+import type { CartItem, NotificationData } from '@/types';
 import { Loader2, Zap, CreditCard, ShoppingBag, Truck, Plus, Minus, Trash2, Calendar, ChevronLeft, ChevronRight, User, Phone, Mail, MapPin, MessageSquare } from 'lucide-react';
-import { useReveal } from '../utils/useReveal';
+import { useReveal } from '@/hooks';
 
 interface OrderFormProps {
   cart: CartItem[];
@@ -241,7 +241,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
           {/* Cart Summary Side */}
           <div className="lg:col-span-5 bg-gradient-to-br from-brand-accent to-brand-accent-dark text-white p-8 md:p-12 lg:p-16 flex flex-col relative overflow-hidden rounded-t-[3rem] lg:rounded-tr-none lg:rounded-l-[3rem]">
             <div className="relative z-10">
-              <h2 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight mb-8 flex items-center gap-3">
+              <h2 className="text-brand-h2 text-white mb-8 flex items-center gap-3">
                 <ShoppingBag size={32} strokeWidth={2.5} className="text-white" /> Ваш заказ
               </h2>
               {/* Free Shipping Progress */}
@@ -339,8 +339,8 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
             <form onSubmit={handleSubmit} className="space-y-10 max-w-2xl mx-auto w-full">
               {/* Header */}
               <div className="text-center">
-                 <h3 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-brand-text mb-3">Оформление</h3>
-                 <p className="text-brand-text-soft font-medium text-lg">Осталось пару шагов до витаминного рая</p>
+                 <h3 className="text-brand-h2 mb-4">Оформление</h3>
+                 <p className="text-brand-body text-brand-text-soft">Осталось пару шагов до витаминного рая</p>
               </div>
               {/* Section 1: Customer Info */}
               <div className="space-y-6">

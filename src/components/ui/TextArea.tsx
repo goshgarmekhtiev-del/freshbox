@@ -61,7 +61,7 @@ const TextArea = React.forwardRef<HTMLTextAreaElement, TextAreaProps>(
           rows={rows}
           aria-invalid={error ? 'true' : 'false'}
           aria-describedby={error ? `${textareaId}-error` : helperText ? `${textareaId}-helper` : undefined}
-          className={`${widthStyle} px-6 py-4 rounded-[--radius-ui] border-2 ${borderStyle} focus:outline-none focus:ring-4 transition-all text-brand-text placeholder-brand-text-soft/70 font-medium text-base resize-none disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 ${className}`}
+          className={`${widthStyle} px-6 py-4 rounded-[--radius-ui] border-2 ${borderStyle} focus:outline-none focus:ring-4 transition-all text-brand-text placeholder-brand-text-soft/70 font-medium text-base resize-none disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-brand-bg/50 ${className}`}
           {...props}
         />
 

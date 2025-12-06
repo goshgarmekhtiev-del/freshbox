@@ -1,7 +1,7 @@
 import React from 'react';
 import { Clock, Gift, Zap, CheckCircle2, Heart } from 'lucide-react';
-import { useStaggeredReveal } from '../utils/useReveal';
-import { SectionLight } from './ui';
+import { useStaggeredReveal } from '@/hooks';
+import { SectionLight } from '@/components/ui';
 
 const ProblemSolution: React.FC = () => {
   const cardReveals = useStaggeredReveal(3, 100, 150);

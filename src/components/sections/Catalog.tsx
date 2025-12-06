@@ -1,11 +1,11 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { PRODUCTS } from '../constants';
-import type { Product } from '../types';
+import { PRODUCTS } from '@/constants';
+import type { Product } from '@/types';
 import { Zap } from 'lucide-react';
-import CatalogFilters from './CatalogFilters';
-import CatalogGrid from './CatalogGrid';
-import SkeletonCard from './SkeletonCard';
-import { SectionAccent, Button } from './ui';
+import CatalogFilters from '../CatalogFilters';
+import CatalogGrid from '../CatalogGrid';
+import SkeletonCard from '../SkeletonCard';
+import { SectionAccent, Button } from '@/components/ui';
 
 interface CatalogProps {
   onAdd: (product: Product, e: React.MouseEvent) => void; 
@@ -84,14 +84,14 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
             <span>Fresh Selection</span>
           </div>
           
-          <h2 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-brand-text">
+          <h2 className="text-brand-h2">
             Premium
             <span className="block mt-4 text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">
               Fruit Boxes
             </span>
           </h2>
           
-          <p className="text-lg font-medium text-brand-text-soft leading-relaxed max-w-3xl mx-auto">
+          <p className="text-brand-body max-w-3xl mx-auto">
             Handpicked fresh fruits, delivered with love
           </p>
         </div>
@@ -108,8 +108,15 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
 
         {/* Premium Product Grid - Clean 2-3 Column Layout */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12 mb-16">
-            <SkeletonCard count={6} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div
+                key={`skeleton-wrapper-${index}`}
+                className="group bg-white rounded-[--radius-card] p-6 shadow-sm flex flex-col relative overflow-hidden"
+              >
+                <SkeletonCard count={1} />
+              </div>
+            ))}
           </div>
         ) : (
           <CatalogGrid 

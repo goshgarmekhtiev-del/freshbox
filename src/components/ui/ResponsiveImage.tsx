@@ -47,25 +47,25 @@ const ResponsiveImage: React.FC<ResponsiveImageProps> = ({
   // Generate srcset string from array
   const generateSrcSet = (): string | undefined => {
     if (!srcSet || srcSet.length === 0) {
-      // Auto-generate from Unsplash URL
+      // Auto-generate from Unsplash URL with WebP format
       if (autoOptimize && src.includes('unsplash.com')) {
         const baseUrl = src.split('?')[0];
         return [
-          `${baseUrl}?auto=format&fit=crop&w=400&q=75 400w`,
-          `${baseUrl}?auto=format&fit=crop&w=800&q=80 800w`,
-          `${baseUrl}?auto=format&fit=crop&w=1200&q=85 1200w`,
-          `${baseUrl}?auto=format&fit=crop&w=1600&q=85 1600w`
+          `${baseUrl}?auto=format&fit=crop&w=400&q=75&fm=webp 400w`,
+          `${baseUrl}?auto=format&fit=crop&w=800&q=80&fm=webp 800w`,
+          `${baseUrl}?auto=format&fit=crop&w=1200&q=85&fm=webp 1200w`,
+          `${baseUrl}?auto=format&fit=crop&w=1600&q=85&fm=webp 1600w`
         ].join(', ');
       }
       
-      // Auto-generate from Supabase URL
+      // Auto-generate from Supabase URL with WebP format
       if (autoOptimize && src.includes('supabase.co')) {
         // Supabase storage supports transformation params
         const baseUrl = src;
         return [
-          `${baseUrl}?width=400&quality=75 400w`,
-          `${baseUrl}?width=800&quality=80 800w`,
-          `${baseUrl}?width=1200&quality=85 1200w`
+          `${baseUrl}?width=400&quality=75&format=webp 400w`,
+          `${baseUrl}?width=800&quality=80&format=webp 800w`,
+          `${baseUrl}?width=1200&quality=85&format=webp 1200w`
         ].join(', ');
       }
       

@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import { BoxSize, BoxType } from '../types';
-import type { Product } from '../types';
-import { CONFIGURATOR_IMAGES } from '../constants';
+import { BoxSize, BoxType } from '@/types';
+import type { Product } from '@/types';
+import { CONFIGURATOR_IMAGES } from '@/constants';
 import { Sparkles, ArrowRight, Package, Box, Container } from 'lucide-react';
-import { useReveal } from '../utils/useReveal';
-import { Button, Badge, ImageWithPlaceholder } from './ui';
+import { useReveal } from '@/hooks';
+import { Button, Badge, ImageWithPlaceholder } from '@/components/ui';
 
 interface ConfiguratorProps {
   onAddCustom: (product: Product, e: React.MouseEvent) => void;
@@ -73,8 +73,8 @@ const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
             <span className="mb-4 inline-block transform -rotate-1">
               <Badge variant="primary" size="sm">Творчество</Badge>
             </span>
-            <h2 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-brand-text mb-6">Собери свой <span className="text-brand-accent">идеал</span></h2>
-            <p className="text-brand-text-soft font-bold text-lg mb-10 max-w-lg leading-relaxed">
+            <h2 className="text-brand-h2 mb-6">Собери свой <span className="text-brand-accent">идеал</span></h2>
+            <p className="text-brand-body text-brand-text-soft mb-10 max-w-lg">
               Не любишь киви? Хочешь только манго? Без проблем. Мы соберем бокс точно по твоим правилам.
             </p>
 
@@ -160,12 +160,14 @@ const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
 
           {/* Image Side - Now Dynamic! */}
           <div className="lg:col-span-5 order-1 lg:order-2 h-full">
-            <div className="relative h-full min-h-[500px] rounded-[--radius-card] overflow-hidden shadow-[--shadow-elevated] border-4 border-white group">
+            <div className="relative h-full aspect-[4/5] rounded-[--radius-card] overflow-hidden shadow-[--shadow-elevated] border-4 border-white group">
               <ImageWithPlaceholder
                 src={currentImage}
                 alt={`Превью фруктового бокса FreshBox — ${type} (конфигуратор авторской сборки)`}
                 containerClassName="absolute inset-0"
                 className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+                loading="lazy"
+                useWebP={true}
                 style={{ opacity: imageOpacity }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>

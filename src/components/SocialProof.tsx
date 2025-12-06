@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { ShoppingBag, X, MapPin, Clock } from 'lucide-react';
-import { RECENT_PURCHASES } from '../constants';
-import type { NotificationData } from '../types';
+import { RECENT_PURCHASES } from '@/constants';
+import type { NotificationData } from '@/types';
 
 interface SocialProofProps {
   customNotification?: NotificationData | null;

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Building2, ArrowRight, TrendingUp, Users, Shield, Gift } from 'lucide-react';
-import B2BForm from './B2BForm';
-import { useReveal, useStaggeredReveal } from '../utils/useReveal';
-import { SectionAccent } from './ui';
+import B2BForm from '../B2BForm';
+import { useReveal, useStaggeredReveal } from '@/hooks';
+import { SectionAccent } from '@/components/ui';
 
 const B2B: React.FC = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -46,12 +46,12 @@ const B2B: React.FC = () => {
           <span>Бизнес-Решения</span>
         </div>
         
-        <h2 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-brand-text mb-6">
+        <h2 className="text-brand-h2 mb-6">
           Энергия <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">витаминов</span>
           <span className="block mt-2">для вашей команды</span>
         </h2>
         
-        <p className="text-lg font-medium text-brand-text-soft leading-relaxed max-w-3xl mx-auto">
+        <p className="text-brand-body max-w-3xl mx-auto">
           Замените скучное печенье на сочные фрукты! Это повышает продуктивность, настроение и лояльность сотрудников.
         </p>
       </div>
@@ -67,8 +67,8 @@ const B2B: React.FC = () => {
               <div className={`w-16 h-16 rounded-[--radius-ui] bg-gradient-to-br ${benefit.gradient} flex items-center justify-center text-white mb-6 shadow-[--shadow-soft] group-hover:scale-110 transition-transform duration-300`}>
                 {benefit.icon}
               </div>
-              <h3 className="text-2xl md:text-3xl font-bold leading-snug tracking-tight text-brand-text mb-3">{benefit.title}</h3>
-              <p className="text-sm font-medium text-brand-text-soft leading-relaxed">{benefit.description}</p>
+              <h3 className="text-brand-h3 mb-4">{benefit.title}</h3>
+              <p className="text-brand-small">{benefit.description}</p>
             </div>
           ))}
         </div>
@@ -80,10 +80,10 @@ const B2B: React.FC = () => {
             {/* Left: Value Props */}
             <div className="lg:col-span-3 space-y-8">
               <div className="space-y-4">
-                <h3 className="text-2xl md:text-3xl font-bold leading-snug tracking-tight text-brand-text">
+                <h3 className="text-brand-h3">
                   Премиум-условия для корпораций
                 </h3>
-                <p className="text-lg font-medium text-brand-text-soft leading-relaxed">
+                <p className="text-brand-body">
                   Получите индивидуальное предложение с лучшими условиями
                 </p>
               </div>

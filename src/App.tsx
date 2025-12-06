@@ -1,32 +1,33 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import ProblemSolution from './components/ProblemSolution';
-import Catalog from './components/Catalog';
-import CartSidebar from './components/CartSidebar';
-import QuickViewModal from './components/QuickViewModal';
-import SocialProof from './components/SocialProof';
-import DecorativeBackground from './components/DecorativeBackground';
-import type { Product, CartItem, NotificationData } from './types';
+import Navbar from '@/components/Navbar';
+import { Hero, ProblemSolution, Catalog, WhyFreshBox } from '@/components/sections';
+import CartSidebar from '@/components/CartSidebar';
+import QuickViewModal from '@/components/QuickViewModal';
+import SocialProof from '@/components/SocialProof';
+import DecorativeBackground from '@/components/DecorativeBackground';
+import { Toast } from '@/components/ui';
+import type { Product, CartItem, NotificationData } from '@/types';
 import { ArrowUp } from 'lucide-react';
-import { fireConfetti } from './utils/confetti';
+import { fireConfetti } from '@/utils/confetti';
 
 // Lazy load heavy components that are below the fold
 // These components load ONLY when user scrolls to them, reducing initial bundle size
-const Configurator = lazy(() => import(/* webpackChunkName: "configurator" */ './components/Configurator'));
-const Benefits = lazy(() => import(/* webpackChunkName: "benefits" */ './components/Benefits'));
-const HowItWorks = lazy(() => import(/* webpackChunkName: "how-it-works" */ './components/HowItWorks'));
-const Reviews = lazy(() => import(/* webpackChunkName: "reviews" */ './components/Reviews'));
-const B2B = lazy(() => import(/* webpackChunkName: "b2b" */ './components/B2B'));
-const FAQ = lazy(() => import(/* webpackChunkName: "faq" */ './components/FAQ'));
-const OrderForm = lazy(() => import(/* webpackChunkName: "order-form" */ './components/OrderForm'));
-const Footer = lazy(() => import(/* webpackChunkName: "footer" */ './components/Footer'));
+const Configurator = lazy(() => import(/* webpackChunkName: "configurator" */ '@/components/Configurator'));
+const Benefits = lazy(() => import(/* webpackChunkName: "benefits" */ '@/components/sections/Benefits'));
+const HowItWorks = lazy(() => import(/* webpackChunkName: "how-it-works" */ '@/components/sections/HowItWorks'));
+const Reviews = lazy(() => import(/* webpackChunkName: "reviews" */ '@/components/sections/Reviews'));
+const B2B = lazy(() => import(/* webpackChunkName: "b2b" */ '@/components/sections/B2B'));
+const FAQ = lazy(() => import(/* webpackChunkName: "faq" */ '@/components/sections/FAQ'));
+const OrderForm = lazy(() => import(/* webpackChunkName: "order-form" */ '@/components/OrderForm'));
+const Footer = lazy(() => import(/* webpackChunkName: "footer" */ '@/components/Footer'));
 
 const App: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
   
   const [lastOrder, setLastOrder] = useState<NotificationData | null>(null);
 
@@ -95,6 +96,10 @@ const App: React.FC = () => {
       return [...prev, { ...product, quantity }];
     });
     
+    // Show toast notification
+    setToastMessage(`${product.name} добавлен в корзину`);
+    setShowToast(true);
+    
     if (e) fireConfetti(e);
   };
 
@@ -135,6 +140,7 @@ const App: React.FC = () => {
         {/* Above-fold: Critical content loaded immediately */}
         <Hero />
         <ProblemSolution />
+        <WhyFreshBox />
         <Catalog onAdd={(p, e) => addToCart(p, 1, e)} onQuickView={setQuickViewProduct} />
         
         {/* Below-fold: Lazy-loaded sections (load on scroll) */}
@@ -179,6 +185,15 @@ const App: React.FC = () => {
         isOpen={!!quickViewProduct} 
         onClose={() => setQuickViewProduct(null)}
         onAddToCart={addToCart}
+      />
+
+      {/* Toast Notification */}
+      <Toast 
+        message={toastMessage}
+        isVisible={showToast}
+        onClose={() => setShowToast(false)}
+        duration={2000}
+        type="success"
       />
 
       <button

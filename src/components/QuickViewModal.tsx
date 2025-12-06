@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
-import type { Product } from '../types';
+import type { Product } from '@/types';
 import { X, Plus, Minus, ShoppingBag, Flame, Star, Leaf } from 'lucide-react';
-import { useFocusTrap } from '../utils/useFocusTrap';
+import { useFocusTrap } from '@/hooks';
 
 interface QuickViewModalProps {
   product: Product | null;
@@ -50,7 +50,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen, onClos
         </button>
 
         {/* Image Side */}
-        <div className="w-full md:w-1/2 relative bg-gray-50 min-h-[300px] md:min-h-[500px] flex items-center justify-center p-8">
+        <div className="w-full md:w-1/2 relative bg-brand-bg min-h-[300px] md:min-h-[500px] flex items-center justify-center p-8">
            <img 
              src={product.image} 
              alt={`Фруктовый бокс ${product.name} — ${product.description} (быстрый просмотр)`} 
@@ -68,7 +68,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen, onClos
            <div className="mb-auto">
              <div className="flex gap-1 mb-4" role="img" aria-label="Рейтинг 5 звёзд">
                {[1,2,3,4,5].map(i => <Star key={i} size={16} strokeWidth={2.5} className="text-brand-yellow fill-current" aria-hidden="true" />)}
-               <span className="text-gray-400 text-sm font-bold ml-2">(42 отзыва)</span>
+               <span className="text-brand-text-soft text-sm font-bold ml-2">(42 отзыва)</span>
              </div>
              
              <h2 id="quick-view-title" className="text-3xl md:text-4xl font-extrabold text-brand-text mb-4 leading-tight">{product.name}</h2>
@@ -91,7 +91,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen, onClos
 
              <div className="flex gap-4">
                {/* Quantity */}
-               <div className="flex items-center bg-gray-50 rounded-[--radius-ui] border border-gray-100 p-1">
+               <div className="flex items-center bg-brand-bg rounded-[--radius-ui] border border-brand-accent/20 p-1">
                  <button 
                    onClick={() => setQty(Math.max(1, qty - 1))}
                    aria-label="Уменьшить количество"

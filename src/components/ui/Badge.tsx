@@ -41,7 +41,7 @@ const Badge: React.FC<BadgeProps> = ({
     warning: 'bg-brand-yellow/20 text-brand-text',
     info: 'bg-brand-accent-light/20 text-brand-text',
     danger: 'bg-red-500/10 text-red-600',
-    neutral: 'bg-gray-100 text-gray-600',
+    neutral: 'bg-brand-bg text-brand-text-soft',
   };
 
   // Size styles

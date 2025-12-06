@@ -5,11 +5,20 @@ interface ImageWithPlaceholderProps extends React.ImgHTMLAttributes<HTMLImageEle
   alt: string;
   placeholderClassName?: string;
   containerClassName?: string;
+  /** Enable WebP format with fallback (default: true) */
+  useWebP?: boolean;
+  /** Lazy load image (default: true for below-fold content) */
+  loading?: 'lazy' | 'eager';
 }
 
 /**
  * Premium image component with smooth fade-in and gradient placeholder
- * Shows brand-colored gradient while image loads, then fades in smoothly
+ * Features:
+ * - Automatic WebP format detection with fallback
+ * - Lazy loading for performance
+ * - Async decoding to prevent blocking
+ * - Zero layout shift with absolute positioning
+ * - Smooth fade-in transition
  */
 const ImageWithPlaceholder: React.FC<ImageWithPlaceholderProps> = ({
   src,
@@ -17,10 +26,61 @@ const ImageWithPlaceholder: React.FC<ImageWithPlaceholderProps> = ({
   placeholderClassName = '',
   containerClassName = '',
   className = '',
+  useWebP = true,
+  loading = 'lazy',
   ...props
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [imageSrc, setImageSrc] = useState(src);
+  const [supportsWebP, setSupportsWebP] = useState(true);
+
+  // Detect WebP support on mount
+  useEffect(() => {
+    if (!useWebP) {
+      setSupportsWebP(false);
+      return;
+    }
+
+    const checkWebPSupport = () => {
+      const canvas = document.createElement('canvas');
+      if (canvas.getContext && canvas.getContext('2d')) {
+        // Check WebP support
+        return canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+      }
+      return false;
+    };
+
+    setSupportsWebP(checkWebPSupport());
+  }, [useWebP]);
+
+  // Convert image URL to WebP format if supported
+  useEffect(() => {
+    let finalSrc = src;
+
+    if (useWebP && supportsWebP) {
+      // For Unsplash images, add WebP format parameter
+      if (src.includes('unsplash.com')) {
+        const url = new URL(src);
+        url.searchParams.set('fm', 'webp');
+        finalSrc = url.toString();
+      }
+      // For Supabase images, add WebP conversion
+      else if (src.includes('supabase.co/storage')) {
+        // Supabase supports format transformation via URL params
+        const url = new URL(src);
+        url.searchParams.set('format', 'webp');
+        finalSrc = url.toString();
+      }
+      // For local images, try .webp extension
+      else if (src.startsWith('/')) {
+        const webpSrc = src.replace(/\.(jpg|jpeg|png)$/i, '.webp');
+        finalSrc = webpSrc;
+      }
+    }
+
+    setImageSrc(finalSrc);
+  }, [src, useWebP, supportsWebP]);
 
   useEffect(() => {
     // Reset states when src changes
@@ -29,26 +89,31 @@ const ImageWithPlaceholder: React.FC<ImageWithPlaceholderProps> = ({
 
     // Preload image
     const img = new Image();
-    img.src = src;
+    img.src = imageSrc;
     
     img.onload = () => {
       setIsLoaded(true);
     };
     
     img.onerror = () => {
-      setHasError(true);
-      setIsLoaded(true); // Show alt text
+      // If WebP fails, try fallback to original format
+      if (useWebP && imageSrc !== src) {
+        setImageSrc(src);
+      } else {
+        setHasError(true);
+        setIsLoaded(true); // Show alt text
+      }
     };
 
     return () => {
       img.onload = null;
       img.onerror = null;
     };
-  }, [src]);
+  }, [imageSrc, src, useWebP]);
 
   return (
     <div className={`relative overflow-hidden ${containerClassName}`}>
-      {/* Placeholder gradient */}
+      {/* Placeholder gradient - absolute positioned */}
       {!isLoaded && (
         <div
           className={`absolute inset-0 bg-gradient-to-br from-brand-accent-light/40 via-brand-bg to-brand-yellow/30 animate-pulse ${placeholderClassName}`}
@@ -59,11 +124,13 @@ const ImageWithPlaceholder: React.FC<ImageWithPlaceholderProps> = ({
         </div>
       )}
 
-      {/* Actual image */}
+      {/* Actual image - absolute positioned for zero layout shift */}
       <img
-        src={src}
+        src={imageSrc}
         alt={alt}
-        className={`${className} transition-opacity duration-500 ${
+        loading={loading}
+        decoding="async"
+        className={`absolute inset-0 ${className} transition-opacity duration-500 ${
           isLoaded ? 'opacity-100' : 'opacity-0'
         }`}
         {...props}
@@ -71,7 +138,7 @@ const ImageWithPlaceholder: React.FC<ImageWithPlaceholderProps> = ({
 
       {/* Error state (optional) */}
       {hasError && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-100 text-gray-400 text-sm">
+        <div className="absolute inset-0 flex items-center justify-center bg-brand-bg text-brand-text-soft text-sm">
           Image unavailable
         </div>
       )}

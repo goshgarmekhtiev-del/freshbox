@@ -83,7 +83,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             required={required}
             aria-invalid={error ? 'true' : 'false'}
             aria-describedby={error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined}
-            className={`${widthStyle} ${sizeStyles[inputSize]} ${iconPadding} rounded-[--radius-ui] border-2 ${borderStyle} focus:outline-none focus:ring-4 transition-all text-brand-text placeholder-brand-text-soft/70 font-medium disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 ${className}`}
+            className={`${widthStyle} ${sizeStyles[inputSize]} ${iconPadding} rounded-[--radius-ui] border-2 ${borderStyle} focus:outline-none focus:ring-4 transition-all text-brand-text placeholder-brand-text-soft/70 font-medium disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-brand-bg/50 ${className}`}
             {...props}
           />
         </div>

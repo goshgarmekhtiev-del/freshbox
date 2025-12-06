@@ -1,4 +1,5 @@
 import React from 'react';
+import Container from './Container';
 
 interface SectionDarkProps {
   children: React.ReactNode;
@@ -23,7 +24,7 @@ const SectionDark: React.FC<SectionDarkProps> = ({
   return (
     <section
       id={id}
-      className={`py-24 md:py-32 bg-gradient-to-br from-brand-text via-brand-text-soft to-brand-green text-white relative overflow-hidden ${className}`}
+      className={`py-16 md:py-24 lg:py-32 bg-gradient-to-br from-brand-text via-brand-text-soft to-brand-green text-white relative overflow-hidden ${className}`}
     >
       {/* Dark Background Pattern with Soft Accent Glows */}
       {withPattern && (
@@ -34,9 +35,9 @@ const SectionDark: React.FC<SectionDarkProps> = ({
         </>
       )}
 
-      <div className={`container mx-auto px-4 md:px-8 relative z-10 ${containerClassName}`}>
+      <Container className={containerClassName}>
         {children}
-      </div>
+      </Container>
     </section>
   );
 };
