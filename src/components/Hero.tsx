@@ -36,12 +36,12 @@ const Hero: React.FC = () => {
             
             {/* Bold, Confident Typography - Mobile Optimized */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-black leading-tight tracking-tight text-brand-text">
-              Fresh.
+              Свежие.
               <span className="block mt-3 md:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">
-                Juicy.
+                Сочные.
               </span>
               <span className="block mt-3 md:mt-4 text-transparent bg-clip-text bg-gradient-to-r from-brand-green via-brand-green to-brand-yellow">
-                Yours.
+                Твои.
               </span>
             </h1>
             
