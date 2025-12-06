@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Building2, ArrowRight, TrendingUp, Users, Shield, Gift } from 'lucide-react';
-import B2BForm from '../B2BForm';
+import B2BForm from '@/components/B2BForm';
 import { useReveal, useStaggeredReveal } from '@/hooks';
 import { SectionAccent } from '@/components/ui';
 
