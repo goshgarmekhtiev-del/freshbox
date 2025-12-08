@@ -136,7 +136,7 @@ const App: React.FC = () => {
       
       <Navbar cartCount={cartCount} onOpenCart={() => setIsCartOpen(true)} />
       
-      <main className="relative z-10">
+      <main className="relative z-10 pt-20">
         {/* Above-fold: Critical content loaded immediately */}
         <Hero />
         <ProblemSolution />
@@ -150,11 +150,11 @@ const App: React.FC = () => {
         }>
           <Benefits />
           <HowItWorks />
+          <Catalog onAdd={(p, e) => addToCart(p, 1, e)} onQuickView={setQuickViewProduct} />
+          <Configurator onAddCustom={(p, e) => addToCart(p, 1, e)} />
           <Reviews />
           <B2B />
           <FAQ />
-          <Catalog onAdd={(p, e) => addToCart(p, 1, e)} onQuickView={setQuickViewProduct} />
-          <Configurator onAddCustom={(p, e) => addToCart(p, 1, e)} />
           <OrderForm 
             cart={cart} 
             onSubmit={handleOrderSubmit} 

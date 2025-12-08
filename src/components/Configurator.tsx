@@ -5,7 +5,7 @@ import type { Product } from '@/types';
 import { CONFIGURATOR_IMAGES } from '@/constants';
 import { Sparkles, ArrowRight, Package, Box, Container } from 'lucide-react';
 import { useReveal } from '@/hooks';
-import { Button, Badge, ImageWithPlaceholder } from '@/components/ui';
+import { Button, ImageWithPlaceholder } from '@/components/ui';
 
 interface ConfiguratorProps {
   onAddCustom: (product: Product, e: React.MouseEvent) => void;
@@ -16,6 +16,7 @@ const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
   const [type, setType] = useState<BoxType>(BoxType.CLASSIC);
   const [comment, setComment] = useState('');
   
+  const { ref: sectionRef, isVisible: sectionVisible } = useReveal({ threshold: 0.1 });
   const { ref: configRef, isVisible: configVisible } = useReveal({ threshold: 0.2 });
   
   // Image state
@@ -64,60 +65,62 @@ const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
   };
 
   return (
-    <section id="configurator" className="py-24 bg-white reveal">
-      <div className="container mx-auto px-4 md:px-8">
-        <div ref={configRef as React.RefObject<HTMLDivElement>} className={`grid lg:grid-cols-12 gap-12 items-center reveal reveal-fade-up ${configVisible ? 'reveal-visible' : ''}`}>
+    <section id="configurator" ref={sectionRef as React.RefObject<HTMLElement>} className={`py-16 md:py-20 lg:py-24 bg-white reveal ${sectionVisible ? 'reveal-visible' : ''}`}>
+      <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+        {/* Header - Centered */}
+        <div className="text-center mb-12 md:mb-16 lg:mb-20">
+          <div className="inline-block px-4 py-1.5 rounded-full bg-brand-accent/8 border border-brand-accent/15 text-brand-accent font-bold text-xs uppercase tracking-widest mb-8">
+            Конструктор
+          </div>
+          <h2 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-brand-text leading-[0.9] mb-8 max-w-4xl mx-auto">
+            Собери свой <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">идеал</span>
+          </h2>
+          <p className="text-xl md:text-2xl lg:text-3xl text-brand-text-soft max-w-3xl mx-auto leading-relaxed">
+            Не любишь киви? Хочешь только манго? Без проблем. Мы соберем бокс точно по твоим правилам.
+          </p>
+        </div>
+
+        <div ref={configRef as React.RefObject<HTMLDivElement>} className={`grid lg:grid-cols-12 gap-12 lg:gap-20 items-start reveal reveal-fade-up ${configVisible ? 'reveal-visible' : ''}`}>
           
           {/* Form Side */}
           <div className="lg:col-span-7 order-2 lg:order-1">
-            <span className="mb-4 inline-block transform -rotate-1">
-              <Badge variant="primary" size="sm">Творчество</Badge>
-            </span>
-            <h2 className="text-brand-h2 mb-6">Собери свой <span className="text-brand-accent">идеал</span></h2>
-            <p className="text-brand-body text-brand-text-soft mb-10 max-w-lg">
-              Не любишь киви? Хочешь только манго? Без проблем. Мы соберем бокс точно по твоим правилам.
-            </p>
 
-            <div className="space-y-8 bg-brand-bg p-8 rounded-[--radius-card] border border-gray-100 shadow-xl relative overflow-hidden">
-               {/* Decorative background blur inside card */}
-               <div className="absolute -top-10 -right-10 w-40 h-40 bg-brand-accent-light/30 rounded-full blur-3xl pointer-events-none"></div>
-
-              {/* Size Selection - Visual Cards */}
+            <div className="space-y-10 bg-white p-10 md:p-12 lg:p-14 rounded-[--radius-card] border border-brand-text/5 shadow-[--shadow-soft]">
+              {/* Size Selection */}
               <div>
-                <label className="block text-xs font-black text-brand-text/60 uppercase tracking-widest mb-4 ml-1">1. Размер</label>
+                <label className="block text-sm font-bold text-brand-text mb-6">1. Размер</label>
                 <div className="grid grid-cols-3 gap-4">
                   {Object.values(BoxSize).map((s) => (
                     <button
                       key={s}
                       onClick={() => setSize(s)}
-                      className={`py-6 px-2 rounded-[--radius-ui] transition-all duration-300 border-2 flex flex-col items-center justify-center gap-3 group relative overflow-hidden ${
+                      className={`py-8 px-4 rounded-2xl transition-all duration-300 border-2 flex flex-col items-center justify-center gap-4 ${
                         size === s 
-                          ? 'bg-white border-brand-accent shadow-xl shadow-brand-accent/20 transform scale-105 z-10' 
-                          : 'bg-white/50 border-transparent hover:bg-white hover:border-brand-text/10'
+                          ? 'bg-gradient-to-br from-brand-accent to-brand-accent-dark text-white border-brand-accent shadow-[--shadow-elevated] scale-105' 
+                          : 'bg-white border-brand-text/10 hover:border-brand-accent/30 hover:bg-brand-accent/5'
                       }`}
                     >
-                      <div className={`transition-colors duration-300 ${size === s ? 'text-brand-accent' : 'text-brand-text/40 group-hover:text-brand-text/70'}`}>
+                      <div className={`transition-colors duration-300 ${size === s ? 'text-white' : 'text-brand-text/40'}`}>
                         <SizeIcon s={s} />
                       </div>
-                      <span className={`text-sm font-bold ${size === s ? 'text-brand-text' : 'text-brand-text/60'}`}>{s.split(' ')[0]}</span>
-                      {size === s && <div className="absolute inset-0 border-2 border-brand-accent rounded-[--radius-ui]"></div>}
+                      <span className={`text-sm font-bold ${size === s ? 'text-white' : 'text-brand-text'}`}>{s.split(' ')[0]}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Type Selection - Tags */}
+              {/* Type Selection */}
               <div>
-                <label className="block text-xs font-black text-brand-text/60 uppercase tracking-widest mb-4 ml-1">2. Наполнение</label>
+                <label className="block text-sm font-bold text-brand-text mb-6">2. Наполнение</label>
                 <div className="flex flex-wrap gap-3">
                   {Object.values(BoxType).map((t) => (
                     <button
                       key={t}
                       onClick={() => setType(t)}
-                      className={`py-3 px-6 rounded-[--radius-ui] text-sm transition-all duration-300 border-2 font-bold ${
+                      className={`py-4 px-6 rounded-xl text-base transition-all duration-300 border-2 font-bold ${
                         type === t 
-                          ? 'bg-brand-text text-white border-brand-text shadow-lg transform -translate-y-1' 
-                          : 'bg-white border-transparent text-brand-text/70 hover:bg-white hover:border-brand-accent/30'
+                          ? 'bg-brand-text text-white border-brand-text shadow-[--shadow-elevated]' 
+                          : 'bg-white border-brand-text/10 text-brand-text hover:border-brand-accent/30'
                       }`}
                     >
                       {t}
@@ -128,29 +131,28 @@ const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
 
               {/* Comment */}
               <div>
-                <label className="block text-xs font-black text-brand-text/60 uppercase tracking-widest mb-4 ml-1">3. Пожелания</label>
+                <label className="block text-sm font-bold text-brand-text mb-6">3. Пожелания</label>
                 <textarea
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   placeholder="Например: побольше ананасов, без яблок..."
-                  className="w-full p-5 rounded-[--radius-ui] border-2 border-transparent bg-white shadow-sm focus:border-brand-accent focus:ring-4 focus:ring-brand-accent/10 outline-none h-28 text-brand-text placeholder-gray-300 resize-none transition-all font-bold"
+                  className="w-full p-5 rounded-xl border-2 border-brand-text/10 bg-white focus:border-brand-accent focus:ring-4 focus:ring-brand-accent/10 outline-none h-32 text-brand-text placeholder-brand-text-soft resize-none transition-all font-medium"
                 />
               </div>
 
               {/* Total & Action */}
-              <div className="pt-6 border-t border-brand-text/5 flex flex-col sm:flex-row items-center justify-between gap-6 relative z-10">
+              <div className="pt-8 border-t border-brand-text/5 flex flex-col sm:flex-row items-center justify-between gap-6">
                 <div>
-                  <span className="text-xs text-brand-text-soft uppercase tracking-wider font-bold">Цена за бокс</span>
-                  <div className="text-2xl md:text-3xl font-bold leading-snug tracking-tight text-brand-text mt-1">{getPrice().toLocaleString()} ₽</div>
+                  <span className="text-sm text-brand-text-soft uppercase tracking-wider font-bold">Цена за бокс</span>
+                  <div className="text-4xl md:text-5xl font-black text-brand-text mt-2">{getPrice().toLocaleString()} ₽</div>
                 </div>
                 <Button
                   variant="primary"
                   size="lg"
                   onClick={handleAdd}
-                  fullWidth={true}
                   icon={<ArrowRight size={20} strokeWidth={2.5} className="group-hover:translate-x-1 transition-transform" />}
                   iconPosition="right"
-                  className="sm:w-auto shadow-xl shadow-brand-accent/30 hover:shadow-2xl"
+                  className="px-8 py-4 text-lg sm:w-auto"
                 >
                   В корзину
                 </Button>
@@ -158,26 +160,26 @@ const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
             </div>
           </div>
 
-          {/* Image Side - Now Dynamic! */}
-          <div className="lg:col-span-5 order-1 lg:order-2 h-full">
-            <div className="relative h-full aspect-[4/5] rounded-[--radius-card] overflow-hidden shadow-[--shadow-elevated] border-4 border-white group">
+          {/* Image Side - Modern Preview */}
+          <div className="lg:col-span-5 order-1 lg:order-2">
+            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-gradient-to-br from-brand-accent-light/20 to-brand-yellow/20 border border-brand-text/5 shadow-[--shadow-elevated] group">
               <ImageWithPlaceholder
                 src={currentImage}
-                alt={`Превью фруктового бокса FreshBox — ${type} (конфигуратор авторской сборки)`}
+                alt={`Превью фруктового бокса FreshBox — ${type}`}
                 containerClassName="absolute inset-0"
                 className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
                 loading="lazy"
                 useWebP={true}
                 style={{ opacity: imageOpacity }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-              <div className="absolute bottom-10 left-10 right-10 text-white">
-                 <div className="w-14 h-14 rounded-full bg-brand-accent flex items-center justify-center mb-6">
-                    <Sparkles size={28} strokeWidth={2.5} className="text-white" fill="currentColor" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+              <div className="absolute bottom-8 left-8 right-8 text-white">
+                 <div className="w-12 h-12 rounded-xl bg-brand-accent flex items-center justify-center mb-4">
+                    <Sparkles size={24} strokeWidth={2.5} className="text-white" fill="currentColor" />
                  </div>
-                 <p className="text-2xl md:text-3xl font-bold leading-snug tracking-tight mb-2">{type}</p>
-                 <p className="text-white/90 font-bold text-lg leading-relaxed">
-                   Мы соберем уникальный набор специально для тебя.
+                 <p className="text-2xl md:text-3xl font-black leading-tight mb-2">{type}</p>
+                 <p className="text-white/90 font-medium text-base leading-relaxed">
+                   Уникальный набор специально для тебя
                  </p>
               </div>
             </div>

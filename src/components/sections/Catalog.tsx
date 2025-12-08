@@ -1,11 +1,11 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { PRODUCTS } from '@/constants';
 import type { Product } from '@/types';
-import { Zap } from 'lucide-react';
 import CatalogFilters from '../CatalogFilters';
 import CatalogGrid from '../CatalogGrid';
 import SkeletonCard from '../SkeletonCard';
 import { SectionAccent, Button } from '@/components/ui';
+import { useReveal } from '@/hooks';
 
 interface CatalogProps {
   onAdd: (product: Product, e: React.MouseEvent) => void; 
@@ -16,6 +16,7 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [sortOption, setSortOption] = useState('popularity');
   const [isLoading, setIsLoading] = useState(true);
+  const { ref: sectionRef, isVisible: sectionVisible } = useReveal({ threshold: 0.1 });
 
   // Simulate initial loading (in real app, this would be data fetching)
   useEffect(() => {
@@ -76,25 +77,26 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
   }, [activeCategory, sortOption]);
 
   return (
-    <SectionAccent id="catalog" paddingY="large" className="reveal">
-      {/* Section Header - Premium with Design System */}
-      <div className="text-center mb-20 space-y-8">
-          <div className="inline-flex items-center gap-3 px-7 py-4 rounded-full bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow text-white font-black uppercase text-xs tracking-[0.15em] shadow-deep shadow-brand-accent/50 border-3 border-white/30">
-            <Zap size={18} className="fill-white" strokeWidth={2.5} />
-            <span>Fresh Selection</span>
-          </div>
-          
-          <h2 className="text-brand-h2">
-            Premium
-            <span className="block mt-4 text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">
-              Fruit Boxes
-            </span>
-          </h2>
-          
-          <p className="text-brand-body max-w-3xl mx-auto">
-            Handpicked fresh fruits, delivered with love
-          </p>
+    <SectionAccent
+      id="catalog"
+      ref={sectionRef}
+      paddingY="large"
+      className={`reveal ${sectionVisible ? 'reveal-visible' : ''}`}
+    >
+      {/* Section Header - Centered, Bold */}
+      <div className="max-w-7xl mx-auto mb-12 md:mb-16 lg:mb-20 text-center">
+        <div className="inline-block px-4 py-1.5 rounded-full bg-brand-accent/8 border border-brand-accent/15 text-brand-accent font-bold text-xs uppercase tracking-widest mb-8">
+          Каталог
         </div>
+        
+        <h2 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-brand-text leading-[0.9] mb-8 max-w-5xl mx-auto">
+          Премиальные <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">фруктовые боксы</span>
+        </h2>
+        
+        <p className="text-xl md:text-2xl lg:text-3xl text-brand-text-soft max-w-3xl mx-auto leading-relaxed">
+          Отборные свежие фрукты, собранные с любовью и доставленные прямо к вашей двери
+        </p>
+      </div>
 
         {/* Modern Minimalistic Controls */}
         <CatalogFilters
@@ -126,20 +128,21 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
           />
         )}
         
-        {/* Empty State - Premium */}
+        {/* Empty State - Modern */}
         {filteredProducts.length === 0 && (
           <div className="text-center py-32">
-            <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-brand-accent-light via-brand-accent-light to-brand-yellow rounded-full mb-8 shadow-medium">
-              <span className="text-5xl">🍊</span>
+            <div className="inline-flex items-center justify-center w-32 h-32 rounded-3xl bg-gradient-to-br from-brand-accent/10 to-brand-yellow/10 mb-8">
+              <span className="text-6xl">🍊</span>
             </div>
-            <p className="text-2xl md:text-3xl font-bold leading-snug tracking-tight text-brand-text mb-4">Nothing here</p>
-            <p className="text-lg font-medium text-brand-text-soft leading-relaxed mb-8">Try a different category</p>
+            <p className="text-3xl md:text-4xl font-black text-brand-text mb-4">Здесь пока пусто</p>
+            <p className="text-lg md:text-xl text-brand-text-soft mb-8">Попробуйте выбрать другую категорию</p>
             <Button
               variant="primary"
               size="lg"
               onClick={() => setActiveCategory('all')}
+              className="px-8 py-4 text-lg"
             >
-              Show All Boxes
+              Показать все боксы
             </Button>
           </div>
         )}

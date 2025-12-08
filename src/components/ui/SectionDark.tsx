@@ -14,17 +14,18 @@ interface SectionDarkProps {
  * Background: Dark green gradient (brand-text → brand-text-soft → brand-green)
  * Usage: Footer, Benefits, high-contrast emphasis sections
  */
-const SectionDark: React.FC<SectionDarkProps> = ({
+const SectionDark = React.forwardRef<HTMLElement, SectionDarkProps>(({
   children,
   id,
   className = '',
   withPattern = true,
   containerClassName = '',
-}) => {
+}, ref) => {
   return (
     <section
+      ref={ref}
       id={id}
-      className={`py-16 md:py-24 lg:py-32 bg-gradient-to-br from-brand-text via-brand-text-soft to-brand-green text-white relative overflow-hidden ${className}`}
+      className={`py-12 md:py-16 lg:py-20 bg-gradient-to-br from-brand-text via-brand-text-soft to-brand-green text-white relative overflow-hidden ${className}`}
     >
       {/* Dark Background Pattern with Soft Accent Glows */}
       {withPattern && (
@@ -40,6 +41,8 @@ const SectionDark: React.FC<SectionDarkProps> = ({
       </Container>
     </section>
   );
-};
+});
+
+SectionDark.displayName = 'SectionDark';
 
 export default SectionDark;

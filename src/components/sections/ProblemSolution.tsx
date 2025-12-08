@@ -1,9 +1,10 @@
 import React from 'react';
 import { Clock, Gift, Zap, CheckCircle2, Heart } from 'lucide-react';
-import { useStaggeredReveal } from '@/hooks';
+import { useReveal, useStaggeredReveal } from '@/hooks';
 import { SectionLight } from '@/components/ui';
 
 const ProblemSolution: React.FC = () => {
+  const { ref: sectionRef, isVisible: sectionVisible } = useReveal({ threshold: 0.1 });
   const cardReveals = useStaggeredReveal(3, 100, 150);
 
   const cards = [
@@ -46,37 +47,64 @@ const ProblemSolution: React.FC = () => {
   ];
 
   return (
-    <SectionLight className="reveal" withBlobs={true}>
-      <div className="text-center mb-16">
-         <h2 className="text-4xl md:text-5xl font-extrabold leading-tight text-brand-text tracking-tight mb-4">Почему выбирают нас?</h2>
-         <p className="text-lg font-medium text-brand-text-soft leading-relaxed max-w-2xl mx-auto">Мы решаем главную проблему — где найти вкусные фрукты в мегаполисе</p>
-      </div>
-
-      <div className="grid md:grid-cols-3 gap-8 md:gap-10">
-        {cards.map((card, index) => (
-          <div 
-            key={index}
-            ref={cardReveals[index].ref as React.RefObject<HTMLDivElement>}
-            className={`group bg-white p-8 rounded-[--radius-card] shadow-[--shadow-soft] hover:shadow-[--shadow-elevated] transition-all duration-300 hover:-translate-y-2 border-2 border-transparent ${card.hoverBorder} reveal reveal-scale-in ${cardReveals[index].isVisible ? 'reveal-visible' : ''}`}
-          >
-            <div className={`w-20 h-20 rounded-[--radius-ui] bg-gradient-to-br ${card.gradient} flex items-center justify-center text-white mb-8 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-              {card.icon}
-            </div>
-            <h3 className="text-2xl md:text-3xl font-bold leading-snug tracking-tight text-brand-text mb-4">
-              {card.title} <br/>{card.titleBreak}
-            </h3>
-            <p className="text-lg font-medium text-brand-text-soft leading-relaxed mb-6">
-              {card.text}
-            </p>
-            <div className={`inline-flex items-center gap-2 ${
-              card.badgeColor === 'orange' ? 'text-brand-accent bg-brand-accent/10' :
-              card.badgeColor === 'green' ? 'text-brand-green bg-brand-green/10' :
-              'text-brand-accent bg-brand-accent/10'
-            } font-black text-sm uppercase tracking-wider px-4 py-2 rounded-lg`}>
-              {card.badgeIcon} {card.badge}
-            </div>
+    <SectionLight ref={sectionRef} className={`reveal ${sectionVisible ? 'reveal-visible' : ''}`} withBlobs={true}>
+      <div className="max-w-7xl mx-auto">
+        {/* Header - Centered, Bold */}
+        <div className="text-center mb-12 md:mb-16 lg:mb-20">
+          <div className="inline-block px-4 py-1.5 rounded-full bg-brand-accent/8 border border-brand-accent/15 text-brand-accent font-bold text-xs uppercase tracking-widest mb-8">
+            Решение проблемы
           </div>
-        ))}
+          <h2 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-brand-text leading-[0.9] mb-8 max-w-5xl mx-auto">
+            Где найти <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">вкусные фрукты</span> в мегаполисе?
+          </h2>
+          <p className="text-xl md:text-2xl lg:text-3xl text-brand-text-soft max-w-3xl mx-auto leading-relaxed">
+            Мы решаем эту проблему раз и навсегда
+          </p>
+        </div>
+
+        {/* Cards - Modern Grid Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12">
+          {cards.map((card, index) => (
+            <div 
+              key={index}
+              ref={cardReveals[index].ref as React.RefObject<HTMLDivElement>}
+              className={`group relative overflow-hidden bg-white rounded-[--radius-card] p-10 md:p-12 lg:p-14 border border-brand-text/5 hover:border-brand-accent/20 transition-all duration-500 hover:shadow-[--shadow-elevated] hover:-translate-y-2 reveal reveal-fade-up ${cardReveals[index].isVisible ? 'reveal-visible' : ''}`}
+            >
+              {/* Background Gradient Accent - Subtle */}
+              <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${
+                card.badgeColor === 'orange' ? 'bg-gradient-to-br from-brand-accent/3 to-transparent' :
+                card.badgeColor === 'green' ? 'bg-gradient-to-br from-brand-green/3 to-transparent' :
+                'bg-gradient-to-br from-brand-yellow/3 to-transparent'
+              }`}></div>
+              
+              {/* Icon - Large, Centered */}
+              <div className={`relative z-10 flex justify-center mb-8`}>
+                <div className={`w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-gradient-to-br ${card.gradient} flex items-center justify-center text-white shadow-[--shadow-elevated] group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
+                  <div className="scale-125">
+                    {card.icon}
+                  </div>
+                </div>
+              </div>
+
+              {/* Content - Centered */}
+              <div className="relative z-10 text-center">
+                <h3 className="text-2xl md:text-3xl lg:text-4xl font-black text-brand-text leading-tight mb-4">
+                  {card.title} <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-brand-accent-dark">{card.titleBreak}</span>
+                </h3>
+                <p className="text-base md:text-lg text-brand-text-soft leading-relaxed mb-8">
+                  {card.text}
+                </p>
+                <div className={`inline-flex items-center gap-2.5 ${
+                  card.badgeColor === 'orange' ? 'text-brand-accent bg-brand-accent/8 border-brand-accent/15' :
+                  card.badgeColor === 'green' ? 'text-brand-green bg-brand-green/8 border-brand-green/15' :
+                  'text-brand-accent bg-brand-accent/8 border-brand-accent/15'
+                } font-bold text-xs uppercase tracking-wider px-5 py-2.5 rounded-full border`}>
+                  {card.badgeIcon} {card.badge}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </SectionLight>
   );

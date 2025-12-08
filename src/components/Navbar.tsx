@@ -38,67 +38,66 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount, onOpenCart }) => {
 
   return (
     <nav 
-      className={`sticky top-0 left-0 w-full z-50 transition-all duration-500 ${
+      className={`fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-6xl z-50 transition-all duration-500 ${
         scrolled || isMenuOpen 
-          ? 'glass border-b-2 border-brand-accent/30 shadow-[--shadow-elevated] py-4' 
-          : 'bg-transparent py-6'
+          ? 'backdrop-blur-xl bg-white/90 border border-brand-accent/10 shadow-[--shadow-elevated] rounded-2xl py-3 px-6' 
+          : 'backdrop-blur-md bg-white/60 border border-white/20 shadow-[--shadow-soft] rounded-full py-3 px-4'
       }`}
     >
-      <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 flex items-center justify-between gap-4">
-        {/* Logo */}
+      <div className="flex items-center justify-between gap-6">
+        {/* Logo - Compact */}
         <div 
-          className="flex items-center gap-3 cursor-pointer group" 
+          className="flex items-center gap-2 cursor-pointer group flex-shrink-0" 
           onClick={() => window.scrollTo(0, 0)}
         >
-          <div className="text-2xl sm:text-3xl" role="img" aria-label="orange">🍊</div>
-          <span className="text-2xl sm:text-3xl md:text-4xl font-black text-brand-text tracking-tighter hover:scale-105 transition-transform duration-300">
-            Fresh<span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">.</span>Box
+          <div className="text-xl sm:text-2xl transition-transform duration-300 group-hover:rotate-12" role="img" aria-label="orange">🍊</div>
+          <span className="text-lg sm:text-xl font-black text-brand-text tracking-tight hover:scale-105 transition-transform duration-300 whitespace-nowrap">
+            Fresh<span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-brand-yellow">Box</span>
           </span>
         </div>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-6 lg:gap-10 text-brand-text font-bold text-base tracking-wide">
+        {/* Desktop Nav - Minimalist */}
+        <div className="hidden md:flex items-center gap-1 flex-1 justify-center">
           {['catalog', 'configurator', 'b2b', 'reviews'].map((item) => (
             <button 
               key={item}
               onClick={() => scrollTo(item)} 
-              className="relative py-2 hover:text-brand-accent transition-all duration-300 group"
+              className="relative px-4 py-2 text-brand-text/70 hover:text-brand-text font-medium text-sm transition-all duration-300 rounded-full hover:bg-brand-accent/5 group"
             >
               <span className="relative z-10">
                 {item === 'catalog' ? 'Фрукты' : 
                  item === 'configurator' ? 'Конструктор' :
                  item === 'b2b' ? 'Офисам' : 'Отзывы'}
               </span>
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow group-hover:w-full transition-all duration-300"></span>
             </button>
           ))}
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center gap-3 sm:gap-4">
+        {/* Actions - Compact */}
+        <div className="flex items-center gap-2 flex-shrink-0">
           <a 
             href="tel:+79990000000" 
-            className="hidden lg:flex items-center gap-2.5 px-5 py-3 glass-dark rounded-full font-bold text-sm text-brand-text hover:bg-gradient-to-r hover:from-brand-accent hover:via-brand-accent-dark hover:to-brand-yellow hover:text-white transition-all duration-300 hover:scale-105 shadow-[--shadow-soft] hover:shadow-[--shadow-elevated] border-2 border-brand-accent/20 hover:border-transparent"
+            className="hidden xl:flex items-center gap-2 px-4 py-2 rounded-full font-medium text-xs text-brand-text/70 hover:text-brand-accent hover:bg-brand-accent/5 transition-all duration-300 whitespace-nowrap"
           >
             <Phone size={16} strokeWidth={2.5} />
-            <span className="whitespace-nowrap">+7 (999) 000-00-00</span>
+            <span>+7 (999) 000-00-00</span>
           </a>
           
           <button 
             id="cart-trigger" 
             onClick={onOpenCart}
             aria-label={`Корзина: ${cartCount} ${cartCount === 1 ? 'товар' : 'товаров'}`}
-            className="relative min-w-[48px] min-h-[48px] px-4 sm:px-5 py-3 sm:py-3.5 bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow text-white rounded-full hover:scale-105 hover:brightness-110 active:scale-95 transition-all duration-300 shadow-[--shadow-soft] hover:shadow-[--shadow-elevated] group border-2 border-white/30"
+            className="relative min-w-[40px] min-h-[40px] px-4 py-2 bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow text-white rounded-full hover:scale-105 hover:brightness-110 active:scale-95 transition-all duration-300 shadow-[--shadow-elevated] group flex items-center justify-center"
           >
             <ShoppingBasket 
-              size={20} 
+              size={18} 
               strokeWidth={2.5} 
               className={`transition-transform duration-300 ${
                 cartBounce ? 'animate-cart-bounce' : ''
               }`} 
             />
             {cartCount > 0 && (
-              <span className={`absolute -top-1.5 -right-1.5 bg-brand-green text-white text-xs font-black min-w-[24px] h-6 px-1.5 flex items-center justify-center rounded-full border-2 border-white shadow-[--shadow-soft] transition-transform duration-300 ${
+              <span className={`absolute -top-1 -right-1 bg-brand-green text-white text-[10px] font-black min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full border-2 border-white shadow-[--shadow-elevated] transition-transform duration-300 ${
                 cartBounce ? 'scale-125' : 'scale-100'
               }`}>
                 {cartCount > 99 ? '99+' : cartCount}
@@ -108,24 +107,24 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount, onOpenCart }) => {
 
           <button 
             aria-label={isMenuOpen ? 'Закрыть меню' : 'Открыть меню'}
-            className="md:hidden p-2.5 text-brand-text hover:text-brand-accent transition-colors duration-300 active:scale-95 min-w-[44px] min-h-[44px] flex items-center justify-center"
+            className="md:hidden p-2 text-brand-text/70 hover:text-brand-accent transition-colors duration-300 active:scale-95 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-lg hover:bg-brand-accent/5"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            {isMenuOpen ? <X size={28} strokeWidth={2.5} /> : <Menu size={28} strokeWidth={2.5} />}
+            {isMenuOpen ? <X size={20} strokeWidth={2.5} /> : <Menu size={20} strokeWidth={2.5} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      <div className={`md:hidden absolute top-full left-0 w-full glass border-t-2 border-brand-accent/30 shadow-[--shadow-elevated] overflow-hidden transition-all duration-500 ease-in-out ${
+      {/* Mobile Menu - Floating Style */}
+      <div className={`md:hidden absolute top-full left-0 right-0 mt-2 backdrop-blur-xl bg-white/95 border border-brand-accent/10 shadow-[--shadow-elevated] rounded-2xl overflow-hidden transition-all duration-500 ease-in-out ${
         isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 pointer-events-none'
       }`}>
-        <div className="py-6 px-4 flex flex-col items-center gap-4">
+        <div className="py-4 px-4 flex flex-col items-stretch gap-2">
           {['catalog', 'configurator', 'b2b', 'reviews'].map((item, index) => (
             <button 
               key={item}
               onClick={() => scrollTo(item)} 
-              className="w-full max-w-xs py-3.5 px-6 text-xl font-bold text-brand-text hover:text-white hover:bg-gradient-to-r hover:from-brand-accent hover:via-brand-accent-dark hover:to-brand-yellow transition-all duration-300 rounded-full hover:scale-105 active:scale-95"
+              className="w-full py-3 px-4 text-base font-medium text-brand-text hover:text-brand-accent hover:bg-brand-accent/5 transition-all duration-300 rounded-xl text-left"
               style={{ animationDelay: `${index * 50}ms` }}
             >
               {item === 'catalog' ? 'Фрукты' : 
@@ -135,7 +134,7 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount, onOpenCart }) => {
           ))}
           <a 
             href="tel:+79990000000" 
-            className="mt-2 flex items-center gap-2.5 px-6 py-3 glass-dark rounded-full font-bold text-base text-brand-text hover:bg-gradient-to-r hover:from-brand-accent hover:via-brand-accent-dark hover:to-brand-yellow hover:text-white transition-all duration-300 hover:scale-105 shadow-[--shadow-soft] border-2 border-brand-accent/20"
+            className="mt-2 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium text-sm text-brand-text hover:text-white hover:bg-gradient-to-r hover:from-brand-accent hover:via-brand-accent-dark hover:to-brand-yellow transition-all duration-300"
           >
             <Phone size={18} strokeWidth={2.5} />
             <span>+7 (999) 000-00-00</span>

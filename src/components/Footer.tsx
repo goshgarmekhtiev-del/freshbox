@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Instagram, Send, Phone, MapPin, ArrowRight, Mail, Shield, Truck, Award, CheckCircle2 } from 'lucide-react';
 import { Container } from '@/components/ui';
+import { useReveal } from '@/hooks';
 
 const Footer: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -14,6 +15,8 @@ const Footer: React.FC = () => {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  const { ref: footerRef, isVisible: footerVisible } = useReveal({ threshold: 0.05 });
 
   const validateEmail = (value: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -61,20 +64,27 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer id="contacts" className="relative bg-gradient-to-br from-brand-text via-brand-text-soft to-brand-green text-white/90 py-12 md:py-16 reveal overflow-hidden border-t-2 border-brand-accent-light/20">
-      {/* Minimalist Background Accent */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-brand-accent/10 to-transparent rounded-full blur-[120px] opacity-30 pointer-events-none"></div>
+    <footer
+      id="contacts"
+      ref={footerRef}
+      className={`relative bg-gradient-to-b from-brand-text via-brand-text-soft to-brand-text text-white py-16 md:py-20 lg:py-24 reveal overflow-hidden ${
+        footerVisible ? 'reveal-visible' : ''
+      }`}
+    >
+      {/* Subtle Background Accent */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] md:w-[700px] md:h-[700px] bg-gradient-to-br from-brand-accent/6 to-transparent rounded-full blur-[150px] opacity-30 pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] md:w-[600px] md:h-[600px] bg-gradient-to-tr from-brand-green/5 to-transparent rounded-full blur-[150px] opacity-25 pointer-events-none"></div>
 
       <Container>
         
-        {/* Newsletter Section - Premium & Minimal */}
-        <div className="rounded-2xl p-8 md:p-10 mb-12 md:mb-16 border border-white/10 bg-white/5 backdrop-blur-sm flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="max-w-lg">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand-accent/30 to-brand-yellow/20 flex items-center justify-center mb-3">
-              <span className="text-2xl" role="img" aria-label="sparkles">✨</span>
+        {/* Newsletter Section - Modern & Clean */}
+        <div className="rounded-[--radius-card] p-10 md:p-12 lg:p-16 mb-12 md:mb-16 lg:mb-20 border border-white/10 bg-white/5 backdrop-blur-xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10 hover:border-brand-accent/30 hover:bg-white/8 transition-all duration-300 shadow-[--shadow-soft]">
+          <div className="max-w-2xl">
+            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-brand-accent/20 to-brand-yellow/15 flex items-center justify-center mb-6">
+              <span className="text-3xl" role="img" aria-label="sparkles">✨</span>
             </div>
-            <h3 className="text-brand-h3 text-white mb-2">Секретные акции</h3>
-            <p className="text-brand-body text-brand-text-soft">Подпишись, чтобы ловить скидки до 50% и новые экзотические поставки.</p>
+            <h3 className="text-3xl md:text-4xl font-black text-white mb-4">Секретные акции</h3>
+            <p className="text-lg md:text-xl text-white/70 leading-relaxed">Подпишись, чтобы получать скидки до 50% и узнавать о новых экзотических поставках первым.</p>
           </div>
           <form className="w-full md:w-auto flex-1 max-w-lg" onSubmit={handleEmailSubmit}>
             <div className="relative">
@@ -120,176 +130,154 @@ const Footer: React.FC = () => {
           </form>
         </div>
 
-        {/* Trust Badges - Simplified */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16">
-          <div className="rounded-xl p-6 border border-white/10 bg-white/5 backdrop-blur-sm hover:border-brand-accent/30 transition-all duration-300 group">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand-accent/30 to-brand-accent-dark/30 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300">
-              <Shield size={24} strokeWidth={2} className="text-white" />
+        {/* Trust Badges - Modern Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 mb-12 md:mb-16 lg:mb-20">
+          <div className="rounded-[--radius-card] p-8 md:p-10 border border-white/8 bg-white/3 backdrop-blur-sm hover:border-brand-accent/30 hover:bg-white/6 transition-all duration-300 group hover:-translate-y-2">
+            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-brand-accent/20 to-brand-accent-dark/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <Shield size={28} strokeWidth={2.5} className="text-white" />
             </div>
-            <h4 className="text-lg font-bold text-white mb-2">Гарантия свежести</h4>
-            <p className="text-brand-small text-brand-text-soft">Вернём деньги или заменим товар, если фрукты не совершенны</p>
+            <h4 className="text-xl md:text-2xl font-bold text-white mb-3">Гарантия свежести</h4>
+            <p className="text-base md:text-lg text-white/60 leading-relaxed">Вернём деньги или заменим товар, если фрукты не совершенны</p>
           </div>
           
-          <div className="rounded-xl p-6 border border-white/10 bg-white/5 backdrop-blur-sm hover:border-brand-accent/30 transition-all duration-300 group">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand-green/30 to-brand-accent/30 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300">
-              <Truck size={24} strokeWidth={2} className="text-white" />
+          <div className="rounded-[--radius-card] p-8 md:p-10 border border-white/8 bg-white/3 backdrop-blur-sm hover:border-brand-accent/30 hover:bg-white/6 transition-all duration-300 group hover:-translate-y-2">
+            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-brand-green/20 to-brand-accent/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <Truck size={28} strokeWidth={2.5} className="text-white" />
             </div>
-            <h4 className="text-lg font-bold text-white mb-2">Быстрая доставка</h4>
-            <p className="text-brand-small text-brand-text-soft">Привезём в течение 2 часов в пределах МКАД</p>
+            <h4 className="text-xl md:text-2xl font-bold text-white mb-3">Быстрая доставка</h4>
+            <p className="text-base md:text-lg text-white/60 leading-relaxed">Привезём в течение 2 часов в пределах МКАД</p>
           </div>
           
-          <div className="rounded-xl p-6 border border-white/10 bg-white/5 backdrop-blur-sm hover:border-brand-accent/30 transition-all duration-300 group">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand-yellow/30 to-brand-accent/30 flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300">
-              <Award size={24} strokeWidth={2} className="text-white" />
+          <div className="rounded-[--radius-card] p-8 md:p-10 border border-white/8 bg-white/3 backdrop-blur-sm hover:border-brand-accent/30 hover:bg-white/6 transition-all duration-300 group hover:-translate-y-2">
+            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-brand-yellow/20 to-brand-accent/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <Award size={28} strokeWidth={2.5} className="text-white" />
             </div>
-            <h4 className="text-lg font-bold text-white mb-2">Премиум качество</h4>
-            <p className="text-brand-small text-brand-text-soft">Отбираем каждый фрукт вручную перед отправкой</p>
+            <h4 className="text-xl md:text-2xl font-bold text-white mb-3">Премиум качество</h4>
+            <p className="text-base md:text-lg text-white/60 leading-relaxed">Отбираем каждый фрукт вручную перед отправкой</p>
           </div>
         </div>
 
-        {/* Main Footer Grid - Clean Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-10 md:mb-12">
+        {/* Main Footer Grid - Modern Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-16 lg:gap-20 mb-12 md:mb-16 lg:mb-20">
           
           {/* Brand Info */}
-          <div className="space-y-5 lg:col-span-2">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-accent/40 to-brand-accent-dark/40 flex items-center justify-center border border-white/20">
-                <span className="text-xl">🍊</span>
+          <div className="space-y-8 lg:col-span-2">
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-brand-accent/20 to-brand-accent-dark/20 flex items-center justify-center border border-white/10">
+                <span className="text-3xl">🍊</span>
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white">Fresh<span className="text-brand-accent">Box</span></h3>
-                <p className="text-xs font-medium text-brand-text-soft">Премиум фрукты с доставкой</p>
+                <h3 className="text-3xl md:text-4xl font-black text-white">Fresh<span className="text-brand-accent">Box</span></h3>
+                <p className="text-base font-medium text-white/50 mt-1">Премиум фрукты с доставкой</p>
               </div>
             </div>
             
-            <p className="text-brand-body text-brand-text-soft max-w-md">
+            <p className="text-lg md:text-xl text-white/60 max-w-xl leading-relaxed">
               Доставляем свежие фрукты высшего сорта прямо к вашей двери. 
               Заботимся о вашем здоровье и настроении.
             </p>
             
-            <div className="flex gap-3">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-accent hover:border-brand-accent transition-all duration-300">
-                <Instagram size={20} strokeWidth={2} />
+            <div className="flex gap-4">
+              <a href="#" className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-accent hover:border-brand-accent hover:scale-110 transition-all duration-300">
+                <Instagram size={22} strokeWidth={2} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-accent hover:border-brand-accent transition-all duration-300">
-                <Send size={20} strokeWidth={2} />
+              <a href="#" className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-accent hover:border-brand-accent hover:scale-110 transition-all duration-300">
+                <Send size={22} strokeWidth={2} />
               </a>
             </div>
           </div>
           
           {/* Contact Info */}
-          <div className="space-y-4">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Контакты</h4>
+          <div className="space-y-6">
+            <h4 className="text-xs font-bold text-white/50 uppercase tracking-widest mb-6">Контакты</h4>
             
-            <div className="space-y-4">
-              <div className="flex items-start gap-3 group cursor-pointer">
-                <div className="w-8 h-8 rounded-full bg-brand-accent/20 flex items-center justify-center text-white group-hover:bg-brand-accent/30 transition-colors duration-300">
-                  <Phone size={16} strokeWidth={2} />
+            <div className="space-y-5">
+              <div className="flex items-start gap-4 group cursor-pointer">
+                <div className="w-11 h-11 rounded-full bg-brand-accent/15 flex items-center justify-center text-white group-hover:bg-brand-accent/25 transition-colors duration-300 flex-shrink-0">
+                  <Phone size={20} strokeWidth={2} />
                 </div>
                 <div>
-                  <p className="text-white font-semibold text-sm">+7 (495) 123-45-67</p>
-                  <p className="text-brand-text-soft text-xs">Ежедневно с 9:00 до 22:00</p>
+                  <p className="text-white font-bold text-lg">+7 (495) 123-45-67</p>
+                  <p className="text-white/50 text-sm mt-1">Ежедневно с 9:00 до 22:00</p>
                 </div>
               </div>
               
-              <div className="flex items-start gap-3 group cursor-pointer">
-                <div className="w-8 h-8 rounded-full bg-brand-green/20 flex items-center justify-center text-white group-hover:bg-brand-green/30 transition-colors duration-300">
-                  <Mail size={16} strokeWidth={2} />
+              <div className="flex items-start gap-4 group cursor-pointer">
+                <div className="w-11 h-11 rounded-full bg-brand-green/15 flex items-center justify-center text-white group-hover:bg-brand-green/25 transition-colors duration-300 flex-shrink-0">
+                  <Mail size={20} strokeWidth={2} />
                 </div>
                 <div>
-                  <p className="text-white font-semibold text-sm">hello@freshbox.ru</p>
-                  <p className="text-brand-text-soft text-xs">Отвечаем в течение часа</p>
+                  <p className="text-white font-bold text-lg">hello@freshbox.ru</p>
+                  <p className="text-white/50 text-sm mt-1">Отвечаем в течение часа</p>
                 </div>
               </div>
               
               <div 
                 onClick={() => scrollTo('contacts')}
-                className="flex items-start gap-3 group cursor-pointer"
+                className="flex items-start gap-4 group cursor-pointer"
               >
-                <div className="w-8 h-8 rounded-full bg-brand-yellow/20 flex items-center justify-center text-white group-hover:bg-brand-yellow/30 transition-colors duration-300">
-                  <MapPin size={16} strokeWidth={2} />
+                <div className="w-11 h-11 rounded-full bg-brand-yellow/15 flex items-center justify-center text-white group-hover:bg-brand-yellow/25 transition-colors duration-300 flex-shrink-0">
+                  <MapPin size={20} strokeWidth={2} />
                 </div>
                 <div>
-                  <p className="text-white font-semibold text-sm">Москва</p>
-                  <p className="text-brand-text-soft text-xs">Доставка в пределах МКАД</p>
+                  <p className="text-white font-bold text-lg">Москва</p>
+                  <p className="text-white/50 text-sm mt-1">Доставка в пределах МКАД</p>
                 </div>
               </div>
             </div>
           </div>
           
           {/* Quick Links */}
-          <div className="space-y-4">
-            <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4">Навигация</h4>
+          <div className="space-y-6">
+            <h4 className="text-xs font-bold text-white/50 uppercase tracking-widest mb-6">Навигация</h4>
             
-            <ul className="space-y-2.5">
+            <ul className="space-y-4">
               <li>
                 <button 
                   onClick={() => scrollTo('catalog')} 
-                  className="text-brand-text-soft hover:text-brand-accent transition-all duration-300 text-left text-sm flex items-center gap-2 group"
+                  className="text-white/60 hover:text-white transition-all duration-300 text-left text-base flex items-center gap-3 group"
                 >
-                  <span className="w-1 h-1 rounded-full bg-brand-accent/50 group-hover:bg-brand-accent transition-colors"></span>
+                  <span className="w-2 h-2 rounded-full bg-brand-accent/40 group-hover:bg-brand-accent transition-colors flex-shrink-0"></span>
                   Каталог боксов
                 </button>
               </li>
               <li>
                 <button 
                   onClick={() => scrollTo('configurator')} 
-                  className="text-brand-text-soft hover:text-brand-accent transition-all duration-300 text-left text-sm flex items-center gap-2 group"
+                  className="text-white/60 hover:text-white transition-all duration-300 text-left text-base flex items-center gap-3 group"
                 >
-                  <span className="w-1 h-1 rounded-full bg-brand-accent/50 group-hover:bg-brand-accent transition-colors"></span>
+                  <span className="w-2 h-2 rounded-full bg-brand-accent/40 group-hover:bg-brand-accent transition-colors flex-shrink-0"></span>
                   Конструктор боксов
                 </button>
               </li>
               <li>
                 <button 
                   onClick={() => scrollTo('faq')} 
-                  className="text-brand-text-soft hover:text-brand-accent transition-all duration-300 text-left text-sm flex items-center gap-2 group"
+                  className="text-white/60 hover:text-white transition-all duration-300 text-left text-base flex items-center gap-3 group"
                 >
-                  <span className="w-1 h-1 rounded-full bg-brand-accent/50 group-hover:bg-brand-accent transition-colors"></span>
+                  <span className="w-2 h-2 rounded-full bg-brand-accent/40 group-hover:bg-brand-accent transition-colors flex-shrink-0"></span>
                   Зона доставки
                 </button>
               </li>
               <li>
                 <button 
                   onClick={() => scrollTo('b2b')} 
-                  className="text-brand-text-soft hover:text-brand-accent transition-all duration-300 text-left text-sm flex items-center gap-2 group"
+                  className="text-white/60 hover:text-white transition-all duration-300 text-left text-base flex items-center gap-3 group"
                 >
-                  <span className="w-1 h-1 rounded-full bg-brand-accent/50 group-hover:bg-brand-accent transition-colors"></span>
+                  <span className="w-2 h-2 rounded-full bg-brand-accent/40 group-hover:bg-brand-accent transition-colors flex-shrink-0"></span>
                   Бизнес-предложение
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => scrollTo('order-form')} 
-                  className="text-brand-text-soft hover:text-brand-accent transition-all duration-300 text-left text-sm flex items-center gap-2 group"
-                >
-                  <span className="w-1 h-1 rounded-full bg-brand-accent/50 group-hover:bg-brand-accent transition-colors"></span>
-                  Конфиденциальность
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => scrollTo('order-form')} 
-                  className="text-brand-text-soft hover:text-brand-accent transition-all duration-300 text-left text-sm flex items-center gap-2 group"
-                >
-                  <span className="w-1 h-1 rounded-full bg-brand-accent/50 group-hover:bg-brand-accent transition-colors"></span>
-                  Оферта
                 </button>
               </li>
             </ul>
           </div>
         </div>
         
-        {/* Bottom Bar - Minimal */}
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-xs gap-4 text-brand-text-soft">
+        {/* Bottom Bar - Clean */}
+        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/40">
+          <p>© {new Date().getFullYear()} FreshBox. Все права защищены</p>
           <p className="flex items-center gap-2">
-            <span>© {new Date().getFullYear()} FreshBox.</span>
-            <span className="hidden md:inline">Все права защищены</span>
-          </p>
-          <p className="flex items-center gap-1.5">
-            <span>Made with</span>
-            <span className="text-base" role="img" aria-label="orange">🍊</span>
-            <span>energy</span>
+            <span>Сделано с</span>
+            <span className="text-xl" role="img" aria-label="orange">🍊</span>
           </p>
         </div>
       </Container>

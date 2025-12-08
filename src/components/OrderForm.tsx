@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { CartItem, NotificationData } from '@/types';
-import { Loader2, Zap, CreditCard, ShoppingBag, Truck, Plus, Minus, Trash2, Calendar, ChevronLeft, ChevronRight, User, Phone, Mail, MapPin, MessageSquare } from 'lucide-react';
+import { Loader2, Zap, CreditCard, ShoppingBag, Truck, Plus, Minus, Trash2, Calendar, ChevronLeft, ChevronRight, User, MapPin, MessageSquare } from 'lucide-react';
 import { useReveal } from '@/hooks';
 
 interface OrderFormProps {
@@ -12,6 +12,7 @@ interface OrderFormProps {
 }
 
 const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrderComplete, onUpdateQty, onRemove }) => {
+  const { ref: sectionRef, isVisible: sectionVisible } = useReveal({ threshold: 0.1 });
   const { ref: formRef, isVisible: formVisible } = useReveal({ threshold: 0.15 });
 
   const [formData, setFormData] = useState({
@@ -231,22 +232,33 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
   };
 
   return (
-    <section id="order-form" className="py-24 md:py-32 bg-gradient-to-br from-orange-50 via-brand-accent-light to-lime-50 reveal relative overflow-hidden">
+    <section id="order-form" ref={sectionRef as React.RefObject<HTMLElement>} className={`py-16 md:py-20 lg:py-24 bg-gradient-to-br from-orange-50 via-brand-accent-light to-lime-50 reveal relative overflow-hidden ${sectionVisible ? 'reveal-visible' : ''}`}>
       {/* Accent Background Blobs - Orange & Yellow Glow */}
       <div className="absolute top-0 right-0 w-[700px] h-[700px] bg-gradient-to-br from-brand-accent/20 to-transparent rounded-full blur-[150px] opacity-60 pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-brand-yellow/15 to-transparent rounded-full blur-[150px] opacity-50 pointer-events-none"></div>
       
       <div className="container mx-auto px-6 md:px-12 lg:px-20 xl:px-24 max-w-7xl">
-        <div ref={formRef as React.RefObject<HTMLDivElement>} className={`bg-white rounded-[3rem] shadow-deep-xl grid lg:grid-cols-12 min-h-[700px] border-3 border-brand-accent-light/40 relative z-10 overflow-hidden reveal reveal-scale-in ${formVisible ? 'reveal-visible' : ''}`}>
+        <div className="mb-12 md:mb-16 lg:mb-20">
+          <div className="inline-block px-4 py-2 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-brand-accent font-bold text-xs uppercase tracking-wider mb-6">
+            Заказ
+          </div>
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-brand-text leading-[0.95] mb-6">
+            Оформление <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-brand-yellow">заказа</span>
+          </h2>
+          <p className="text-xl md:text-2xl text-brand-text-soft max-w-2xl leading-relaxed">
+            Заполните форму, и мы доставим свежие фрукты прямо к вашей двери
+          </p>
+        </div>
+        <div ref={formRef as React.RefObject<HTMLDivElement>} className={`bg-white rounded-3xl md:rounded-[2.5rem] shadow-[--shadow-elevated] grid lg:grid-cols-12 min-h-[700px] border border-brand-text/5 relative z-10 overflow-hidden reveal reveal-scale-in ${formVisible ? 'reveal-visible' : ''}`}>
           {/* Cart Summary Side */}
-          <div className="lg:col-span-5 bg-gradient-to-br from-brand-accent to-brand-accent-dark text-white p-8 md:p-12 lg:p-16 flex flex-col relative overflow-hidden rounded-t-[3rem] lg:rounded-tr-none lg:rounded-l-[3rem]">
+          <div className="lg:col-span-5 bg-gradient-to-br from-brand-accent to-brand-accent-dark text-white p-8 md:p-12 lg:p-16 flex flex-col relative overflow-hidden rounded-t-3xl md:rounded-t-[2.5rem] lg:rounded-tr-none lg:rounded-l-3xl md:lg:rounded-l-[2.5rem]">
             <div className="relative z-10">
-              <h2 className="text-brand-h2 text-white mb-8 flex items-center gap-3">
+              <h2 className="text-3xl md:text-4xl font-black text-white mb-8 flex items-center gap-3">
                 <ShoppingBag size={32} strokeWidth={2.5} className="text-white" /> Ваш заказ
               </h2>
               {/* Free Shipping Progress */}
               {cart.length > 0 && (
-                <div className="bg-white/15 backdrop-blur-sm rounded-[--radius-ui] p-5 border border-white/20 mb-8 shadow-medium">
+                <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-6 border border-white/20 mb-8">
                   {remainingForFreeShipping > 0 ? (
                     <>
                       <p className="text-sm font-black text-white mb-3 flex items-center gap-2">
@@ -268,15 +280,15 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
               )}
               <div className="flex-1 relative z-10 overflow-y-auto pr-2 custom-scrollbar mt-4">
                 {cart.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-center opacity-70 border-2 border-dashed border-white/20 rounded-[--radius-ui] p-8 bg-white/5">
-                     <p className="font-black text-xl mb-2">В корзине пусто :(</p>
-                     <p className="text-white/80 font-medium mt-1">Добавьте сочных фруктов!</p>
+                  <div className="h-full flex flex-col items-center justify-center text-center border-2 border-dashed border-white/20 rounded-2xl p-12 bg-white/5 backdrop-blur-sm">
+                     <p className="font-black text-2xl md:text-3xl mb-3 text-white">В корзине пусто</p>
+                     <p className="text-white/80 font-medium text-lg md:text-xl">Добавьте сочных фруктов!</p>
                   </div>
                 ) : (
                   <div className="space-y-5">
                     {cart.map((item) => (
-                      <div key={item.id} className="flex gap-5 items-center bg-white/10 p-4 rounded-[--radius-ui] border border-white/10 hover:bg-white/15 transition-all duration-300 group">
-                        <div className="w-20 h-20 rounded-[--radius-ui] bg-white overflow-hidden flex-shrink-0 border-2 border-white/20 shadow-medium">
+                      <div key={item.id} className="flex gap-5 items-center bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/15 hover:bg-white/20 transition-all duration-300 group">
+                        <div className="w-20 h-20 rounded-xl bg-white overflow-hidden flex-shrink-0 border border-white/20">
                            <img src={item.image} alt={`Изображение товара в корзине — ${item.name}`} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -319,11 +331,11 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
                 )}
               </div>
               <div className="mt-10 pt-8 border-t border-white/20 relative z-10">
-                <div className="flex justify-between items-end mb-8">
-                  <span className="text-white/80 font-black uppercase tracking-wider text-sm">Итого к оплате</span>
-                  <span className="text-2xl md:text-3xl font-bold leading-snug tracking-tight text-white">{total.toLocaleString()} ₽</span>
+                <div className="flex justify-between items-end mb-6">
+                  <span className="text-white/70 font-bold uppercase tracking-wider text-sm">Итого к оплате</span>
+                  <span className="text-3xl md:text-4xl font-black text-white">{total.toLocaleString()} ₽</span>
                 </div>
-                <div className="bg-white/15 p-5 rounded-[--radius-ui] flex items-start gap-4 text-sm text-white/90 border border-white/10 backdrop-blur-sm shadow-medium">
+                <div className="bg-white/10 p-5 rounded-xl flex items-start gap-4 text-sm text-white/80 border border-white/10 backdrop-blur-sm">
                    <Zap size={24} strokeWidth={2.5} className="text-brand-accent-light flex-shrink-0 mt-0.5" />
                    <span className="font-medium leading-relaxed">
                      {remainingForFreeShipping > 0 
@@ -335,25 +347,24 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
             </div>
           </div>
           {/* Form Side */}
-          <div className="lg:col-span-7 p-8 md:p-12 lg:p-16 bg-white flex flex-col justify-center rounded-b-[3rem] lg:rounded-bl-none lg:rounded-r-[3rem]">
+          <div className="lg:col-span-7 p-8 md:p-12 lg:p-16 bg-white flex flex-col justify-center rounded-b-3xl md:rounded-b-[2.5rem] lg:rounded-bl-none lg:rounded-r-3xl md:lg:rounded-r-[2.5rem]">
             <form onSubmit={handleSubmit} className="space-y-10 max-w-2xl mx-auto w-full">
               {/* Header */}
-              <div className="text-center">
-                 <h3 className="text-brand-h2 mb-4">Оформление</h3>
-                 <p className="text-brand-body text-brand-text-soft">Осталось пару шагов до витаминного рая</p>
+              <div>
+                 <h3 className="text-3xl md:text-4xl font-black text-brand-text mb-4">Оформление</h3>
+                 <p className="text-lg md:text-xl text-brand-text-soft">Осталось пару шагов до витаминного рая</p>
               </div>
               {/* Section 1: Customer Info */}
               <div className="space-y-6">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-accent to-brand-accent-dark flex items-center justify-center text-white shadow-medium">
-                    <User size={20} strokeWidth={2.5} />
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-brand-accent to-brand-accent-dark flex items-center justify-center text-white">
+                    <User size={24} strokeWidth={2.5} />
                   </div>
-                  <h4 className="text-xl font-black text-brand-text tracking-tight">Контактные данные</h4>
+                  <h4 className="text-2xl font-black text-brand-text">Контактные данные</h4>
                 </div>
                 <div className="grid grid-cols-1 gap-6">
                   <div>
-                    <label className="flex items-center gap-2 text-sm font-black text-brand-text uppercase tracking-wider mb-3 ml-1">
-                      <User size={14} strokeWidth={2.5} className="text-brand-accent" />
+                    <label className="block text-sm font-bold text-brand-text mb-3">
                       Ваше имя
                     </label>
                     <input
@@ -363,11 +374,11 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
                       value={formData.name}
                       onChange={handleChange}
                       onBlur={() => handleBlur('name')}
-                      className={`w-full px-6 py-5 rounded-[--radius-ui] border-2 ${
+                      className={`w-full px-5 py-4 rounded-xl border-2 ${
                         touched.name && errors.name
                           ? 'border-red-400 bg-red-50 focus:border-red-500 focus:ring-red-500/20'
-                          : 'border-brand-accent-light/40 glass focus:border-brand-accent focus:ring-4 focus:ring-brand-accent/20'
-                      } outline-none transition-all text-brand-text placeholder-brand-text-soft/70 font-medium text-base`}
+                          : 'border-brand-text/10 bg-white focus:border-brand-accent focus:ring-4 focus:ring-brand-accent/10'
+                      } outline-none transition-all text-brand-text placeholder-brand-text-soft/50 font-medium text-base`}
                       placeholder="Иван Иванов"
                     />
                     {touched.name && errors.name && (
@@ -379,8 +390,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
                   </div>
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label className="flex items-center gap-2 text-sm font-black text-brand-text uppercase tracking-wider mb-3 ml-1">
-                        <Phone size={14} strokeWidth={2.5} className="text-brand-accent" />
+                      <label className="block text-sm font-bold text-brand-text mb-3">
                         Телефон
                       </label>
                       <input
@@ -390,11 +400,11 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
                         value={formData.phone}
                         onChange={handleChange}
                         onBlur={() => handleBlur('phone')}
-                        className={`w-full px-6 py-5 rounded-[--radius-ui] border-2 ${
+                        className={`w-full px-5 py-4 rounded-xl border-2 ${
                           touched.phone && errors.phone
                             ? 'border-red-400 bg-red-50 focus:border-red-500 focus:ring-red-500/20'
-                            : 'border-brand-accent-light/40 glass focus:border-brand-accent focus:ring-4 focus:ring-brand-accent/20'
-                        } outline-none transition-all text-brand-text placeholder-brand-text-soft/70 font-medium text-base`}
+                            : 'border-brand-text/10 bg-white focus:border-brand-accent focus:ring-4 focus:ring-brand-accent/10'
+                        } outline-none transition-all text-brand-text placeholder-brand-text-soft/50 font-medium text-base`}
                         placeholder="+7 (999) 000-00-00"
                       />
                       {touched.phone && errors.phone && (
@@ -405,8 +415,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
                       )}
                     </div>
                     <div>
-                      <label className="flex items-center gap-2 text-sm font-black text-brand-text uppercase tracking-wider mb-3 ml-1">
-                        <Mail size={14} strokeWidth={2.5} className="text-brand-accent" />
+                      <label className="block text-sm font-bold text-brand-text mb-3">
                         Email
                       </label>
                       <input
@@ -415,11 +424,11 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
                         value={formData.email}
                         onChange={handleChange}
                         onBlur={() => handleBlur('email')}
-                        className={`w-full px-6 py-5 rounded-[--radius-ui] border-2 ${
+                        className={`w-full px-5 py-4 rounded-xl border-2 ${
                           touched.email && errors.email
                             ? 'border-red-400 bg-red-50 focus:border-red-500 focus:ring-red-500/20'
-                            : 'border-brand-accent-light/40 glass focus:border-brand-accent focus:ring-4 focus:ring-brand-accent/20'
-                        } outline-none transition-all text-brand-text placeholder-brand-text-soft/70 font-medium text-base`}
+                            : 'border-brand-text/10 bg-white focus:border-brand-accent focus:ring-4 focus:ring-brand-accent/10'
+                        } outline-none transition-all text-brand-text placeholder-brand-text-soft/50 font-medium text-base`}
                         placeholder="ivan@example.com"
                       />
                       {touched.email && errors.email && (

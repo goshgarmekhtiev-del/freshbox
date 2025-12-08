@@ -22,12 +22,8 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
     }, 2000);
   };
   return (
-    <div className="relative flex flex-col h-full">
-      {/* Glassmorphism Light Effect - Design System Colors */}
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br from-brand-accent/30 via-brand-accent-dark/20 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-      <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-gradient-to-tr from-brand-yellow/25 via-brand-green/15 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-      
-      {/* Product Image with 4:5 Aspect Ratio */}
+    <div className="group relative flex flex-col h-full bg-white rounded-[--radius-card] overflow-hidden border border-brand-text/5 hover:border-brand-accent/20 transition-all duration-500 hover:shadow-[--shadow-elevated] hover:-translate-y-2">
+      {/* Product Image - Modern Large */}
       <div 
         role="button"
         tabIndex={0}
@@ -39,7 +35,7 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
           }
         }}
         aria-label={`Открыть быстрый просмотр ${product.name}`}
-        className="relative aspect-[4/5] rounded-2xl overflow-hidden mb-6 bg-gradient-to-br from-brand-accent-light/60 via-brand-accent-light/40 to-brand-yellow/50 cursor-pointer shadow-lg shadow-black/5 group-hover:shadow-xl group-hover:shadow-black/10"
+        className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-brand-accent-light/30 to-brand-yellow/20 cursor-pointer"
       >
         <ResponsiveImage
           src={product.image}
@@ -50,85 +46,78 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
           className="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
         />
         
-        {/* Warm Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-text/25 via-transparent to-brand-accent-light/10 opacity-60 group-hover:opacity-100 transition-opacity duration-700"></div>
+        {/* Warm Gradient Overlay - Softer */}
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-text/20 via-transparent to-brand-accent-light/5 opacity-50 group-hover:opacity-80 transition-opacity duration-700"></div>
         
-        {/* Modern Quick View Button */}
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+        {/* Quick View Overlay */}
+        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
            <button 
              onClick={(e) => { e.stopPropagation(); onQuickView(); }}
-             className="px-8 py-4 glass border-2 border-white/80 rounded-full flex items-center gap-3 text-brand-text font-black text-base shadow-xl shadow-black/10 scale-75 group-hover:scale-100 transition-all duration-300"
+             className="px-6 py-3 bg-white rounded-full flex items-center gap-2 text-brand-text font-bold text-sm shadow-[--shadow-elevated] hover:scale-110 transition-transform duration-300"
            >
-            <Eye size={20} strokeWidth={3} />
-            <span className="tracking-wide">Quick View</span>
+            <Eye size={18} strokeWidth={2.5} />
+            <span>Быстрый просмотр</span>
            </button>
         </div>
 
-        {/* Premium Tag Badge */}
+        {/* Tag Badge - More Subtle */}
         {product.tag && (
-          <div className="absolute top-6 right-6 glass text-brand-text px-6 py-3 rounded-full text-sm font-black uppercase tracking-[0.1em] shadow-lg shadow-black/10 flex items-center gap-2.5 z-10 border-3 border-white/70">
+          <div className="absolute top-4 right-4 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md text-brand-accent text-xs font-black uppercase tracking-wider border border-brand-accent/15 shadow-[--shadow-soft]">
             {product.tag.includes('Новинка') ? 
-              <Sparkles size={16} className="text-brand-accent" fill="currentColor" strokeWidth={2.5} /> : 
-              <Flame size={16} className="text-brand-accent" fill="currentColor" strokeWidth={2.5} />
+              <Sparkles size={12} className="inline mr-1" fill="currentColor" strokeWidth={2.5} /> : 
+              <Flame size={12} className="inline mr-1" fill="currentColor" strokeWidth={2.5} />
             }
-            <span className="bg-gradient-to-r from-brand-accent to-brand-accent-dark text-transparent bg-clip-text">{product.tag}</span>
+            {product.tag}
           </div>
         )}
       </div>
       
-      {/* Content Section */}
-      <div className="flex-1 flex flex-col space-y-4 relative z-10">
+      {/* Content Section - More Spacious */}
+      <div className="flex-1 flex flex-col p-8 md:p-10 space-y-5">
         {/* Title */}
         <h3 
-          className="text-2xl md:text-3xl font-bold leading-snug tracking-tight text-brand-text group-hover:text-brand-accent transition-colors duration-300 cursor-pointer" 
+          className="text-2xl md:text-3xl font-black text-brand-text leading-tight cursor-pointer group-hover:text-brand-accent transition-colors duration-300" 
           onClick={onQuickView}
         >
           {product.name}
         </h3>
         
         {/* Description */}
-        <p className="text-lg font-medium text-brand-text-soft leading-relaxed line-clamp-2">
+        <p className="text-base md:text-lg text-brand-text-soft leading-relaxed line-clamp-2">
           {product.description}
         </p>
         
-        {/* Ingredients */}
-        <div className="flex items-start gap-2 bg-gradient-to-r from-brand-accent-light/80 via-brand-accent-light/60 to-brand-yellow/50 rounded-xl p-3 border border-brand-accent/50">
+        {/* Ingredients - More Subtle */}
+        <div className="flex items-start gap-2 bg-brand-accent-light/5 rounded-xl p-4 border border-brand-accent-light/10">
           <Star size={16} className="text-brand-accent fill-brand-accent shrink-0 mt-0.5" strokeWidth={2.5} />
-          <span className="text-xs font-semibold text-brand-text-soft leading-relaxed line-clamp-2" title={product.ingredients}>
+          <span className="text-xs md:text-sm font-medium text-brand-text leading-relaxed line-clamp-2" title={product.ingredients}>
             {product.ingredients}
           </span>
         </div>
         
         {/* Price and CTA */}
-        <div className="mt-auto flex items-center justify-between pt-2">
+        <div className="mt-auto flex items-center justify-between pt-6 border-t border-brand-text/5">
           {/* Price */}
-          <div className="text-2xl font-bold text-brand-text">
+          <div className="text-3xl md:text-4xl font-black text-brand-text">
             {product.price} ₽
           </div>
           
-          {/* CTA Button - Premium Orange with Animation */}
+          {/* CTA Button */}
           <button 
             onClick={handleAdd} 
             disabled={isAdded}
-            className={`px-5 py-3 rounded-full text-white flex items-center gap-2 font-bold text-base shadow-lg transition-all duration-300 active:scale-95 overflow-hidden relative ${
+            className={`px-6 py-3 rounded-full text-white flex items-center gap-2 font-bold text-sm md:text-base shadow-[--shadow-elevated] transition-all duration-300 hover:scale-105 ${
               isAdded 
-                ? 'bg-brand-green shadow-brand-green/30' 
-                : 'bg-brand-accent shadow-brand-accent/30 hover:shadow-xl hover:shadow-brand-accent/40 hover:bg-brand-accent-dark'
+                ? 'bg-brand-green' 
+                : 'bg-gradient-to-r from-brand-accent to-brand-accent-dark hover:brightness-110'
             }`}
           >
-            <ShoppingBag size={18} strokeWidth={2.5} className="relative z-10" />
-            <span className="relative z-10">
-              {isAdded ? 'Добавлено' : 'В корзину'}
-            </span>
+            <ShoppingBag size={18} strokeWidth={2.5} />
+            <span>{isAdded ? 'Добавлено' : 'В корзину'}</span>
             {isAdded ? (
-              <Check size={18} strokeWidth={2.5} className="relative z-10 animate-scale-in" />
+              <Check size={18} strokeWidth={2.5} />
             ) : (
-              <Plus size={18} strokeWidth={2.5} className="relative z-10" />
-            )}
-            
-            {/* Success ripple effect */}
-            {isAdded && (
-              <span className="absolute inset-0 bg-brand-green animate-ping opacity-75"></span>
+              <Plus size={18} strokeWidth={2.5} />
             )}
           </button>
         </div>
