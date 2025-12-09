@@ -91,8 +91,8 @@ export const useStaggeredReveal = (
   const reveals = Array.from({ length: count }, (_, index) =>
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useReveal({
-      threshold: 0.1,
-      rootMargin: '0px 0px -30px 0px',
+      threshold: 0.05,  // More aggressive - trigger earlier (was 0.1)
+      rootMargin: '0px 0px 0px 0px',  // No negative margin to avoid hiding on mobile
       triggerOnce: true,
       delay: baseDelay + index * staggerDelay
     })
