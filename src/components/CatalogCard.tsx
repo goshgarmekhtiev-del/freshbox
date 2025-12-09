@@ -32,7 +32,6 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
         <LazyImage
           src={product.image}
           alt={`Фруктовый бокс ${product.name} — ${product.description}`}
-          autoOptimize
           priority={false}
           aspectRatio="aspect-[4/5]"
           imgClassName="object-cover transition-all duration-700 group-hover:scale-110"

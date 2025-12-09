@@ -52,6 +52,12 @@ const LazyImage: React.FC<LazyImageProps> = ({
 
     let optimizedSrc = src;
 
+    // Skip optimization if already webp
+    if (src.endsWith('.webp') || src.includes('.webp?')) {
+      setImageSrc(src);
+      return;
+    }
+
     // Unsplash optimization
     if (src.includes('unsplash.com')) {
       try {
@@ -67,7 +73,7 @@ const LazyImage: React.FC<LazyImageProps> = ({
         optimizedSrc = src;
       }
     }
-    // Supabase optimization
+    // Supabase optimization (only for non-webp)
     else if (src.includes('supabase.co')) {
       try {
         const url = new URL(src);
@@ -82,9 +88,18 @@ const LazyImage: React.FC<LazyImageProps> = ({
     setImageSrc(optimizedSrc);
   }, [src, autoOptimize]);
 
-  // Reset loaded state when src changes
+  // Check if image is already cached and load instantly
   useEffect(() => {
     setIsLoaded(false);
+    
+    // Create a temporary image to check cache status
+    const img = new Image();
+    img.src = imageSrc;
+    
+    // If image is already in cache (complete), show it immediately
+    if (img.complete && img.naturalHeight !== 0) {
+      setIsLoaded(true);
+    }
   }, [imageSrc]);
 
   const handleLoad = () => {

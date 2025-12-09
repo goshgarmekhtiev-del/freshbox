@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight, Star, ShoppingBag, Gift, CheckCircle2, Truck, Package, ChevronDown, Sparkles } from 'lucide-react';
 import { JUICY_IMAGES } from '@/constants';
-import { Button, ImageWithPlaceholder, Container } from '@/components/ui';
+import { Button, LazyImage, Container } from '@/components/ui';
 import { useReveal } from '@/hooks';
 
 const Hero: React.FC = () => {
@@ -15,10 +15,9 @@ const Hero: React.FC = () => {
   };
 
   const trustTriggers = [
-    { icon: <Star size={18} strokeWidth={2.5} className="fill-brand-accent text-brand-accent" />, text: '500+ довольных клиентов' },
-    { icon: <Package size={18} strokeWidth={2.5} className="text-brand-green" />, text: 'Собираем вручную' },
-    { icon: <Truck size={18} strokeWidth={2.5} className="text-brand-accent" />, text: 'Доставка за 2 часа' },
-    { icon: <Gift size={18} strokeWidth={2.5} className="text-brand-yellow" />, text: 'Подарочная упаковка' },
+    { icon: <Star size={18} strokeWidth={2.5} className="fill-brand-accent text-brand-accent" />, text: '500+ клиентов' },
+    { icon: <Package size={18} strokeWidth={2.5} className="text-brand-green" />, text: 'Ручная сборка' },
+    { icon: <Truck size={18} strokeWidth={2.5} className="text-brand-accent" />, text: 'За 2 часа' },
   ];
 
   return (
@@ -30,196 +29,118 @@ const Hero: React.FC = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] md:w-[600px] md:h-[600px] bg-gradient-to-br from-brand-yellow/6 to-brand-accent-light/8 rounded-full blur-[150px] opacity-30 pointer-events-none"></div>
 
       <Container>
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 xl:gap-16 items-center lg:justify-between">
           
           {/* Left: Content */}
-          <div ref={heroRef as React.RefObject<HTMLDivElement>} className={`text-center lg:text-left space-y-4 md:space-y-5 lg:space-y-6 opacity-0 animate-fade-in ${heroVisible ? '' : ''}`} style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>
+          <div ref={heroRef as React.RefObject<HTMLDivElement>} className={`text-center lg:text-left space-y-6 md:space-y-7 lg:space-y-8 lg:max-w-[600px] opacity-0 animate-fade-in ${heroVisible ? '' : ''}`} style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>
             
             {/* Badge - Gift Focused */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-brand-accent/10 to-brand-yellow/10 border border-brand-accent/20 text-brand-accent font-black text-xs uppercase tracking-widest">
-              <Gift size={12} className="fill-brand-accent" strokeWidth={2.5} />
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-brand-accent/10 to-brand-yellow/10 border border-brand-accent/20 text-brand-accent font-black text-xs uppercase tracking-widest">
+              <Gift size={14} className="fill-brand-accent" strokeWidth={2.5} />
               <span>Подарочная доставка по Москве</span>
             </div>
             
-            {/* Hero Headline - Compact, 2 Lines */}
-            <div className="space-y-2 md:space-y-3">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[0.95] tracking-tighter text-brand-text">
-                Премиальные фруктовые{' '}
+            {/* Hero Headline */}
+            <div className="space-y-3 md:space-y-4">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[0.95] tracking-tighter text-brand-text">
+                Премиальные<br />
+                фруктовые{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">
-                  боксы-подарки
+                  боксы‑подарки
                 </span>
               </h1>
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-brand-text-soft">
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-brand-text-soft">
                 С доставкой за 2 часа по Москве
               </h2>
               
-              {/* Description - Compact */}
-              <p className="text-sm md:text-base lg:text-lg font-medium leading-relaxed text-brand-text-soft max-w-xl mx-auto lg:mx-0 pt-1">
-                Красивые подарочные коробки, ручная сборка из лучших сортов фруктов, доставка в день заказа
+              {/* Description */}
+              <p className="text-base md:text-lg font-medium leading-relaxed text-brand-text-soft max-w-xl mx-auto lg:mx-0">
+                Красивые подарочные коробки с ручной сборкой из лучших сортов фруктов
               </p>
             </div>
 
-            {/* Trust Triggers - 2 Rows, 2 Items Each */}
-            <div className="grid grid-cols-2 gap-2 md:gap-3 pt-1 max-w-lg mx-auto lg:mx-0">
+            {/* Trust Triggers - 3 items in one row */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 md:gap-4">
               {trustTriggers.map((trigger, idx) => (
-                <div key={idx} className="flex items-center gap-2 bg-white/80 backdrop-blur-sm rounded-xl px-3 py-2 border border-brand-accent/10 shadow-[--shadow-soft] group hover:border-brand-accent/30 hover:shadow-[--shadow-elevated] transition-all duration-300">
+                <div key={idx} className="flex items-center gap-2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2.5 border border-brand-accent/10 shadow-sm group hover:border-brand-accent/30 hover:shadow-md transition-all duration-300">
                   <div className="group-hover:scale-110 transition-transform duration-300 shrink-0">
                     {trigger.icon}
                   </div>
-                  <span className="text-xs md:text-sm font-semibold text-brand-text">{trigger.text}</span>
+                  <span className="text-sm md:text-base font-bold text-brand-text whitespace-nowrap">{trigger.text}</span>
                 </div>
               ))}
             </div>
 
-            {/* CTA Buttons - Compact with Discount Badge */}
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2 relative">
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
               <div className="relative">
                 <Button
                   size="lg"
                   onClick={() => scrollTo('catalog')}
-                  icon={<ShoppingBag size={20} strokeWidth={2.5} />}
+                  icon={<ShoppingBag size={22} strokeWidth={2.5} />}
                   iconPosition="left"
-                  className="text-base md:text-lg lg:text-xl px-6 md:px-8 lg:px-10 py-4 md:py-5 lg:py-6 bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow hover:brightness-110 hover:from-brand-accent-dark hover:via-brand-accent hover:to-brand-yellow shadow-[--shadow-elevated] hover:shadow-[--shadow-elevated] hover:scale-[1.02] hover:-translate-y-0.5 transition-all duration-300 font-black"
+                  className="text-lg md:text-xl px-8 md:px-10 py-5 md:py-6 bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow hover:brightness-110 shadow-[0_20px_50px_rgba(249,115,22,0.3)] hover:shadow-[0_24px_60px_rgba(249,115,22,0.4)] hover:scale-[1.03] hover:-translate-y-1 transition-all duration-300 font-black rounded-full"
                 >
                   Собрать бокс
-                  <ArrowRight size={20} strokeWidth={2.5} className="relative z-10 group-hover:translate-x-1 transition-transform duration-300" />
+                  <ArrowRight size={22} strokeWidth={2.5} className="group-hover:translate-x-1 transition-transform duration-300" />
                 </Button>
                 
-                {/* Discount Badge - Near CTA */}
-                <div className="absolute -top-2 -right-2 bg-white backdrop-blur-xl px-3 py-1.5 rounded-xl shadow-[--shadow-elevated] border-2 border-brand-accent/30 z-20">
-                  <p className="text-xs font-black text-brand-accent leading-none">-20%</p>
-                  <p className="text-[10px] font-bold text-brand-accent uppercase tracking-wider">Первый заказ</p>
+                {/* Discount Badge */}
+                <div className="absolute -top-3 -right-3 bg-white backdrop-blur-xl px-3 py-1.5 rounded-xl shadow-lg border-2 border-brand-accent/30 z-20 animate-pulse">
+                  <p className="text-sm font-black text-brand-accent leading-none">-20%</p>
                 </div>
               </div>
               
-              <Button
-                variant="ghost"
-                size="lg"
+              <button
                 onClick={() => scrollTo('b2b')}
-                className="text-base md:text-lg lg:text-xl px-6 md:px-8 lg:px-10 py-4 md:py-5 lg:py-6 border-2 border-brand-text/20 hover:border-brand-accent hover:bg-brand-accent/5 hover:text-brand-accent transition-all duration-300 font-bold"
+                className="text-base md:text-lg px-8 py-4 font-bold text-brand-text-soft hover:text-brand-accent transition-colors duration-300 underline underline-offset-4 decoration-2 decoration-brand-accent/30 hover:decoration-brand-accent"
               >
                 Подарки для офиса
-              </Button>
+              </button>
             </div>
 
-            {/* CTA Support Text - Compact */}
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-2 pt-1 text-xs md:text-sm text-brand-text-soft">
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 size={14} strokeWidth={2.5} className="text-brand-green shrink-0" />
-                <span className="font-medium">Оформление за 2–3 минуты</span>
+            {/* CTA Support Text */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-4 gap-y-2 text-sm text-brand-text-soft">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 size={16} strokeWidth={2.5} className="text-brand-green shrink-0" />
+                <span className="font-medium">Оформление за 2 минуты</span>
               </div>
-              <span className="hidden sm:inline">•</span>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 size={14} strokeWidth={2.5} className="text-brand-green shrink-0" />
-                <span className="font-medium">Оплата онлайн или при получении</span>
+              <span className="hidden sm:inline text-brand-text/30">•</span>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 size={16} strokeWidth={2.5} className="text-brand-green shrink-0" />
+                <span className="font-medium">Оплата при получении</span>
               </div>
             </div>
           </div>
           
-          {/* Right: Hero Visual - Enhanced, Premium Box */}
-          <div className="relative flex justify-center lg:justify-end items-center min-h-[260px] md:min-h-[320px] lg:min-h-[360px] order-last lg:order-last mt-4 lg:mt-0">
+          {/* Right: Hero Image - Large, Clean, Premium */}
+          <div className="relative w-full lg:w-auto lg:flex-1 lg:max-w-[620px] order-first lg:order-last">
              
-             {/* Main Image Container - Optimized Size with Shadow */}
-             <div className="relative w-full max-w-[400px] md:max-w-[480px] lg:max-w-[520px]">
+             {/* Premium Image Container */}
+             <div className="relative w-full">
                 
-                {/* Enhanced Glow Effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-accent/25 via-brand-yellow/20 to-brand-green/20 rounded-[--radius-card] blur-3xl scale-110 opacity-60"></div>
+                {/* Glow Effect Behind Image */}
+                <div className="absolute inset-0 bg-gradient-to-br from-brand-accent/20 via-brand-yellow/15 to-brand-green/15 rounded-[32px] blur-3xl scale-105 opacity-70"></div>
                 
-                {/* Premium Box Card */}
-                <div className="relative z-10 w-full rounded-[--radius-card] overflow-hidden bg-white shadow-[0_20px_60px_rgba(249,115,22,0.15)] border-2 border-brand-accent/10">
+                {/* Main Image - No Card Wrapper */}
+                <div className="relative z-10">
+                  <LazyImage
+                    src={JUICY_IMAGES.box1}
+                    alt="Премиальный подарочный фруктовый бокс FreshBox"
+                    priority={true}
+                    aspectRatio="w-full aspect-[4/3]"
+                    imgClassName="object-cover rounded-[32px] shadow-[0_24px_80px_rgba(249,115,22,0.2)] transition-all duration-700 hover:scale-[1.02] hover:shadow-[0_32px_100px_rgba(249,115,22,0.25)]"
+                    skeletonClassName="bg-gradient-to-br from-orange-100/70 via-yellow-100/60 to-amber-100/70 rounded-[32px]"
+                  />
                   
-                  {/* Header Section */}
-                  <div className="px-5 md:px-6 pt-5 md:pt-6 pb-3 border-b border-brand-accent/10">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Gift size={24} strokeWidth={2.5} className="text-brand-accent fill-brand-accent/20" />
-                      <h3 className="text-lg md:text-xl font-black text-brand-text">Премиальный фруктовый бокс</h3>
+                  {/* Premium Badge - Top Left */}
+                  <div className="absolute top-4 left-4 md:top-6 md:left-6 bg-gradient-to-r from-brand-accent to-brand-accent-dark backdrop-blur-xl px-4 py-2.5 md:px-5 md:py-3 rounded-2xl shadow-[0_16px_40px_rgba(249,115,22,0.4)] border border-white/20 z-20">
+                    <div className="flex items-center gap-2 mb-1">
+                      <Sparkles size={14} className="text-white fill-white" strokeWidth={2.5} />
+                      <span className="text-[10px] md:text-xs font-black text-white uppercase tracking-wider">Хит продаж</span>
                     </div>
-                    <p className="text-sm md:text-base font-bold text-brand-accent">
-                      Хит продаж "Забота о маме" • <span className="text-brand-text">3 990 ₽</span>
-                    </p>
-                  </div>
-                  
-                  {/* Visual Zone - Large Fruit Icons with Radial Gradient */}
-                  <div className="relative px-5 md:px-6 py-8 md:py-10 min-h-[200px] md:min-h-[240px] flex items-center justify-center overflow-hidden">
-                    {/* Radial gradient background - light from center */}
-                    <div className="absolute inset-0" style={{
-                      background: 'radial-gradient(circle at center, rgba(253, 224, 71, 0.2), rgba(217, 249, 157, 0.1), rgba(249, 115, 22, 0.05))'
-                    }}></div>
-                    <div className="absolute inset-0 bg-gradient-to-br from-brand-yellow/15 via-transparent to-brand-green/10"></div>
-                    
-                    {/* Large Fruit Icons with Shadows - Organic Layout */}
-                    <div className="relative w-full h-full">
-                      {/* Orange - slightly higher and left */}
-                      <div 
-                        className="absolute w-20 h-20 md:w-24 md:h-24 bg-white/90 backdrop-blur-sm rounded-2xl shadow-[0_10px_30px_rgba(249,115,22,0.2)] flex items-center justify-center border-2 border-brand-accent-light/30 animate-float-slow"
-                        style={{ 
-                          animation: 'float 12s ease-in-out infinite',
-                          left: '15%',
-                          top: '35%',
-                          transform: 'translate(-50%, -50%)'
-                        }}
-                      >
-                        <span className="text-5xl md:text-6xl" role="img" aria-label="orange">🍊</span>
-                      </div>
-                      
-                      {/* Kiwi - center, slightly lower */}
-                      <div 
-                        className="absolute w-18 h-18 md:w-22 md:h-22 bg-white/90 backdrop-blur-sm rounded-2xl shadow-[0_10px_30px_rgba(34,197,94,0.2)] flex items-center justify-center border-2 border-brand-green/30 animate-float-slow"
-                        style={{ 
-                          animation: 'float 14s ease-in-out infinite 2s',
-                          left: '50%',
-                          top: '55%',
-                          transform: 'translate(-50%, -50%)'
-                        }}
-                      >
-                        <span className="text-4xl md:text-5xl" role="img" aria-label="kiwi">🥝</span>
-                      </div>
-                      
-                      {/* Strawberry - right, slightly higher */}
-                      <div 
-                        className="absolute w-16 h-16 md:w-20 md:h-20 bg-white/90 backdrop-blur-sm rounded-2xl shadow-[0_10px_30px_rgba(253,224,71,0.2)] flex items-center justify-center border-2 border-brand-yellow/30 animate-float-slow"
-                        style={{ 
-                          animation: 'float 13s ease-in-out infinite 1s',
-                          left: '75%',
-                          top: '40%',
-                          transform: 'translate(-50%, -50%)'
-                        }}
-                      >
-                        <span className="text-3xl md:text-4xl" role="img" aria-label="strawberry">🍓</span>
-                      </div>
-                    </div>
-                    
-                    {/* Try to load actual image if available */}
-                    <div className="absolute inset-0 opacity-0 pointer-events-none">
-                      <ImageWithPlaceholder
-                        src={JUICY_IMAGES.box1}
-                        alt="Премиальный подарочный фруктовый бокс FreshBox"
-                        containerClassName="w-full h-full"
-                        className="w-full h-full object-contain"
-                        loading="lazy"
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* Footer - CTA Link */}
-                  <div className="px-5 md:px-6 py-4 border-t border-brand-accent/10">
-                    <button
-                      onClick={() => scrollTo('catalog')}
-                      className="w-full flex items-center justify-center gap-2 text-sm md:text-base font-bold text-brand-accent hover:text-brand-accent-dark transition-colors duration-300 group"
-                    >
-                      <span>Смотреть набор</span>
-                      <ArrowRight size={16} strokeWidth={2.5} className="group-hover:translate-x-1 transition-transform duration-300" />
-                    </button>
-                  </div>
-                  
-                  {/* Sticker - "Хит: Забота о маме" */}
-                  <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-xl px-3 py-2 rounded-xl shadow-[--shadow-elevated] border-2 border-brand-accent/30 z-20">
-                    <div className="flex items-center gap-1.5 mb-0.5">
-                      <Sparkles size={12} className="text-brand-accent fill-brand-accent" strokeWidth={2.5} />
-                      <span className="text-[10px] font-black text-brand-accent uppercase tracking-wider">Хит</span>
-                    </div>
-                    <p className="text-xs md:text-sm font-black text-brand-text leading-tight">"Забота о маме"</p>
-                    <p className="text-base md:text-lg font-black text-brand-accent leading-none mt-0.5">3 990 ₽</p>
+                    <p className="text-sm md:text-base font-black text-white leading-tight">"Забота о маме"</p>
+                    <p className="text-xl md:text-2xl font-black text-white leading-none mt-1">3 990 ₽</p>
                   </div>
                 </div>
              </div>

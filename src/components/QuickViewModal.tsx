@@ -88,7 +88,6 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen, onClos
             containerClassName="lg:max-h-[520px]"
             imgClassName="object-contain drop-shadow-2xl transform hover:scale-105 transition-transform duration-500 rounded-[32px]"
             skeletonClassName="bg-gradient-to-br from-orange-100/70 via-yellow-100/60 to-amber-100/70 rounded-[32px]"
-            autoOptimize
           />
           
           {/* Tag Badge */}
