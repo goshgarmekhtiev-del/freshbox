@@ -1,98 +1,45 @@
 import React from 'react';
-import { MousePointerClick, Truck, Gift, ShoppingBag } from 'lucide-react';
-import { useReveal, useStaggeredReveal } from '@/hooks';
+import { useReveal } from '@/hooks';
 import { SectionLight } from '@/components/ui';
+import ProcessTimeline from './ProcessTimeline';
 
 const HowItWorks: React.FC = () => {
   const { ref: sectionRef, isVisible: sectionVisible } = useReveal({ threshold: 0.1 });
-  const stepReveals = useStaggeredReveal(4, 200, 120);
-
-  const steps = [
-    { 
-      num: '1', 
-      title: 'Клик', 
-      desc: 'Выбери готовый бокс или создай свой.',
-      icon: <MousePointerClick size={32} strokeWidth={2.5} />
-    },
-    { 
-      num: '2', 
-      title: 'Заказ', 
-      desc: 'Оставь контакт. Это займет 30 сек.',
-      icon: <ShoppingBag size={32} strokeWidth={2.5} />
-    },
-    { 
-      num: '3', 
-      title: 'Вжух', 
-      desc: 'Курьер мчит к тебе. Всего 2 часа.',
-      icon: <Truck size={32} strokeWidth={2.5} />
-    },
-    { 
-      num: '4', 
-      title: 'Вау!', 
-      desc: 'Ты наслаждаешься сочными фруктами.',
-      icon: <Gift size={32} strokeWidth={2.5} />
-    },
-  ];
 
   return (
-    <SectionLight id="how-it-works" ref={sectionRef} className={`reveal ${sectionVisible ? 'reveal-visible' : ''}`} withBlobs={true}>
-      <div className="max-w-7xl mx-auto">
+    <SectionLight 
+      id="how-it-works" 
+      ref={sectionRef} 
+      className={`reveal ${sectionVisible ? 'reveal-visible' : ''} relative overflow-hidden`} 
+      withBlobs={false}
+    >
+      {/* Clean, Soft Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-orange-50/60 via-yellow-50/50 to-lime-50/60 pointer-events-none"></div>
+      
+      {/* Subtle Light Accents */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-brand-accent/6 to-transparent rounded-full blur-[150px] pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-gradient-to-tr from-brand-green/8 to-transparent rounded-full blur-[150px] pointer-events-none"></div>
+
+      {/* Minimal Fruit Decoration */}
+      <div className="absolute top-16 right-12 text-5xl opacity-8 pointer-events-none">🍊</div>
+      <div className="absolute bottom-16 left-12 text-5xl opacity-8 pointer-events-none">🍎</div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Header - Centered */}
         <div className="text-center mb-12 md:mb-16 lg:mb-20">
           <div className="inline-block px-4 py-1.5 rounded-full bg-brand-accent/8 border border-brand-accent/15 text-brand-accent font-bold text-xs uppercase tracking-widest mb-8">
             Процесс
           </div>
-          <h2 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-brand-text leading-[0.9] mb-8 max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-brand-text leading-[0.95] mb-4 max-w-4xl mx-auto">
             Как мы <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">работаем</span>
           </h2>
-          <p className="text-xl md:text-2xl lg:text-3xl text-brand-text-soft max-w-3xl mx-auto leading-relaxed">
-            Заказ премиальных фруктов — это просто и быстро. Всего 4 шага до свежести.
+          <p className="text-lg md:text-xl lg:text-2xl text-brand-text-soft max-w-3xl mx-auto leading-relaxed font-semibold">
+            От клика до «Вау!» — <span className="text-brand-accent font-bold">~2 часа</span> ⚡
           </p>
         </div>
 
-        {/* Steps - Modern Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
-          {steps.map((step, idx) => (
-            <div 
-              key={idx} 
-              ref={stepReveals[idx].ref as React.RefObject<HTMLDivElement>}
-              className={`group relative reveal reveal-fade-up ${stepReveals[idx].isVisible ? 'reveal-visible' : ''}`}
-            >
-              <div className="flex flex-col items-center text-center h-full">
-                {/* Step Number Badge - Top */}
-                <div className="mb-6">
-                  <div className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-full flex items-center justify-center text-brand-accent font-black text-2xl md:text-3xl shadow-[--shadow-elevated] border-2 border-brand-accent/20 group-hover:scale-110 transition-all duration-500">
-                    {step.num}
-                  </div>
-                </div>
-                
-                {/* Icon Container - Centered */}
-                <div className="mb-8">
-                  <div className="relative w-24 h-24 md:w-28 md:h-28 rounded-2xl bg-gradient-to-br from-brand-accent to-brand-accent-dark flex items-center justify-center text-white shadow-[--shadow-elevated] group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                    <div className="scale-125">
-                      {step.icon}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Content - Centered */}
-                <div className="flex-1">
-                  <h3 className="text-2xl md:text-3xl lg:text-4xl font-black text-brand-text mb-4 leading-tight">
-                    {step.title}
-                  </h3>
-                  <p className="text-base md:text-lg text-brand-text-soft leading-relaxed">
-                    {step.desc}
-                  </p>
-                </div>
-
-                {/* Connector Line - Between Steps (Desktop Only) */}
-                {idx < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-12 right-0 w-full h-0.5 bg-gradient-to-r from-brand-accent/20 via-brand-accent/40 to-transparent translate-x-1/2"></div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+        {/* Interactive Process Timeline */}
+        <ProcessTimeline />
       </div>
     </SectionLight>
   );

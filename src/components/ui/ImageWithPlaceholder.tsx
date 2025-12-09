@@ -9,6 +9,8 @@ interface ImageWithPlaceholderProps extends React.ImgHTMLAttributes<HTMLImageEle
   useWebP?: boolean;
   /** Lazy load image (default: true for below-fold content) */
   loading?: 'lazy' | 'eager';
+  /** Custom fallback component when image fails to load */
+  fallback?: React.ReactNode;
 }
 
 /**
@@ -28,6 +30,7 @@ const ImageWithPlaceholder: React.FC<ImageWithPlaceholderProps> = ({
   className = '',
   useWebP = true,
   loading = 'lazy',
+  fallback,
   ...props
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -138,9 +141,11 @@ const ImageWithPlaceholder: React.FC<ImageWithPlaceholderProps> = ({
 
       {/* Error state (optional) */}
       {hasError && (
-        <div className="absolute inset-0 flex items-center justify-center bg-brand-bg text-brand-text-soft text-sm">
-          Image unavailable
-        </div>
+        fallback || (
+          <div className="absolute inset-0 flex items-center justify-center bg-brand-bg text-brand-text-soft text-sm">
+            Image unavailable
+          </div>
+        )
       )}
     </div>
   );

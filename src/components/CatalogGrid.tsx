@@ -14,12 +14,12 @@ const CatalogGrid: React.FC<CatalogGridProps> = ({ products, onAdd, onQuickView 
   const productReveals = useStaggeredReveal(products.length, 100, 80);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
       {products.map((product, index) => (
         <div 
           key={product.id}
           ref={productReveals[index].ref as React.RefObject<HTMLDivElement>}
-          className={`group bg-white rounded-2xl p-4 md:p-6 shadow-lg shadow-black/5 hover:shadow-xl hover:shadow-black/10 transition-all duration-500 hover:-translate-y-2 flex flex-col relative overflow-hidden reveal reveal-fade-up ${productReveals[index].isVisible ? 'reveal-visible' : ''}`}
+          className={`reveal reveal-fade-up ${productReveals[index].isVisible ? 'reveal-visible' : ''}`}
         >
           <CatalogCard 
             product={product} 

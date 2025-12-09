@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Instagram, Send, Phone, MapPin, ArrowRight, Mail, Shield, Truck, Award, CheckCircle2 } from 'lucide-react';
-import { Container } from '@/components/ui';
+import { Instagram, Send, Phone, MapPin, ArrowRight, Mail, CheckCircle2, Sparkles } from 'lucide-react';
 import { useReveal } from '@/hooks';
 
 const Footer: React.FC = () => {
@@ -21,9 +20,9 @@ const Footer: React.FC = () => {
   const validateEmail = (value: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!value) {
-      return 'Укажите email';
+      return 'Пожалуйста, введите email';
     } else if (!emailRegex.test(value)) {
-      return 'Неверный формат email';
+      return 'Пожалуйста, введите корректный email';
     }
     return '';
   };
@@ -45,11 +44,11 @@ const Footer: React.FC = () => {
 
     setEmailSuccess(true);
     setEmail('');
+    setIsSubmitting(false);
     
     // Reset success message after 5 seconds
     setTimeout(() => {
       setEmailSuccess(false);
-      setIsSubmitting(false);
     }, 5000);
   };
 
@@ -63,224 +62,271 @@ const Footer: React.FC = () => {
     }
   };
 
+  const newsletterBenefits = [
+    'Скидки до 50% на премиальные боксы',
+    'Ранний доступ к редким фруктам и экзотике',
+    'Без спама, только полезные подборки'
+  ];
+
   return (
     <footer
       id="contacts"
       ref={footerRef}
-      className={`relative bg-gradient-to-b from-brand-text via-brand-text-soft to-brand-text text-white py-16 md:py-20 lg:py-24 reveal overflow-hidden ${
+      className={`relative bg-gradient-to-b from-[#064E3B] via-[#065F46] to-[#064E3B] text-white py-16 lg:py-20 reveal overflow-hidden ${
         footerVisible ? 'reveal-visible' : ''
       }`}
     >
       {/* Subtle Background Accent */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] md:w-[700px] md:h-[700px] bg-gradient-to-br from-brand-accent/6 to-transparent rounded-full blur-[150px] opacity-30 pointer-events-none"></div>
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] md:w-[600px] md:h-[600px] bg-gradient-to-tr from-brand-green/5 to-transparent rounded-full blur-[150px] opacity-25 pointer-events-none"></div>
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-brand-accent/5 to-transparent rounded-full blur-[120px] opacity-40 pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-brand-yellow/5 to-transparent rounded-full blur-[120px] opacity-30 pointer-events-none"></div>
 
-      <Container>
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Newsletter Section - Modern & Clean */}
-        <div className="rounded-[--radius-card] p-10 md:p-12 lg:p-16 mb-12 md:mb-16 lg:mb-20 border border-white/10 bg-white/5 backdrop-blur-xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10 hover:border-brand-accent/30 hover:bg-white/8 transition-all duration-300 shadow-[--shadow-soft]">
-          <div className="max-w-2xl">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-brand-accent/20 to-brand-yellow/15 flex items-center justify-center mb-6">
-              <span className="text-3xl" role="img" aria-label="sparkles">✨</span>
+        {/* Newsletter Section - Two Column Layout */}
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-16 lg:mb-20">
+          
+          {/* Left Column: Heading & Benefits */}
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-brand-accent text-xs font-bold uppercase tracking-wider mb-5">
+              <Sparkles size={12} strokeWidth={2.5} />
+              Секретные акции
             </div>
-            <h3 className="text-3xl md:text-4xl font-black text-white mb-4">Секретные акции</h3>
-            <p className="text-lg md:text-xl text-white/70 leading-relaxed">Подпишись, чтобы получать скидки до 50% и узнавать о новых экзотических поставках первым.</p>
+            
+            <h3 className="text-3xl lg:text-4xl font-black text-white mb-4 leading-tight">
+              Секретные акции
+            </h3>
+            
+            <p className="text-base lg:text-lg text-white/70 leading-relaxed mb-6">
+              Подпишись и получай эксклюзивные скидки и предложения на лучшие фрукты
+            </p>
+
+            {/* Benefits List */}
+            <ul className="space-y-3">
+              {newsletterBenefits.map((benefit, index) => (
+                <li key={index} className="flex items-start gap-3 text-sm text-white/80">
+                  <CheckCircle2 size={18} strokeWidth={2.5} className="text-brand-accent flex-shrink-0 mt-0.5" />
+                  <span>{benefit}</span>
+                </li>
+              ))}
+            </ul>
           </div>
-          <form className="w-full md:w-auto flex-1 max-w-lg" onSubmit={handleEmailSubmit}>
-            <div className="relative">
-              <Mail className="absolute left-6 top-1/2 -translate-y-1/2 text-white/50" size={20} strokeWidth={2} />
-              <input 
-                type="email" 
-                placeholder="Ваш email" 
-                value={email}
-                onChange={handleEmailChange}
-                disabled={isSubmitting}
-                className={`w-full pl-14 pr-16 py-4 border rounded-full text-white placeholder-white/40 focus:outline-none transition-all font-medium backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed ${
-                  emailError
-                    ? 'bg-red-500/20 border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/30'
-                    : emailSuccess
-                      ? 'bg-brand-green/20 border-brand-green focus:border-brand-green focus:ring-2 focus:ring-brand-green/30'
-                      : 'bg-white/5 border-white/20 focus:bg-white/10 focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/30'
-                }`}
-              />
+
+          {/* Right Column: Form Card */}
+          <div className="rounded-3xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/10 p-6 lg:p-8 shadow-xl">
+            <form onSubmit={handleEmailSubmit} className="space-y-4">
+              <div>
+                <div className="relative">
+                  <input 
+                    type="email" 
+                    placeholder="Ваш email" 
+                    value={email}
+                    onChange={handleEmailChange}
+                    disabled={isSubmitting}
+                    className={`
+                      w-full px-5 py-4 rounded-2xl text-white placeholder-white/40 
+                      font-medium transition-all duration-200 outline-none
+                      disabled:opacity-50 disabled:cursor-not-allowed
+                      ${emailError
+                        ? 'bg-red-500/20 border-2 border-red-400 focus:border-red-500 focus:ring-4 focus:ring-red-500/20'
+                        : emailSuccess
+                          ? 'bg-emerald-500/20 border-2 border-emerald-400'
+                          : 'bg-white/5 border-2 border-white/20 hover:border-white/30 focus:bg-white/10 focus:border-brand-accent focus:ring-4 focus:ring-brand-accent/20'
+                      }
+                    `}
+                  />
+                </div>
+                
+                {/* Error Message with smooth animation */}
+                <div 
+                  className={`
+                    overflow-hidden transition-all duration-200 ease-out
+                    ${emailError ? 'max-h-8 opacity-100 mt-2' : 'max-h-0 opacity-0 mt-0'}
+                  `}
+                >
+                  <p className="text-xs font-semibold text-red-400 flex items-center gap-2">
+                    <span className="inline-block w-1 h-1 rounded-full bg-red-400 flex-shrink-0"></span>
+                    {emailError}
+                  </p>
+                </div>
+
+                {/* Success Message with smooth animation */}
+                <div 
+                  className={`
+                    overflow-hidden transition-all duration-200 ease-out
+                    ${emailSuccess ? 'max-h-16 opacity-100 mt-2' : 'max-h-0 opacity-0 mt-0'}
+                  `}
+                >
+                  <div className="flex items-start gap-2 p-3 bg-emerald-500/20 border border-emerald-400/30 rounded-xl">
+                    <CheckCircle2 size={16} strokeWidth={2.5} className="text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <p className="text-xs font-medium text-emerald-100 leading-relaxed">
+                      Готово! Мы будем присылать только вкусные предложения ✉️
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <button 
                 type="submit"
                 disabled={isSubmitting}
-                className="absolute right-2 top-2 bottom-2 px-6 bg-gradient-to-r from-brand-accent to-brand-accent-dark rounded-full flex items-center justify-center text-white hover:scale-105 transition-all duration-300 shadow-lg shadow-brand-accent/20 font-bold disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="
+                  w-full px-6 py-4 rounded-2xl
+                  bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow 
+                  text-white font-bold text-base
+                  shadow-lg shadow-brand-accent/30
+                  hover:shadow-xl hover:shadow-brand-accent/40 hover:scale-[1.02]
+                  active:scale-[0.98]
+                  disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
+                  transition-all duration-200
+                  flex items-center justify-center gap-2 group
+                "
               >
-                {emailSuccess ? (
-                  <CheckCircle2 size={20} strokeWidth={2.5} />
-                ) : (
-                  <ArrowRight size={20} strokeWidth={2.5} />
-                )}
+                <span>{isSubmitting ? 'Отправляем...' : 'Получать секретные акции'}</span>
+                <ArrowRight size={20} strokeWidth={2.5} className="group-hover:translate-x-1 transition-transform" />
               </button>
-            </div>
-            {emailError && (
-              <p className="mt-2 text-sm font-medium text-red-400 flex items-center gap-2">
-                <span className="inline-block w-1 h-1 rounded-full bg-red-400 flex-shrink-0"></span>
-                {emailError}
-              </p>
-            )}
-            {emailSuccess && (
-              <p className="mt-2 text-sm font-medium text-brand-green flex items-center gap-2">
-                <CheckCircle2 size={16} strokeWidth={2} className="flex-shrink-0" />
-                Готово! Проверяй почту — скидка уже летит к тебе!
-              </p>
-            )}
-          </form>
-        </div>
-
-        {/* Trust Badges - Modern Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 mb-12 md:mb-16 lg:mb-20">
-          <div className="rounded-[--radius-card] p-8 md:p-10 border border-white/8 bg-white/3 backdrop-blur-sm hover:border-brand-accent/30 hover:bg-white/6 transition-all duration-300 group hover:-translate-y-2">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-brand-accent/20 to-brand-accent-dark/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-              <Shield size={28} strokeWidth={2.5} className="text-white" />
-            </div>
-            <h4 className="text-xl md:text-2xl font-bold text-white mb-3">Гарантия свежести</h4>
-            <p className="text-base md:text-lg text-white/60 leading-relaxed">Вернём деньги или заменим товар, если фрукты не совершенны</p>
-          </div>
-          
-          <div className="rounded-[--radius-card] p-8 md:p-10 border border-white/8 bg-white/3 backdrop-blur-sm hover:border-brand-accent/30 hover:bg-white/6 transition-all duration-300 group hover:-translate-y-2">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-brand-green/20 to-brand-accent/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-              <Truck size={28} strokeWidth={2.5} className="text-white" />
-            </div>
-            <h4 className="text-xl md:text-2xl font-bold text-white mb-3">Быстрая доставка</h4>
-            <p className="text-base md:text-lg text-white/60 leading-relaxed">Привезём в течение 2 часов в пределах МКАД</p>
-          </div>
-          
-          <div className="rounded-[--radius-card] p-8 md:p-10 border border-white/8 bg-white/3 backdrop-blur-sm hover:border-brand-accent/30 hover:bg-white/6 transition-all duration-300 group hover:-translate-y-2">
-            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-brand-yellow/20 to-brand-accent/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-              <Award size={28} strokeWidth={2.5} className="text-white" />
-            </div>
-            <h4 className="text-xl md:text-2xl font-bold text-white mb-3">Премиум качество</h4>
-            <p className="text-base md:text-lg text-white/60 leading-relaxed">Отбираем каждый фрукт вручную перед отправкой</p>
+            </form>
           </div>
         </div>
 
-        {/* Main Footer Grid - Modern Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-16 lg:gap-20 mb-12 md:mb-16 lg:mb-20">
+        {/* Main Footer Grid - 4 Columns on Desktop */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 mb-12 border-t border-white/10 pt-12">
           
-          {/* Brand Info */}
-          <div className="space-y-8 lg:col-span-2">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-brand-accent/20 to-brand-accent-dark/20 flex items-center justify-center border border-white/10">
-                <span className="text-3xl">🍊</span>
+          {/* Column 1: Brand Info */}
+          <div className="lg:col-span-1 space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-accent/20 to-brand-accent-dark/20 flex items-center justify-center border border-white/10">
+                <span className="text-2xl">🍊</span>
               </div>
               <div>
-                <h3 className="text-3xl md:text-4xl font-black text-white">Fresh<span className="text-brand-accent">Box</span></h3>
-                <p className="text-base font-medium text-white/50 mt-1">Премиум фрукты с доставкой</p>
+                <h3 className="text-2xl font-black text-white">Fresh<span className="text-brand-accent">Box</span></h3>
+                <p className="text-xs font-medium text-white/50">Премиум фрукты</p>
               </div>
             </div>
             
-            <p className="text-lg md:text-xl text-white/60 max-w-xl leading-relaxed">
-              Доставляем свежие фрукты высшего сорта прямо к вашей двери. 
-              Заботимся о вашем здоровье и настроении.
+            <p className="text-sm text-white/60 leading-relaxed">
+              Доставляем свежие фрукты высшего сорта прямо к вашей двери. Заботимся о вашем здоровье.
             </p>
             
-            <div className="flex gap-4">
-              <a href="#" className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-accent hover:border-brand-accent hover:scale-110 transition-all duration-300">
-                <Instagram size={22} strokeWidth={2} />
-              </a>
-              <a href="#" className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-accent hover:border-brand-accent hover:scale-110 transition-all duration-300">
-                <Send size={22} strokeWidth={2} />
-              </a>
-            </div>
-          </div>
-          
-          {/* Contact Info */}
-          <div className="space-y-6">
-            <h4 className="text-xs font-bold text-white/50 uppercase tracking-widest mb-6">Контакты</h4>
-            
-            <div className="space-y-5">
-              <div className="flex items-start gap-4 group cursor-pointer">
-                <div className="w-11 h-11 rounded-full bg-brand-accent/15 flex items-center justify-center text-white group-hover:bg-brand-accent/25 transition-colors duration-300 flex-shrink-0">
-                  <Phone size={20} strokeWidth={2} />
-                </div>
-                <div>
-                  <p className="text-white font-bold text-lg">+7 (495) 123-45-67</p>
-                  <p className="text-white/50 text-sm mt-1">Ежедневно с 9:00 до 22:00</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-4 group cursor-pointer">
-                <div className="w-11 h-11 rounded-full bg-brand-green/15 flex items-center justify-center text-white group-hover:bg-brand-green/25 transition-colors duration-300 flex-shrink-0">
-                  <Mail size={20} strokeWidth={2} />
-                </div>
-                <div>
-                  <p className="text-white font-bold text-lg">hello@freshbox.ru</p>
-                  <p className="text-white/50 text-sm mt-1">Отвечаем в течение часа</p>
-                </div>
-              </div>
-              
-              <div 
-                onClick={() => scrollTo('contacts')}
-                className="flex items-start gap-4 group cursor-pointer"
+            <div className="flex gap-3 pt-2">
+              <a 
+                href="https://instagram.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-accent hover:border-brand-accent hover:scale-110 transition-all duration-200"
               >
-                <div className="w-11 h-11 rounded-full bg-brand-yellow/15 flex items-center justify-center text-white group-hover:bg-brand-yellow/25 transition-colors duration-300 flex-shrink-0">
-                  <MapPin size={20} strokeWidth={2} />
+                <Instagram size={18} strokeWidth={2} />
+              </a>
+              <a 
+                href="https://t.me" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-accent hover:border-brand-accent hover:scale-110 transition-all duration-200"
+              >
+                <Send size={18} strokeWidth={2} />
+              </a>
+            </div>
+          </div>
+          
+          {/* Column 2: Contact Info */}
+          <div className="space-y-5">
+            <h4 className="text-xs font-bold text-white/50 uppercase tracking-wider mb-4">Контакты</h4>
+            
+            <div className="space-y-4">
+              <a 
+                href="tel:+74951234567"
+                className="flex items-start gap-3 group hover:translate-x-1 transition-transform duration-200"
+              >
+                <div className="w-9 h-9 rounded-xl bg-brand-accent/10 flex items-center justify-center text-white flex-shrink-0 group-hover:bg-brand-accent/20 transition-colors">
+                  <Phone size={16} strokeWidth={2} />
                 </div>
                 <div>
-                  <p className="text-white font-bold text-lg">Москва</p>
-                  <p className="text-white/50 text-sm mt-1">Доставка в пределах МКАД</p>
+                  <p className="text-white font-bold text-sm group-hover:text-brand-accent-light transition-colors">+7 (495) 123-45-67</p>
+                  <p className="text-white/50 text-xs mt-0.5">Ежедневно 9:00–22:00</p>
+                </div>
+              </a>
+              
+              <a 
+                href="mailto:hello@freshbox.ru"
+                className="flex items-start gap-3 group hover:translate-x-1 transition-transform duration-200"
+              >
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/10 flex items-center justify-center text-white flex-shrink-0 group-hover:bg-emerald-500/20 transition-colors">
+                  <Mail size={16} strokeWidth={2} />
+                </div>
+                <div>
+                  <p className="text-white font-bold text-sm group-hover:text-brand-accent-light transition-colors">hello@freshbox.ru</p>
+                  <p className="text-white/50 text-xs mt-0.5">Ответим в течение часа</p>
+                </div>
+              </a>
+              
+              <div className="flex items-start gap-3 group">
+                <div className="w-9 h-9 rounded-xl bg-brand-yellow/10 flex items-center justify-center text-white flex-shrink-0">
+                  <MapPin size={16} strokeWidth={2} />
+                </div>
+                <div>
+                  <p className="text-white font-bold text-sm">Москва</p>
+                  <p className="text-white/50 text-xs mt-0.5">Доставка в пределах МКАД</p>
                 </div>
               </div>
             </div>
           </div>
           
-          {/* Quick Links */}
-          <div className="space-y-6">
-            <h4 className="text-xs font-bold text-white/50 uppercase tracking-widest mb-6">Навигация</h4>
+          {/* Column 3: Navigation */}
+          <div className="space-y-5">
+            <h4 className="text-xs font-bold text-white/50 uppercase tracking-wider mb-4">Навигация</h4>
             
-            <ul className="space-y-4">
-              <li>
-                <button 
-                  onClick={() => scrollTo('catalog')} 
-                  className="text-white/60 hover:text-white transition-all duration-300 text-left text-base flex items-center gap-3 group"
-                >
-                  <span className="w-2 h-2 rounded-full bg-brand-accent/40 group-hover:bg-brand-accent transition-colors flex-shrink-0"></span>
-                  Каталог боксов
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => scrollTo('configurator')} 
-                  className="text-white/60 hover:text-white transition-all duration-300 text-left text-base flex items-center gap-3 group"
-                >
-                  <span className="w-2 h-2 rounded-full bg-brand-accent/40 group-hover:bg-brand-accent transition-colors flex-shrink-0"></span>
-                  Конструктор боксов
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => scrollTo('faq')} 
-                  className="text-white/60 hover:text-white transition-all duration-300 text-left text-base flex items-center gap-3 group"
-                >
-                  <span className="w-2 h-2 rounded-full bg-brand-accent/40 group-hover:bg-brand-accent transition-colors flex-shrink-0"></span>
-                  Зона доставки
-                </button>
-              </li>
-              <li>
-                <button 
-                  onClick={() => scrollTo('b2b')} 
-                  className="text-white/60 hover:text-white transition-all duration-300 text-left text-base flex items-center gap-3 group"
-                >
-                  <span className="w-2 h-2 rounded-full bg-brand-accent/40 group-hover:bg-brand-accent transition-colors flex-shrink-0"></span>
-                  Бизнес-предложение
-                </button>
-              </li>
+            <ul className="space-y-3">
+              {[
+                { label: 'Каталог боксов', id: 'catalog' },
+                { label: 'Конструктор', id: 'configurator' },
+                { label: 'Для бизнеса', id: 'b2b' },
+                { label: 'FAQ', id: 'faq' }
+              ].map((link, index) => (
+                <li key={index}>
+                  <button 
+                    onClick={() => scrollTo(link.id)} 
+                    className="text-white/60 hover:text-white transition-colors duration-200 text-sm flex items-center gap-2 group"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-accent/40 group-hover:bg-brand-accent transition-colors flex-shrink-0"></span>
+                    {link.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 4: Additional */}
+          <div className="space-y-5">
+            <h4 className="text-xs font-bold text-white/50 uppercase tracking-wider mb-4">Информация</h4>
+            
+            <ul className="space-y-3">
+              {[
+                { label: 'О компании', href: '#' },
+                { label: 'Доставка и оплата', href: '#' },
+                { label: 'Политика конфиденциальности', href: '#' },
+                { label: 'Публичная оферта', href: '/offer' }
+              ].map((link, index) => (
+                <li key={index}>
+                  <a 
+                    href={link.href}
+                    className="text-white/60 hover:text-white transition-colors duration-200 text-sm flex items-center gap-2 group"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-accent/40 group-hover:bg-brand-accent transition-colors flex-shrink-0"></span>
+                    {link.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
         
-        {/* Bottom Bar - Clean */}
-        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-white/40">
+        {/* Bottom Bar - Clean & Tight */}
+        <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-white/40">
           <p>© {new Date().getFullYear()} FreshBox. Все права защищены</p>
           <p className="flex items-center gap-2">
             <span>Сделано с</span>
-            <span className="text-xl" role="img" aria-label="orange">🍊</span>
+            <span className="text-lg" role="img" aria-label="orange">🍊</span>
           </p>
         </div>
-      </Container>
+      </div>
     </footer>
   );
 };

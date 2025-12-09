@@ -1,103 +1,178 @@
 import React from 'react';
-import { Sparkles, Package, BadgeCheck, Apple } from 'lucide-react';
-import { useReveal, useStaggeredReveal } from '@/hooks';
+import { Apple, CheckCircle2, Gift, ShieldCheck, Zap, Heart } from 'lucide-react';
+import { useReveal } from '@/hooks';
 import { SectionLight } from '@/components/ui';
 
-interface Benefit {
-  id: string;
-  icon: React.ElementType;
+interface SecondaryBenefit {
+  icon: React.ReactNode;
   title: string;
   description: string;
+  gradient: string;
+  iconColor: string;
 }
-
-const BENEFITS: Benefit[] = [
-  {
-    id: '1',
-    icon: Apple,
-    title: 'Только премиальные фрукты',
-    description: 'Отбираем каждый фрукт вручную. Никаких компромиссов в качестве.'
-  },
-  {
-    id: '2',
-    icon: Sparkles,
-    title: 'Сбор в день доставки',
-    description: 'Утром на базе — в обед у вас. Максимальная свежесть гарантирована.'
-  },
-  {
-    id: '3',
-    icon: Package,
-    title: 'Идеально упаковано',
-    description: 'Красивая экологичная упаковка. Готово к подарку и сторис.'
-  },
-  {
-    id: '4',
-    icon: BadgeCheck,
-    title: '100% свежесть гарантирована',
-    description: 'Не понравилось? Вернём деньги без лишних вопросов.'
-  }
-];
 
 const WhyFreshBox: React.FC = () => {
   const { ref: sectionRef, isVisible: sectionVisible } = useReveal({ threshold: 0.1 });
-  const benefitReveals = useStaggeredReveal(BENEFITS.length, 100, 150);
+
+  const secondaryBenefits: SecondaryBenefit[] = [
+    {
+      icon: <Apple size={48} strokeWidth={2.5} />,
+      title: 'Премиум фрукты',
+      description: '0 компромиссов по вкусу и виду',
+      gradient: 'from-lime-50 to-emerald-50/50',
+      iconColor: 'from-brand-green via-emerald-500 to-brand-green',
+    },
+    {
+      icon: <Gift size={48} strokeWidth={2.5} />,
+      title: 'Упаковка мечты',
+      description: 'ВАУ-эффект, готовый к сторис и фото',
+      gradient: 'from-yellow-50 to-amber-50/50',
+      iconColor: 'from-brand-yellow via-amber-400 to-brand-accent',
+    },
+    {
+      icon: <ShieldCheck size={48} strokeWidth={2.5} />,
+      title: 'Гарантия возврата',
+      description: 'Если что-то не понравится — вернём деньги или заменим бокс',
+      gradient: 'from-emerald-50 to-lime-50/50',
+      iconColor: 'from-brand-green via-emerald-500 to-lime-500',
+    },
+  ];
 
   return (
-    <SectionLight id="why-freshbox" ref={sectionRef} className={`reveal ${sectionVisible ? 'reveal-visible' : ''}`} withBlobs={true}>
-      <div className="max-w-7xl mx-auto">
-        {/* Header - Centered, Bold */}
-        <div className="text-center mb-12 md:mb-16 lg:mb-20">
-          <div className="inline-block px-4 py-1.5 rounded-full bg-brand-green/8 border border-brand-green/15 text-brand-green font-bold text-xs uppercase tracking-widest mb-8">
-            Наша философия
+    <SectionLight 
+      id="why-freshbox" 
+      ref={sectionRef} 
+      className={`reveal ${sectionVisible ? 'reveal-visible' : ''} relative overflow-hidden`} 
+      withBlobs={false}
+    >
+      {/* Clean, Soft Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-lime-50/60 via-yellow-50/50 to-orange-50/60 pointer-events-none"></div>
+      
+      {/* Subtle Light Accents */}
+      <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-gradient-to-br from-brand-green/8 to-transparent rounded-full blur-[150px] pointer-events-none"></div>
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gradient-to-tl from-brand-accent/6 to-transparent rounded-full blur-[150px] pointer-events-none"></div>
+
+      {/* Minimal Fruit Decoration */}
+      <div className="absolute top-16 right-12 text-6xl opacity-10 pointer-events-none animate-float-slow">🍊</div>
+      <div className="absolute bottom-20 left-12 text-6xl opacity-10 pointer-events-none animate-float-slow" style={{ animationDelay: '1.5s' }}>🍏</div>
+
+      <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+        {/* Header */}
+        <div className={`text-center mb-10 md:mb-14 reveal reveal-fade-up ${sectionVisible ? 'reveal-visible' : ''}`}>
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-brand-yellow/15 via-brand-accent/10 to-brand-green/15 border border-brand-accent/20 text-brand-accent font-bold text-sm uppercase tracking-wide mb-6 shadow-sm">
+            <Heart size={16} strokeWidth={2.5} fill="currentColor" />
+            <span>почему нас любят 💛</span>
           </div>
-          <h2 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-brand-text leading-[0.9] mb-8 max-w-4xl mx-auto">
-            Почему <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-green via-brand-accent to-brand-yellow">FreshBox</span>?
+
+          {/* Title */}
+          <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-brand-text leading-tight mb-4 px-4">
+            Свежесть и любовь{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-green via-brand-accent to-brand-yellow">
+              в каждой коробке
+            </span>
           </h2>
-          <p className="text-xl md:text-2xl lg:text-3xl text-brand-text-soft max-w-3xl mx-auto leading-relaxed">
-            Мы делаем больше, чем доставляем фрукты — мы дарим радость и заботу о вашем здоровье
+
+          {/* Subtitle */}
+          <p className="text-lg md:text-xl lg:text-2xl text-brand-text-soft font-semibold max-w-3xl mx-auto px-4">
+            4 преимущества, из-за которых к нам возвращаются
           </p>
         </div>
 
-        {/* Benefits Grid - Modern 2x2 Layout with More Space */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 lg:gap-12">
-          {BENEFITS.map((benefit, index) => {
-            const Icon = benefit.icon;
-            return (
-              <div
-                key={benefit.id}
-                ref={benefitReveals[index].ref as React.RefObject<HTMLDivElement>}
-                className={`group relative overflow-hidden bg-white rounded-[--radius-card] p-10 md:p-12 lg:p-14 border border-brand-text/5 hover:border-brand-accent/20 transition-all duration-500 hover:shadow-[--shadow-elevated] hover:-translate-y-2 reveal reveal-fade-up ${
-                  benefitReveals[index].isVisible ? 'reveal-visible' : ''
-                }`}
-              >
-                {/* Subtle Background Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-green/2 via-brand-accent-light/1 to-brand-yellow/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                
-                {/* Content */}
-                <div className="relative z-10">
-                  {/* Icon - Modern Style, Larger */}
-                  <div className="mb-8">
-                    <div className="inline-flex items-center justify-center w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-gradient-to-br from-brand-green/8 to-brand-accent-light/8 border border-brand-green/15 group-hover:bg-gradient-to-br group-hover:from-brand-green/15 group-hover:to-brand-accent-light/15 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                      <Icon 
-                        size={40} 
-                        strokeWidth={2.5} 
-                        className="text-brand-green group-hover:text-brand-accent transition-colors duration-500" 
-                      />
-                    </div>
-                  </div>
+        {/* Main Benefit - Wide Featured Card */}
+        <div className={`mb-10 md:mb-12 reveal reveal-fade-up ${sectionVisible ? 'reveal-visible' : ''}`}>
+          {/* Main Badge */}
+          <div className="text-center mb-4">
+            <div className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-brand-accent to-brand-accent-dark text-white font-bold text-sm uppercase tracking-wide shadow-lg">
+              <Zap size={16} strokeWidth={2.5} fill="currentColor" />
+              <span>Главное преимущество</span>
+            </div>
+          </div>
 
-                  {/* Title */}
-                  <h3 className="text-2xl md:text-3xl lg:text-4xl font-black text-brand-text mb-4 leading-tight">
-                    {benefit.title}
-                  </h3>
+          {/* Main Card */}
+          <div 
+            className="group relative rounded-3xl p-6 md:p-8 lg:p-10 shadow-lg border-2 border-brand-accent/40 bg-gradient-to-br from-orange-50 via-yellow-50 to-amber-50/80 backdrop-blur-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02]"
+          >
+            {/* Glow Effect */}
+            <div 
+              className="absolute -inset-4 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl pointer-events-none"
+              style={{
+                background: 'radial-gradient(circle at center, rgba(249, 115, 22, 0.2), transparent 70%)',
+              }}
+            ></div>
 
-                  {/* Description */}
-                  <p className="text-base md:text-lg text-brand-text-soft leading-relaxed">
-                    {benefit.description}
-                  </p>
+            <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 md:gap-10">
+              {/* Icon */}
+              <div className="flex-shrink-0">
+                <div className="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-gradient-to-br from-brand-accent via-brand-accent-dark to-brand-yellow flex items-center justify-center text-white shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-300">
+                  <Zap size={48} strokeWidth={2.5} fill="currentColor" />
                 </div>
               </div>
-            );
-          })}
+
+              {/* Content */}
+              <div className="flex-1 text-center md:text-left">
+                <h3 className="text-2xl md:text-3xl lg:text-4xl font-black text-brand-text leading-tight mb-2">
+                  Свежесть в день доставки
+                </h3>
+                <p className="text-base md:text-lg lg:text-xl text-brand-accent font-bold mb-3">
+                  Собрали — привезли в тот же день
+                </p>
+                <p className="text-sm md:text-base text-brand-text-soft font-medium leading-relaxed max-w-2xl">
+                  Фрукты приезжают сочными, не успевают "уставать" в холодильниках и на витринах. Каждый бокс собирается под заказ в день доставки.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Secondary Benefits - Compact Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-10 md:mb-12">
+          {secondaryBenefits.map((benefit, index) => (
+            <div
+              key={index}
+              className={`group relative rounded-3xl p-6 md:p-7 shadow-md border-2 border-brand-text/10 bg-gradient-to-br ${benefit.gradient} backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:scale-105 hover:border-brand-accent/30 reveal reveal-fade-up ${sectionVisible ? 'reveal-visible' : ''}`}
+              style={{
+                animationDelay: `${index * 100}ms`,
+              }}
+            >
+              {/* Icon */}
+              <div className="flex justify-center mb-5">
+                <div 
+                  className={`w-16 h-16 md:w-18 md:h-18 rounded-xl bg-gradient-to-br ${benefit.iconColor} flex items-center justify-center text-white shadow-md group-hover:scale-110 group-hover:-rotate-6 transition-all duration-300`}
+                >
+                  {benefit.icon}
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="text-center">
+                <h4 className="text-lg md:text-xl font-black text-brand-text leading-tight mb-2">
+                  {benefit.title}
+                </h4>
+                <p className="text-sm text-brand-text-soft font-medium leading-relaxed">
+                  {benefit.description}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Social Proof */}
+        <div className={`flex justify-center reveal reveal-fade-up ${sectionVisible ? 'reveal-visible' : ''}`}>
+          <div className="inline-flex items-center gap-4 px-6 py-4 rounded-full bg-white/90 backdrop-blur-sm border-2 border-brand-green/20 shadow-md">
+            <div className="relative flex-shrink-0">
+              <div className="absolute inset-0 rounded-full bg-brand-green/20 animate-ping-slow"></div>
+              <CheckCircle2 size={32} className="text-brand-green relative z-10" strokeWidth={2.5} fill="currentColor" />
+            </div>
+            <div className="text-left">
+              <div className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-green via-brand-accent to-brand-yellow leading-none mb-0.5">
+                500+
+              </div>
+              <p className="text-xs md:text-sm font-semibold text-brand-text-soft">
+                счастливых клиентов 🎉
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </SectionLight>

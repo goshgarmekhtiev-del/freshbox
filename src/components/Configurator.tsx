@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { BoxSize, BoxType } from '@/types';
 import type { Product } from '@/types';
 import { CONFIGURATOR_IMAGES } from '@/constants';
-import { Sparkles, ArrowRight, Package, Box, Container } from 'lucide-react';
+import { Sparkles, ArrowRight, Package, Box, Container, Truck } from 'lucide-react';
 import { useReveal } from '@/hooks';
-import { Button, ImageWithPlaceholder } from '@/components/ui';
+import { ImageWithPlaceholder } from '@/components/ui';
 
 interface ConfiguratorProps {
   onAddCustom: (product: Product, e: React.MouseEvent) => void;
@@ -17,7 +16,6 @@ const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
   const [comment, setComment] = useState('');
   
   const { ref: sectionRef, isVisible: sectionVisible } = useReveal({ threshold: 0.1 });
-  const { ref: configRef, isVisible: configVisible } = useReveal({ threshold: 0.2 });
   
   // Image state
   const [currentImage, setCurrentImage] = useState(CONFIGURATOR_IMAGES[BoxType.CLASSIC]);
@@ -29,7 +27,7 @@ const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
     const timeout = setTimeout(() => {
       setCurrentImage(CONFIGURATOR_IMAGES[type]);
       setImageOpacity(1);
-    }, 300); // wait for fade out
+    }, 300);
     return () => clearTimeout(timeout);
   }, [type]);
 
@@ -59,132 +57,200 @@ const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
 
   // Helper for size icons
   const SizeIcon = ({ s }: { s: BoxSize }) => {
-    if (s === BoxSize.SMALL) return <Package size={24} strokeWidth={2.5} />;
-    if (s === BoxSize.MEDIUM) return <Box size={32} strokeWidth={2.5} />;
-    return <Container size={40} strokeWidth={2.5} />;
+    if (s === BoxSize.SMALL) return <Package size={20} strokeWidth={2.5} />;
+    if (s === BoxSize.MEDIUM) return <Box size={24} strokeWidth={2.5} />;
+    return <Container size={28} strokeWidth={2.5} />;
+  };
+
+  // Helper for size descriptions
+  const getSizeDescription = () => {
+    if (size === BoxSize.SMALL) return 'Примерно 5–7 фруктов, идеален для одного';
+    if (size === BoxSize.MEDIUM) return 'Примерно 10–14 фруктов, идеален для семьи';
+    return 'Примерно 18–22 фрукта, идеален для компании';
+  };
+
+  const getConfigName = () => {
+    const sizeLabel = size === BoxSize.SMALL ? 'Малый' : size === BoxSize.MEDIUM ? 'Средний' : 'Большой';
+    return `${sizeLabel} бокс • ${type}`;
   };
 
   return (
-    <section id="configurator" ref={sectionRef as React.RefObject<HTMLElement>} className={`py-16 md:py-20 lg:py-24 bg-white reveal ${sectionVisible ? 'reveal-visible' : ''}`}>
-      <div className="container mx-auto px-4 md:px-8 max-w-7xl">
-        {/* Header - Centered */}
-        <div className="text-center mb-12 md:mb-16 lg:mb-20">
-          <div className="inline-block px-4 py-1.5 rounded-full bg-brand-accent/8 border border-brand-accent/15 text-brand-accent font-bold text-xs uppercase tracking-widest mb-8">
+    <section 
+      id="configurator" 
+      ref={sectionRef as React.RefObject<HTMLElement>} 
+      className={`py-16 lg:py-20 bg-white reveal ${sectionVisible ? 'reveal-visible' : ''}`}
+    >
+      <div className="max-w-6xl mx-auto px-4 lg:px-6">
+        {/* Header - Compact */}
+        <div className="text-center mb-10">
+          <div className="inline-block px-4 py-1.5 rounded-full bg-brand-accent/8 border border-brand-accent/15 text-brand-accent font-bold text-xs uppercase tracking-widest mb-6">
             Конструктор
           </div>
-          <h2 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-brand-text leading-[0.9] mb-8 max-w-4xl mx-auto">
-            Собери свой <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">идеал</span>
+          <h2 className="text-4xl lg:text-5xl font-extrabold text-brand-text leading-tight mb-4 max-w-4xl mx-auto">
+            Собери свой{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">
+              идеал
+            </span>
           </h2>
-          <p className="text-xl md:text-2xl lg:text-3xl text-brand-text-soft max-w-3xl mx-auto leading-relaxed">
-            Не любишь киви? Хочешь только манго? Без проблем. Мы соберем бокс точно по твоим правилам.
+          <p className="text-lg lg:text-xl text-brand-text-soft max-w-3xl mx-auto leading-relaxed mt-4">
+            Мы соберем бокс точно по твоим правилам
           </p>
         </div>
 
-        <div ref={configRef as React.RefObject<HTMLDivElement>} className={`grid lg:grid-cols-12 gap-12 lg:gap-20 items-start reveal reveal-fade-up ${configVisible ? 'reveal-visible' : ''}`}>
+        {/* Two Column Layout - Configurator Steps + Preview */}
+        <div className="mt-10 grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-stretch lg:min-h-[460px]">
           
-          {/* Form Side */}
-          <div className="lg:col-span-7 order-2 lg:order-1">
+          {/* Left Column - Configurator Steps */}
+          <div className="bg-white/70 backdrop-blur-sm rounded-[32px] p-6 lg:p-8 flex flex-col gap-6 shadow-lg shadow-emerald-900/5 border border-emerald-50">
+            
+            {/* Step 1: Size */}
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="inline-flex h-7 min-w-[28px] items-center justify-center rounded-full bg-brand-accent-light text-xs font-semibold text-brand-text">
+                  1
+                </span>
+                <span className="text-sm font-semibold uppercase tracking-wide text-brand-text-soft">
+                  Размер
+                </span>
+              </div>
+              
+              <div className="grid grid-cols-3 gap-3">
+                {Object.values(BoxSize).map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setSize(s)}
+                    className={`h-[112px] lg:h-[120px] rounded-3xl transition-all duration-300 border-2 flex flex-col items-center justify-center gap-3 ${
+                      size === s 
+                        ? 'bg-brand-accent text-white border-transparent shadow-[0_18px_45px_rgba(249,115,22,0.35)] scale-105' 
+                        : 'bg-white border-emerald-100 hover:border-brand-accent/30 hover:-translate-y-0.5'
+                    }`}
+                  >
+                    <div className={`transition-colors duration-300 ${size === s ? 'text-white' : 'text-brand-text/40'}`}>
+                      <SizeIcon s={s} />
+                    </div>
+                    <span className={`text-xs lg:text-sm font-bold ${size === s ? 'text-white' : 'text-brand-text'}`}>
+                      {s.split(' ')[0]}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
 
-            <div className="space-y-10 bg-white p-10 md:p-12 lg:p-14 rounded-[--radius-card] border border-brand-text/5 shadow-[--shadow-soft]">
-              {/* Size Selection */}
-              <div>
-                <label className="block text-sm font-bold text-brand-text mb-6">1. Размер</label>
-                <div className="grid grid-cols-3 gap-4">
-                  {Object.values(BoxSize).map((s) => (
-                    <button
-                      key={s}
-                      onClick={() => setSize(s)}
-                      className={`py-8 px-4 rounded-2xl transition-all duration-300 border-2 flex flex-col items-center justify-center gap-4 ${
-                        size === s 
-                          ? 'bg-gradient-to-br from-brand-accent to-brand-accent-dark text-white border-brand-accent shadow-[--shadow-elevated] scale-105' 
-                          : 'bg-white border-brand-text/10 hover:border-brand-accent/30 hover:bg-brand-accent/5'
-                      }`}
-                    >
-                      <div className={`transition-colors duration-300 ${size === s ? 'text-white' : 'text-brand-text/40'}`}>
-                        <SizeIcon s={s} />
-                      </div>
-                      <span className={`text-sm font-bold ${size === s ? 'text-white' : 'text-brand-text'}`}>{s.split(' ')[0]}</span>
-                    </button>
-                  ))}
-                </div>
+            {/* Step 2: Type */}
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="inline-flex h-7 min-w-[28px] items-center justify-center rounded-full bg-brand-accent-light text-xs font-semibold text-brand-text">
+                  2
+                </span>
+                <span className="text-sm font-semibold uppercase tracking-wide text-brand-text-soft">
+                  Наполнение
+                </span>
+              </div>
+              
+              <div className="flex flex-wrap gap-3">
+                {Object.values(BoxType).map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setType(t)}
+                    className={`inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium transition-all duration-300 ${
+                      type === t 
+                        ? 'bg-brand-text text-white border-transparent shadow-md' 
+                        : 'bg-white border-emerald-100 text-brand-text hover:border-brand-accent/30 hover:bg-emerald-50/50'
+                    }`}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Step 3: Comment */}
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="inline-flex h-7 min-w-[28px] items-center justify-center rounded-full bg-brand-accent-light text-xs font-semibold text-brand-text">
+                  3
+                </span>
+                <span className="text-sm font-semibold uppercase tracking-wide text-brand-text-soft">
+                  Пожелания
+                </span>
+              </div>
+              
+              <textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Например: побольше ананасов, без яблок..."
+                className="w-full p-4 rounded-3xl border-2 border-emerald-100 bg-white/60 focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none min-h-[96px] text-sm text-brand-text placeholder-brand-text-soft resize-none transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Right Column - Preview + Summary */}
+          <div className="bg-gradient-to-b from-[#FDFBEF] via-[#F7FFFA] to-[#E4FAE9] rounded-[32px] p-6 lg:p-8 flex flex-col justify-between shadow-lg shadow-emerald-900/10 border border-emerald-100">
+            
+            {/* Top Section - Preview */}
+            <div>
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/60 backdrop-blur-sm border border-emerald-200/50 text-brand-text text-xs font-semibold mb-4">
+                <Sparkles size={14} strokeWidth={2.5} className="text-brand-accent" />
+                Твой бокс
               </div>
 
-              {/* Type Selection */}
-              <div>
-                <label className="block text-sm font-bold text-brand-text mb-6">2. Наполнение</label>
-                <div className="flex flex-wrap gap-3">
-                  {Object.values(BoxType).map((t) => (
-                    <button
-                      key={t}
-                      onClick={() => setType(t)}
-                      className={`py-4 px-6 rounded-xl text-base transition-all duration-300 border-2 font-bold ${
-                        type === t 
-                          ? 'bg-brand-text text-white border-brand-text shadow-[--shadow-elevated]' 
-                          : 'bg-white border-brand-text/10 text-brand-text hover:border-brand-accent/30'
-                      }`}
-                    >
-                      {t}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              {/* Configuration Name */}
+              <h3 className="text-2xl lg:text-3xl font-black text-brand-text leading-tight mb-2">
+                {getConfigName()}
+              </h3>
 
-              {/* Comment */}
-              <div>
-                <label className="block text-sm font-bold text-brand-text mb-6">3. Пожелания</label>
-                <textarea
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  placeholder="Например: побольше ананасов, без яблок..."
-                  className="w-full p-5 rounded-xl border-2 border-brand-text/10 bg-white focus:border-brand-accent focus:ring-4 focus:ring-brand-accent/10 outline-none h-32 text-brand-text placeholder-brand-text-soft resize-none transition-all font-medium"
+              {/* Description */}
+              <p className="text-sm text-brand-text-soft leading-relaxed mb-5">
+                {getSizeDescription()}
+              </p>
+
+              {/* Image Preview */}
+              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-brand-accent-light/20 to-brand-yellow/20 shadow-md">
+                <ImageWithPlaceholder
+                  src={currentImage}
+                  alt={`Превью фруктового бокса FreshBox — ${type}`}
+                  containerClassName="absolute inset-0"
+                  className="w-full h-full object-contain transition-all duration-500"
+                  loading="lazy"
+                  useWebP={true}
+                  style={{ opacity: imageOpacity, maxHeight: '220px' }}
                 />
               </div>
+            </div>
 
-              {/* Total & Action */}
-              <div className="pt-8 border-t border-brand-text/5 flex flex-col sm:flex-row items-center justify-between gap-6">
+            {/* Bottom Section - Price & CTA */}
+            <div className="mt-6 flex flex-col gap-4">
+              {/* Price */}
+              <div className="flex items-baseline justify-between gap-4">
                 <div>
-                  <span className="text-sm text-brand-text-soft uppercase tracking-wider font-bold">Цена за бокс</span>
-                  <div className="text-4xl md:text-5xl font-black text-brand-text mt-2">{getPrice().toLocaleString()} ₽</div>
+                  <div className="text-sm uppercase tracking-wide text-brand-text-soft font-semibold">
+                    Цена за бокс
+                  </div>
+                  <div className="mt-1 text-3xl font-extrabold text-brand-text">
+                    {getPrice().toLocaleString()} ₽
+                  </div>
                 </div>
-                <Button
-                  variant="primary"
-                  size="lg"
-                  onClick={handleAdd}
-                  icon={<ArrowRight size={20} strokeWidth={2.5} className="group-hover:translate-x-1 transition-transform" />}
-                  iconPosition="right"
-                  className="px-8 py-4 text-lg sm:w-auto"
-                >
-                  В корзину
-                </Button>
               </div>
+
+              {/* Delivery Info */}
+              <div className="flex items-center gap-2 text-sm text-brand-text-soft">
+                <Truck size={16} strokeWidth={2.5} className="text-brand-accent flex-shrink-0" />
+                <span>Доставка ~2 часа по городу</span>
+              </div>
+
+              {/* CTA Button */}
+              <button
+                type="button"
+                onClick={handleAdd}
+                className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-brand-accent to-[#FFB347] py-3.5 text-base font-semibold text-white shadow-[0_18px_40px_rgba(248,113,22,0.45)] hover:brightness-[1.03] active:translate-y-[1px] transition-all group"
+              >
+                В корзину
+                <ArrowRight size={20} strokeWidth={2.5} className="group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
           </div>
 
-          {/* Image Side - Modern Preview */}
-          <div className="lg:col-span-5 order-1 lg:order-2">
-            <div className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-gradient-to-br from-brand-accent-light/20 to-brand-yellow/20 border border-brand-text/5 shadow-[--shadow-elevated] group">
-              <ImageWithPlaceholder
-                src={currentImage}
-                alt={`Превью фруктового бокса FreshBox — ${type}`}
-                containerClassName="absolute inset-0"
-                className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-                loading="lazy"
-                useWebP={true}
-                style={{ opacity: imageOpacity }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-              <div className="absolute bottom-8 left-8 right-8 text-white">
-                 <div className="w-12 h-12 rounded-xl bg-brand-accent flex items-center justify-center mb-4">
-                    <Sparkles size={24} strokeWidth={2.5} className="text-white" fill="currentColor" />
-                 </div>
-                 <p className="text-2xl md:text-3xl font-black leading-tight mb-2">{type}</p>
-                 <p className="text-white/90 font-medium text-base leading-relaxed">
-                   Уникальный набор специально для тебя
-                 </p>
-              </div>
-            </div>
-          </div>
-          
         </div>
       </div>
     </section>

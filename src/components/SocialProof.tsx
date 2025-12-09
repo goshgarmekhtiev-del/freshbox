@@ -62,13 +62,13 @@ const SocialProof: React.FC<SocialProofProps> = ({ customNotification }) => {
 
       timerRef.current = setTimeout(() => {
         setVisible(false);
-      }, 6000); // Show for 6 seconds
+      }, 6000 + Math.random() * 2000); // Show for 6-8 seconds
     };
 
     // Random interval between 12-25 seconds
     const getRandomInterval = () => 12000 + Math.random() * 13000; // 12000ms + random(0-13000ms)
 
-    const initialTimeout = setTimeout(showRandom, 5000); // First notification after 5s
+    const initialTimeout = setTimeout(showRandom, 4000 + Math.random() * 1000); // First notification after 4-5s
     
     let intervalId: ReturnType<typeof setTimeout>;
     const scheduleNext = () => {
@@ -94,7 +94,7 @@ const SocialProof: React.FC<SocialProofProps> = ({ customNotification }) => {
       role="status"
       aria-live="polite"
       aria-atomic="true"
-      className={`fixed bottom-6 left-4 md:bottom-8 md:left-8 z-50 transition-all duration-500 ${
+      className={`fixed bottom-6 left-4 md:bottom-20 md:left-8 z-40 transition-all duration-500 ${
         visible 
           ? 'translate-y-0 opacity-100' 
           : 'translate-y-8 opacity-0 pointer-events-none'

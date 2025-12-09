@@ -81,19 +81,19 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
       id="catalog"
       ref={sectionRef}
       paddingY="large"
-      className={`reveal ${sectionVisible ? 'reveal-visible' : ''}`}
+      className={`reveal ${sectionVisible ? 'reveal-visible' : ''} overflow-visible`}
     >
-      {/* Section Header - Centered, Bold */}
-      <div className="max-w-7xl mx-auto mb-12 md:mb-16 lg:mb-20 text-center">
-        <div className="inline-block px-4 py-1.5 rounded-full bg-brand-accent/8 border border-brand-accent/15 text-brand-accent font-bold text-xs uppercase tracking-widest mb-8">
+      {/* Section Header - Centered, Bold, More Breathing Space */}
+      <div className="max-w-7xl mx-auto mb-8 md:mb-10 text-center px-4">
+        <div className="inline-block px-4 py-1.5 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-brand-accent font-bold text-xs uppercase tracking-widest mb-6 shadow-sm">
           Каталог
         </div>
         
-        <h2 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black text-brand-text leading-[0.9] mb-8 max-w-5xl mx-auto">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-brand-text leading-tight mb-6">
           Премиальные <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">фруктовые боксы</span>
         </h2>
         
-        <p className="text-xl md:text-2xl lg:text-3xl text-brand-text-soft max-w-3xl mx-auto leading-relaxed">
+        <p className="text-lg md:text-xl lg:text-2xl text-brand-text-soft max-w-3xl mx-auto leading-relaxed font-semibold mb-8">
           Отборные свежие фрукты, собранные с любовью и доставленные прямо к вашей двери
         </p>
       </div>
@@ -108,13 +108,13 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
           setSortOption={setSortOption}
         />
 
-        {/* Premium Product Grid - Clean 2-3 Column Layout */}
+        {/* Premium Product Grid - Max 3 Columns */}
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
             {Array.from({ length: 6 }).map((_, index) => (
               <div
                 key={`skeleton-wrapper-${index}`}
-                className="group bg-white rounded-[--radius-card] p-6 shadow-sm flex flex-col relative overflow-hidden"
+                className="group bg-white rounded-3xl p-6 shadow-md flex flex-col relative overflow-hidden"
               >
                 <SkeletonCard count={1} />
               </div>

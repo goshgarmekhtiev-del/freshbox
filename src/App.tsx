@@ -5,6 +5,8 @@ import CartSidebar from '@/components/CartSidebar';
 import QuickViewModal from '@/components/QuickViewModal';
 import SocialProof from '@/components/SocialProof';
 import DecorativeBackground from '@/components/DecorativeBackground';
+import Marquee from '@/components/Marquee';
+import MiniCart from '@/components/MiniCart';
 import { Toast } from '@/components/ui';
 import type { Product, CartItem, NotificationData } from '@/types';
 import { ArrowUp } from 'lucide-react';
@@ -30,6 +32,9 @@ const App: React.FC = () => {
   const [toastMessage, setToastMessage] = useState('');
   
   const [lastOrder, setLastOrder] = useState<NotificationData | null>(null);
+  
+  // Track if user is in the order/checkout section
+  const [isInOrderSection, setIsInOrderSection] = useState(false);
 
   useEffect(() => {
     const observerOptions = {
@@ -60,6 +65,35 @@ const App: React.FC = () => {
       clearTimeout(timeoutId);
       observer.disconnect();
       window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // Track when user enters/exits the order form section
+  // This is used to hide the floating MiniCart widget when user is already in checkout
+  useEffect(() => {
+    const orderFormElement = document.getElementById('order-form');
+    if (!orderFormElement) return;
+
+    const observerOptions = {
+      threshold: 0.3, // At least 30% of the section is visible
+      rootMargin: "0px 0px -100px 0px"
+    };
+
+    const orderObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        // Show/hide floating cart based on whether user is viewing the order section
+        setIsInOrderSection(entry.isIntersecting);
+      });
+    }, observerOptions);
+
+    // Small delay to ensure OrderForm is rendered (it's lazy loaded)
+    const timeoutId = setTimeout(() => {
+      orderObserver.observe(orderFormElement);
+    }, 500);
+
+    return () => {
+      clearTimeout(timeoutId);
+      orderObserver.disconnect();
     };
   }, []);
 
@@ -129,6 +163,23 @@ const App: React.FC = () => {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
+  const handleGoToCheckout = () => {
+    const orderFormElement = document.getElementById('order-form');
+    if (orderFormElement) {
+      orderFormElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  /**
+   * Determines if the floating cart widget should be visible
+   * Conditions:
+   * - Cart has items
+   * - User is NOT in the order/checkout section
+   */
+  const shouldShowFloatingCart = () => {
+    return cart.length > 0 && !isInOrderSection;
+  };
+
   return (
     <div className="min-h-screen bg-brand-bg text-brand-text font-sans selection:bg-brand-accent selection:text-white overflow-x-hidden">
       {/* Premium Decorative Background - NO scroll dependencies */}
@@ -139,6 +190,8 @@ const App: React.FC = () => {
       <main className="relative z-10 pt-20">
         {/* Above-fold: Critical content loaded immediately */}
         <Hero />
+        {/* Marquee - Between Hero and ProblemSolution */}
+        <Marquee speed="normal" className="relative z-10" />
         <ProblemSolution />
         <WhyFreshBox />
         
@@ -148,11 +201,11 @@ const App: React.FC = () => {
             <div className="w-12 h-12 border-4 border-brand-accent border-t-transparent rounded-full animate-spin"></div>
           </div>
         }>
-          <Benefits />
           <HowItWorks />
           <Catalog onAdd={(p, e) => addToCart(p, 1, e)} onQuickView={setQuickViewProduct} />
-          <Configurator onAddCustom={(p, e) => addToCart(p, 1, e)} />
           <Reviews />
+          <Benefits />
+          <Configurator onAddCustom={(p, e) => addToCart(p, 1, e)} />
           <B2B />
           <FAQ />
           <OrderForm 
@@ -175,6 +228,7 @@ const App: React.FC = () => {
         cart={cart}
         onRemove={removeFromCart}
         onUpdateQty={updateQuantity}
+        onQuickView={setQuickViewProduct}
       />
 
       <QuickViewModal 
@@ -191,6 +245,17 @@ const App: React.FC = () => {
         onClose={() => setShowToast(false)}
         duration={2000}
         type="success"
+      />
+
+      {/* Mini Cart Widget - Floating 
+          Only shown when:
+          1. Cart has items
+          2. User is NOT in the order/checkout section
+      */}
+      <MiniCart 
+        cart={cart}
+        onCheckout={handleGoToCheckout}
+        isVisible={shouldShowFloatingCart()}
       />
 
       <button

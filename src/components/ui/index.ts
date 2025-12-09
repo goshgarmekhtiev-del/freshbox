@@ -12,4 +12,5 @@ export { TextArea } from './TextArea';
 export { Badge, type BadgeVariant, type BadgeSize } from './Badge';
 export { ResponsiveImage, type ResponsiveImageProps } from './ResponsiveImage';
 export { default as ImageWithPlaceholder } from './ImageWithPlaceholder';
+export { default as LazyImage, type LazyImageProps } from './LazyImage';
 export { default as Toast } from './Toast';
