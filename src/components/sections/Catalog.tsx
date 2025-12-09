@@ -5,7 +5,6 @@ import CatalogFilters from '../CatalogFilters';
 import CatalogGrid from '../CatalogGrid';
 import SkeletonCard from '../SkeletonCard';
 import { SectionAccent, Button } from '@/components/ui';
-import { useReveal } from '@/hooks';
 
 interface CatalogProps {
   onAdd: (product: Product, e: React.MouseEvent) => void; 
@@ -16,27 +15,29 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [sortOption, setSortOption] = useState('popularity');
   const [isLoading, setIsLoading] = useState(true);
-  const { ref: sectionRef, isVisible: sectionVisible } = useReveal({ threshold: 0.1 });
 
   // Simulate initial loading (in real app, this would be data fetching)
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 800); // 800ms skeleton display
+    }, 500); // 500ms skeleton display (reduced for mobile)
     
     return () => clearTimeout(timer);
   }, []);
 
   // Show skeleton when category/sort changes (simulate re-fetching)
   useEffect(() => {
-    if (!isLoading) {
-      setIsLoading(true);
-      const timer = setTimeout(() => {
-        setIsLoading(false);
-      }, 400); // 400ms for filter changes
-      
-      return () => clearTimeout(timer);
+    // Skip loading state on first render
+    if (activeCategory === 'all' && sortOption === 'popularity') {
+      return;
     }
+    
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 300); // 300ms for filter changes (reduced for mobile)
+    
+    return () => clearTimeout(timer);
   }, [activeCategory, sortOption]);
 
   const categories = [
@@ -79,9 +80,8 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
   return (
     <SectionAccent
       id="catalog"
-      ref={sectionRef}
       paddingY="large"
-      className={`reveal ${sectionVisible ? 'reveal-visible' : ''} overflow-visible`}
+      className="overflow-visible"
     >
       {/* Section Header - Centered, Bold, More Breathing Space */}
       <div className="max-w-7xl mx-auto mb-8 md:mb-10 text-center px-4">
@@ -110,11 +110,11 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
 
         {/* Premium Product Grid - Max 3 Columns */}
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto px-4">
             {Array.from({ length: 6 }).map((_, index) => (
               <div
                 key={`skeleton-wrapper-${index}`}
-                className="group bg-white rounded-3xl p-6 shadow-md flex flex-col relative overflow-hidden"
+                className="group bg-white rounded-3xl p-6 shadow-md flex flex-col relative overflow-hidden min-h-[400px]"
               >
                 <SkeletonCard count={1} />
               </div>
@@ -129,8 +129,8 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
         )}
         
         {/* Empty State - Modern */}
-        {filteredProducts.length === 0 && (
-          <div className="text-center py-32">
+        {!isLoading && filteredProducts.length === 0 && (
+          <div className="text-center py-32 px-4">
             <div className="inline-flex items-center justify-center w-32 h-32 rounded-3xl bg-gradient-to-br from-brand-accent/10 to-brand-yellow/10 mb-8">
               <span className="text-6xl">🍊</span>
             </div>
