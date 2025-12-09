@@ -4,7 +4,14 @@ import type { Product } from '@/types';
 import CatalogFilters from '../CatalogFilters';
 import CatalogGrid from '../CatalogGrid';
 import SkeletonCard from '../SkeletonCard';
-import { SectionAccent, Button } from '@/components/ui';
+import { Button } from '@/components/ui';
+
+/**
+ * Catalog Section - Mobile-First Product Display
+ * 
+ * CRITICAL: No reveal animations or conditional rendering
+ * This section MUST be visible on all devices immediately
+ */
 
 interface CatalogProps {
   onAdd: (product: Product, e: React.MouseEvent) => void; 
@@ -78,10 +85,9 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
   }, [activeCategory, sortOption]);
 
   return (
-    <SectionAccent
+    <section
       id="catalog"
-      paddingY="large"
-      className="overflow-visible"
+      className="py-20 md:py-24 lg:py-28 bg-gradient-to-b from-white via-brand-bg/30 to-white relative"
     >
       {/* Section Header - Centered, Bold, More Breathing Space */}
       <div className="max-w-7xl mx-auto mb-8 md:mb-10 text-center px-4">
@@ -128,25 +134,25 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
           />
         )}
         
-        {/* Empty State - Modern */}
-        {!isLoading && filteredProducts.length === 0 && (
-          <div className="text-center py-32 px-4">
-            <div className="inline-flex items-center justify-center w-32 h-32 rounded-3xl bg-gradient-to-br from-brand-accent/10 to-brand-yellow/10 mb-8">
-              <span className="text-6xl">🍊</span>
-            </div>
-            <p className="text-3xl md:text-4xl font-black text-brand-text mb-4">Здесь пока пусто</p>
-            <p className="text-lg md:text-xl text-brand-text-soft mb-8">Попробуйте выбрать другую категорию</p>
-            <Button
-              variant="primary"
-              size="lg"
-              onClick={() => setActiveCategory('all')}
-              className="px-8 py-4 text-lg"
-            >
-              Показать все боксы
-            </Button>
+      {/* Empty State - Modern */}
+      {!isLoading && filteredProducts.length === 0 && (
+        <div className="text-center py-32 px-4">
+          <div className="inline-flex items-center justify-center w-32 h-32 rounded-3xl bg-gradient-to-br from-brand-accent/10 to-brand-yellow/10 mb-8">
+            <span className="text-6xl">🍊</span>
           </div>
-        )}
-    </SectionAccent>
+          <p className="text-3xl md:text-4xl font-black text-brand-text mb-4">Здесь пока пусто</p>
+          <p className="text-lg md:text-xl text-brand-text-soft mb-8">Попробуйте выбрать другую категорию</p>
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={() => setActiveCategory('all')}
+            className="px-8 py-4 text-lg"
+          >
+            Показать все боксы
+          </Button>
+        </div>
+      )}
+    </section>
   );
 };
 
