@@ -188,21 +188,34 @@ const App: React.FC = () => {
       <Navbar cartCount={cartCount} onOpenCart={() => setIsCartOpen(true)} />
       
       <main className="relative z-10 pt-20">
-        {/* Above-fold: Critical content loaded immediately */}
+        {/* 
+          🎯 CONVERSION FUNNEL FOR COLD TRAFFIC (TikTok/Reels/Shorts)
+          Target: Get user to catalog in 10-15 seconds (1-2 swipes on mobile)
+        */}
+        
+        {/* Step 1: HERO - Hook & Value Proposition (3-5 sec) */}
         <Hero />
-        {/* Marquee - Between Hero and ProblemSolution */}
+        
+        {/* Step 2: MARQUEE - Social proof & trust triggers (2-3 sec) */}
         <Marquee speed="normal" className="relative z-10" />
+        
+        {/* Step 3: CATALOG - IMMEDIATE CONVERSION OPPORTUNITY (5-10 sec) 
+            🚀 KEY CHANGE: Moved catalog right after hook to minimize friction
+            User sees products BEFORE reading explanations = faster decision
+        */}
+        <Catalog onAdd={(p, e) => addToCart(p, 1, e)} onQuickView={setQuickViewProduct} />
+        
+        {/* Step 4-5: SOCIAL PROOF & BENEFITS - Why choose us (for interested users) */}
         <ProblemSolution />
         <WhyFreshBox />
         
-        {/* Below-fold: Lazy-loaded sections (load on scroll) */}
+        {/* Below-fold: Supporting content (lazy-loaded for performance) */}
         <Suspense fallback={
           <div className="min-h-[400px] flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-lime-50">
             <div className="w-12 h-12 border-4 border-brand-accent border-t-transparent rounded-full animate-spin"></div>
           </div>
         }>
           <HowItWorks />
-          <Catalog onAdd={(p, e) => addToCart(p, 1, e)} onQuickView={setQuickViewProduct} />
           <Reviews />
           <Benefits />
           <Configurator onAddCustom={(p, e) => addToCart(p, 1, e)} />
