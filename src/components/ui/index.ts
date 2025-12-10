@@ -14,3 +14,4 @@ export { ResponsiveImage, type ResponsiveImageProps } from './ResponsiveImage';
 export { default as ImageWithPlaceholder } from './ImageWithPlaceholder';
 export { default as LazyImage, type LazyImageProps } from './LazyImage';
 export { default as Toast } from './Toast';
+export { default as B2BSelect } from './B2BSelect';

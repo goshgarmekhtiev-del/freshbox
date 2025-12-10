@@ -20,17 +20,19 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
 }) => {
   return (
     <section 
-      className="mt-6 mb-12 md:mb-16 max-w-5xl mx-auto px-4"
+      className="mt-6 mb-12 md:mb-16 max-w-5xl mx-auto px-4 overflow-visible relative z-50"
     >
       {/* Premium Control Panel - "Воздушная" панель с фильтрами и сортировкой */}
       <div 
         className="
+          relative
           flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4
           rounded-[999px]
           px-6 py-3
           bg-white/80
           shadow-[0_18px_45px_rgba(6,78,59,0.08)]
           backdrop-blur-sm
+          overflow-visible
         "
       >
         {/* Left Zone: Filters */}
@@ -77,8 +79,8 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         </div>
 
         {/* Right Zone: Sort Button */}
-        <div className="flex items-center gap-3 ml-auto lg:ml-0 justify-center lg:justify-end">
-          <div className="relative group">
+        <div className="flex items-center gap-3 ml-auto lg:ml-0 justify-center lg:justify-end overflow-visible">
+          <div className="relative group overflow-visible">
             <button 
               className="
                 inline-flex items-center gap-2
@@ -100,8 +102,8 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
               <span>Сортировка</span>
             </button>
             
-            {/* Dropdown Menu */}
-            <div className="absolute right-0 top-full mt-3 w-64 bg-white rounded-2xl shadow-[0_24px_60px_rgba(15,118,110,0.2)] border border-brand-accent/10 p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-right z-30">
+            {/* Dropdown Menu - High z-index to stay above product cards */}
+            <div className="absolute right-0 top-full mt-3 w-64 bg-white rounded-2xl shadow-[0_24px_60px_rgba(15,118,110,0.2)] border border-brand-accent/10 p-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-right z-[100]">
               {sortOptions.map((opt) => (
                 <button
                   key={opt.id}

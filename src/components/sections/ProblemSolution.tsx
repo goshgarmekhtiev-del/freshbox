@@ -106,7 +106,7 @@ const ProblemSolution: React.FC = () => {
         {/* Header */}
         <div className={`text-center mb-10 md:mb-14 reveal reveal-fade-up ${sectionVisible ? 'reveal-visible' : ''}`}>
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-brand-accent/15 to-brand-yellow/15 border border-brand-accent/20 text-brand-accent font-bold text-sm uppercase tracking-wide mb-6 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-brand font-bold text-xs uppercase tracking-widest mb-6 shadow-sm">
             <Sparkles size={16} strokeWidth={2.5} />
             <span>3 супер-причины</span>
           </div>
@@ -114,7 +114,7 @@ const ProblemSolution: React.FC = () => {
           {/* Title */}
           <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-brand-text leading-tight mb-4 px-4">
             Почему все{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-green via-brand-accent to-brand-yellow">
+            <span className="text-gradient-brand-heading">
               выбирают FreshBox
             </span>
             ?
@@ -123,7 +123,7 @@ const ProblemSolution: React.FC = () => {
           {/* Subtitle */}
           <p className="text-lg md:text-xl lg:text-2xl text-brand-text-soft font-semibold max-w-2xl mx-auto px-4">
             Не просто фрукты —{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-brand-green font-bold">
+            <span className="text-gradient-brand-heading font-bold">
               эмоция в коробке
             </span>{' '}
             💚

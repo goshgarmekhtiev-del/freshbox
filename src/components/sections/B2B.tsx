@@ -95,13 +95,13 @@ const B2B: React.FC = () => {
         
         {/* Header Section - Compact for 1440x900 */}
         <div ref={headerRef as React.RefObject<HTMLDivElement>} className={`text-center mb-7 reveal reveal-fade-up ${headerVisible ? 'reveal-visible' : ''}`}>
-          <div className="inline-block px-4 py-1.5 rounded-full bg-brand-accent/8 border border-brand-accent/15 text-brand-accent font-bold text-xs uppercase tracking-widest mb-5">
+          <div className="inline-block px-4 py-1.5 rounded-full badge-brand font-bold text-xs uppercase tracking-widest mb-5 shadow-sm">
             Бизнес
           </div>
           
           <h2 className="text-4xl lg:text-5xl font-extrabold text-brand-text leading-tight mb-3 max-w-4xl mx-auto">
             Энергия{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">
+            <span className="text-gradient-brand-heading">
               витаминов
             </span>{' '}
             для вашей команды
@@ -141,8 +141,8 @@ const B2B: React.FC = () => {
                 className={`relative bg-gradient-to-br from-white/90 to-emerald-50/30 backdrop-blur-sm rounded-[28px] p-6 border border-brand-text/10 hover:border-brand-accent/30 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group reveal reveal-scale-in flex flex-col h-full ${benefitReveals[index].isVisible ? 'reveal-visible' : ''}`}
               >
                 {/* Badge in top-right corner */}
-                <div className="absolute top-4 right-4 px-2.5 py-1 rounded-full bg-brand-accent-light/60 border border-brand-accent/30 text-[10px] font-bold text-brand-text uppercase tracking-wide">
-                  {benefit.badge}
+                <div className="absolute top-4 right-4 px-3 py-1.5 rounded-full badge-brand-dark text-xs font-bold uppercase tracking-widest shadow-sm">
+                  <span className="text-white">{benefit.badge}</span>
                 </div>
 
                 {/* Icon */}
@@ -169,7 +169,7 @@ const B2B: React.FC = () => {
           </div>
 
           {/* Right Column - Premium Offer Card (MAIN VISUAL FOCUS) */}
-          <div className="bg-gradient-to-br from-[#FFF9E6] via-[#F0FFF4] to-[#DFFFD6] rounded-[32px] p-7 lg:p-9 shadow-[0_24px_60px_rgba(15,118,110,0.18)] border-2 border-brand-green/20 flex flex-col relative overflow-hidden">
+          <div className="bg-gradient-to-br from-[#FFF9E6] via-[#F0FFF4] to-[#DFFFD6] rounded-[32px] p-7 lg:p-9 shadow-[0_24px_60px_rgba(15,118,110,0.18)] border-2 border-brand-text/10 flex flex-col relative overflow-hidden" style={{ boxShadow: '0 24px 60px rgba(6, 78, 59, 0.18), 0 0 0 1px rgba(6, 78, 59, 0.1), 0 0 40px rgba(22, 163, 74, 0.1) inset' }}>
             
             {/* Decorative glow */}
             <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-accent/10 rounded-full blur-3xl"></div>
@@ -177,9 +177,9 @@ const B2B: React.FC = () => {
 
             <div className="relative z-10">
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/80 backdrop-blur-md border-2 border-brand-accent/30 text-brand-text text-xs font-bold mb-5 self-start shadow-sm">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-brand font-bold text-xs uppercase tracking-widest mb-5 self-start shadow-sm">
                 <Sparkles size={16} strokeWidth={2.5} className="text-brand-accent" />
-                Премиум
+                <span>Премиум-условия</span>
               </div>
 
               {/* Title & Subtitle */}

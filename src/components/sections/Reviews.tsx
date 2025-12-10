@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Star } from 'lucide-react';
+import { Star, CheckCircle2 } from 'lucide-react';
 import { useReveal } from '@/hooks';
 import { SectionLight } from '@/components/ui';
 
@@ -572,11 +572,17 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
 
       {/* Top Section - Rating + Tag */}
       <div className="flex items-start justify-between mb-4 relative z-10">
-        {/* 5 Stars Rating */}
-        <div className="flex gap-0.5 text-brand-yellow">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <Star key={i} size={16} strokeWidth={2.5} fill="currentColor" stroke="none" />
-          ))}
+        {/* 5 Stars Rating + Verified Badge */}
+        <div className="flex items-center gap-2">
+          <div className="flex gap-0.5 text-brand-yellow">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <Star key={i} size={16} strokeWidth={2.5} fill="currentColor" stroke="none" />
+            ))}
+          </div>
+          {/* Verified Icon */}
+          <div className="inline-flex items-center justify-center w-5 h-5 rounded-full badge-brand-dark">
+            <CheckCircle2 size={12} strokeWidth={2.5} className="text-white" fill="currentColor" />
+          </div>
         </div>
 
         {/* Tag Badge */}
@@ -701,31 +707,31 @@ const Reviews: React.FC = () => {
         {/* Header - Centered */}
         <div className="text-center mb-10 md:mb-12 lg:mb-14">
           {/* Top Badge */}
-          <div className="inline-flex items-center px-5 py-1.5 rounded-full bg-gradient-to-r from-brand-accent to-brand-yellow text-white font-bold text-xs uppercase tracking-widest mb-6 shadow-md">
+          <div className="inline-block px-4 py-1.5 rounded-full badge-brand font-bold text-xs uppercase tracking-widest mb-6 shadow-sm">
             Отзывы
           </div>
 
-          {/* Main Title */}
-          <h2 className="text-[40px] md:text-[52px] lg:text-[60px] font-semibold text-brand-text leading-[1.1] mb-4 max-w-4xl mx-auto">
+          {/* Main Title - Unified Typography with Catalog */}
+          <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-brand-text leading-tight mb-6">
             Говорят{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">
+            <span className="text-gradient-brand-heading">
               клиенты
             </span>
           </h2>
 
-          {/* Subtitle */}
-          <p className="text-base md:text-lg lg:text-xl text-brand-text-soft max-w-[640px] mx-auto leading-relaxed mb-4">
+          {/* Subtitle - Unified Typography */}
+          <p className="text-lg md:text-xl lg:text-2xl text-brand-text-soft max-w-3xl mx-auto leading-relaxed font-semibold mb-8">
             Реальные отзывы от тех, кто уже получил свои премиальные фруктовые боксы
           </p>
 
-          {/* Overall Rating */}
-          <div className="inline-flex items-center gap-2 text-sm md:text-base text-brand-text-soft">
+          {/* Overall Rating - Accent Subtitle Style */}
+          <div className="inline-flex items-center gap-2 text-sm md:text-base font-semibold text-brand-text-soft">
             <div className="flex gap-0.5 text-brand-yellow">
               {[1, 2, 3, 4, 5].map((i) => (
                 <Star key={i} size={18} strokeWidth={2.5} fill="currentColor" stroke="none" />
               ))}
             </div>
-            <span className="font-semibold">4,9 из 5</span>
+            <span className="font-bold text-brand-text">4,9 из 5</span>
             <span className="text-brand-text-soft/60">•</span>
             <span>по 120+ отзывам клиентов</span>
           </div>

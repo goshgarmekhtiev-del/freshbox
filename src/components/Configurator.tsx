@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BoxSize, BoxType } from '@/types';
 import type { Product } from '@/types';
 import { CONFIGURATOR_IMAGES } from '@/constants';
-import { Sparkles, ArrowRight, Package, Box, Container, Truck } from 'lucide-react';
+import { Sparkles, ArrowRight, Package, Box, Container, Truck, Info } from 'lucide-react';
 import { useReveal } from '@/hooks';
 import { ImageWithPlaceholder } from '@/components/ui';
 
@@ -10,10 +10,84 @@ interface ConfiguratorProps {
   onAddCustom: (product: Product, e: React.MouseEvent) => void;
 }
 
+// Types and data structure for wishes
+type WishId =
+  | 'more_sweet'
+  | 'no_apples'
+  | 'no_bananas'
+  | 'add_card'
+  | 'no_sour'
+  | 'extra_mango'
+  | 'extra_berries'
+  | 'office'
+  | 'kids'
+  | 'bday';
+
+type WishChip = {
+  id: WishId;
+  label: string;
+  followUps?: WishId[];
+};
+
+const WISHES_MAP: Record<WishId, WishChip> = {
+  more_sweet: {
+    id: 'more_sweet',
+    label: 'Побольше сладких фруктов',
+    followUps: ['no_sour', 'extra_mango', 'extra_berries'],
+  },
+  no_apples: {
+    id: 'no_apples',
+    label: 'Без яблок',
+    followUps: ['extra_berries'],
+  },
+  no_bananas: {
+    id: 'no_bananas',
+    label: 'Без бананов',
+    followUps: ['extra_berries'],
+  },
+  add_card: {
+    id: 'add_card',
+    label: 'Добавьте открытку',
+    followUps: ['bday', 'kids', 'office'],
+  },
+  no_sour: {
+    id: 'no_sour',
+    label: 'Без кислых фруктов',
+  },
+  extra_mango: {
+    id: 'extra_mango',
+    label: 'Побольше манго',
+  },
+  extra_berries: {
+    id: 'extra_berries',
+    label: 'Побольше ягод',
+  },
+  office: {
+    id: 'office',
+    label: 'Для офиса',
+  },
+  kids: {
+    id: 'kids',
+    label: 'Для ребёнка',
+  },
+  bday: {
+    id: 'bday',
+    label: 'С днём рождения',
+  },
+};
+
+const BASE_WISHES: WishId[] = [
+  'more_sweet',
+  'no_apples',
+  'no_bananas',
+  'add_card',
+];
+
 const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
   const [size, setSize] = useState<BoxSize>(BoxSize.MEDIUM);
   const [type, setType] = useState<BoxType>(BoxType.CLASSIC);
-  const [comment, setComment] = useState('');
+  const [selectedWishIds, setSelectedWishIds] = useState<WishId[]>([]);
+  const [wishesText, setWishesText] = useState<string>('');
   
   const { ref: sectionRef, isVisible: sectionVisible } = useReveal({ threshold: 0.1 });
   
@@ -31,6 +105,39 @@ const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
     return () => clearTimeout(timeout);
   }, [type]);
 
+  // Toggle wish chip
+  const toggleWish = (id: WishId) => {
+    setSelectedWishIds((prev) => {
+      const exists = prev.includes(id);
+      const next = exists ? prev.filter((w) => w !== id) : [...prev, id];
+
+      // After updating selected wishes — recalculate text in textarea
+      const labels = next.map((wishId) => WISHES_MAP[wishId].label);
+      const text = labels.length ? labels.join(', ') : '';
+      setWishesText(text);
+
+      return next;
+    });
+  };
+
+  // Get follow-up wishes based on selected wishes
+  const getFollowUpWishes = (selected: WishId[]): WishChip[] => {
+    const followUpIds = new Set<WishId>();
+
+    selected.forEach((id) => {
+      const wish = WISHES_MAP[id];
+      wish.followUps?.forEach((fId) => {
+        if (!selected.includes(fId)) {
+          followUpIds.add(fId);
+        }
+      });
+    });
+
+    // Limit to avoid clutter
+    const limited = Array.from(followUpIds).slice(0, 4);
+    return limited.map((id) => WISHES_MAP[id]);
+  };
+
   const getPrice = () => {
     let base = 2000;
     if (size === BoxSize.SMALL) base = 1500;
@@ -46,7 +153,7 @@ const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
     const customProduct: Product = {
       id: `custom-${Date.now()}`,
       name: `Мой бокс (${size})`,
-      description: comment || 'Авторская сборка',
+      description: wishesText || 'Авторская сборка',
       ingredients: `Тип: ${type}`,
       price: getPrice(),
       image: currentImage,
@@ -88,7 +195,7 @@ const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
           </div>
           <h2 className="text-4xl lg:text-5xl font-extrabold text-brand-text leading-tight mb-4 max-w-4xl mx-auto">
             Собери свой{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">
+            <span className="text-gradient-brand-heading">
               идеал
             </span>
           </h2>
@@ -176,11 +283,63 @@ const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
               </div>
               
               <textarea
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="Например: побольше ананасов, без яблок..."
+                value={wishesText}
+                onChange={(e) => setWishesText(e.target.value)}
+                placeholder="Например: побольше ананасов, без яблок и бананов, добавьте открытку с поздравлением…"
                 className="w-full p-4 rounded-3xl border-2 border-emerald-100 bg-white/60 focus:border-brand-accent focus:ring-2 focus:ring-brand-accent/20 outline-none min-h-[96px] text-sm text-brand-text placeholder-brand-text-soft resize-none transition-all"
               />
+              
+              {/* First row — base wishes */}
+              <div className="flex flex-wrap gap-2 mt-4">
+                {BASE_WISHES.map((id) => {
+                  const chip = WISHES_MAP[id];
+                  const isActive = selectedWishIds.includes(id);
+
+                  return (
+                    <button
+                      key={chip.id}
+                      type="button"
+                      onClick={() => toggleWish(chip.id)}
+                      className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 shadow-sm border ${
+                        isActive
+                          ? 'bg-emerald-600 text-white border-emerald-600'
+                          : 'bg-white text-emerald-900 border-emerald-100 hover:border-emerald-300'
+                      }`}
+                    >
+                      {chip.label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Second row — follow-up wishes (show only if they exist) */}
+              {(() => {
+                const followUpChips = getFollowUpWishes(selectedWishIds);
+                if (followUpChips.length === 0) return null;
+
+                return (
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {followUpChips.map((chip) => {
+                      const isActive = selectedWishIds.includes(chip.id);
+
+                      return (
+                        <button
+                          key={chip.id}
+                          type="button"
+                          onClick={() => toggleWish(chip.id)}
+                          className={`inline-flex items-center rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 shadow-sm border ${
+                            isActive
+                              ? 'bg-emerald-600 text-white border-emerald-600'
+                              : 'bg-emerald-50 text-emerald-900 border-emerald-100 hover:border-emerald-300'
+                          }`}
+                        >
+                          {chip.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
             </div>
           </div>
 
@@ -200,22 +359,48 @@ const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
                 {getConfigName()}
               </h3>
 
+              {/* Box Summary */}
+              <div className="text-xs md:text-sm text-brand-text-soft leading-relaxed mb-1 flex flex-wrap items-center gap-1">
+                <span className="font-medium">Размер:</span> {size}
+                <span className="text-brand-text-soft/40">•</span>
+                <span className="font-medium">Наполнение:</span> {type}
+                <span className="text-brand-text-soft/40">•</span>
+                <span className="font-medium">Пожелания:</span>{' '}
+                <span className="italic">{wishesText.trim() || 'Без особых пожеланий'}</span>
+              </div>
+
               {/* Description */}
-              <p className="text-sm text-brand-text-soft leading-relaxed mb-5">
+              <p className="text-xs text-brand-text-soft/70 leading-relaxed mb-5">
                 {getSizeDescription()}
               </p>
 
-              {/* Image Preview */}
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-gradient-to-br from-brand-accent-light/20 to-brand-yellow/20 shadow-md">
-                <ImageWithPlaceholder
-                  src={currentImage}
-                  alt={`Превью фруктового бокса FreshBox — ${type}`}
-                  containerClassName="absolute inset-0"
-                  className="w-full h-full object-contain transition-all duration-500"
-                  loading="lazy"
-                  useWebP={true}
-                  style={{ opacity: imageOpacity, maxHeight: '220px' }}
-                />
+              {/* Image Preview - Enhanced with gradient and placeholder */}
+              <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-gradient-to-br from-amber-50 via-lime-50 to-emerald-50 shadow-lg border border-emerald-100/50">
+                {currentImage ? (
+                  <ImageWithPlaceholder
+                    src={currentImage}
+                    alt={`Превью фруктового бокса FreshBox — ${type}`}
+                    containerClassName="absolute inset-0"
+                    className="w-full h-full object-contain transition-all duration-500"
+                    loading="lazy"
+                    useWebP={true}
+                    style={{ opacity: imageOpacity, maxHeight: '220px' }}
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <p className="text-sm text-brand-text-soft/60 font-medium text-center px-4">
+                      Здесь скоро появится визуал твоего бокса 🍊
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Status Message */}
+              <div className="mt-4 flex items-start gap-2 px-3 py-2 rounded-xl bg-white/50 border border-emerald-100">
+                <Info size={16} strokeWidth={2.5} className="text-brand-accent flex-shrink-0 mt-0.5" />
+                <p className="text-xs text-brand-text-soft leading-relaxed">
+                  Мы подберём фрукты под твой запрос и уточним детали при звонке.
+                </p>
               </div>
             </div>
 
@@ -230,6 +415,9 @@ const Configurator: React.FC<ConfiguratorProps> = ({ onAddCustom }) => {
                   <div className="mt-1 text-3xl font-extrabold text-brand-text">
                     {getPrice().toLocaleString()} ₽
                   </div>
+                  <p className="mt-1 text-xs text-brand-text-soft/70 leading-relaxed">
+                    Оплатишь только после подтверждения заказа менеджером
+                  </p>
                 </div>
               </div>
 

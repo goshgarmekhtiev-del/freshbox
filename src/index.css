@@ -625,3 +625,129 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;  /* Chrome, Safari and Opera */
 }
+
+/* ============================================
+  UNIFIED SECTION & COMPONENT COLOR TOKENS
+  ============================================
+  
+  These utility classes provide consistent color schemes across all sections
+  to ensure visual harmony without radical redesign.
+  
+  Usage by section:
+  - Hero: bg-section-light, bg-gradient-brand-heading, badge-brand
+  - Catalog: bg-section-light, bg-gradient-brand-heading, badge-brand
+  - ProblemSolution: bg-section-light, bg-gradient-brand-heading, badge-brand
+  - WhyFreshBox: bg-section-light, bg-gradient-brand-heading, badge-brand
+  - HowItWorks: bg-section-light, bg-gradient-brand-heading, badge-brand
+  - Reviews: bg-section-light, bg-gradient-brand-heading, badge-brand
+  - Benefits: bg-section-dark, card-dark-translucent, badge-brand-dark
+  - Configurator: bg-section-light, badge-brand
+  - B2B: bg-section-light, bg-gradient-brand-heading, badge-brand
+  - FAQ: bg-section-light, badge-brand
+  - OrderForm: bg-section-light, badge-brand
+  - Footer: bg-section-dark, badge-brand-dark
+*/
+
+/* ========== SECTION BACKGROUNDS ========== */
+
+/**
+ * Dark section background
+ * Based on: SectionDark component, Footer
+ * Usage: Benefits, Footer
+ * Colors: Deep green gradient (brand-text → brand-text-soft → brand-green)
+ */
+.bg-section-dark {
+  background: linear-gradient(to bottom right, 
+    var(--color-brand-text) 0%,
+    var(--color-brand-text-soft) 50%,
+    var(--color-brand-green) 100%
+  );
+}
+
+/**
+ * Light section background
+ * Based: SectionLight, SectionAccent, cream backgrounds
+ * Usage: Hero, Catalog, ProblemSolution, WhyFreshBox, HowItWorks, Reviews, Configurator, B2B, FAQ, OrderForm
+ * Colors: Soft cream (brand-bg) or white
+ */
+.bg-section-light {
+  background-color: var(--color-brand-bg);
+}
+
+/* ========== BRAND GRADIENTS ========== */
+
+/**
+ * Brand heading gradient
+ * Based on: Existing heading gradients across sections
+ * Usage: Hero, Catalog, ProblemSolution, WhyFreshBox, HowItWorks, Reviews, Configurator, B2B, FAQ
+ * Colors: Orange → Dark Orange → Yellow (brand-accent → brand-accent-dark → brand-yellow)
+ */
+.bg-gradient-brand-heading {
+  background: linear-gradient(to right,
+    var(--color-brand-accent) 0%,
+    var(--color-brand-accent-dark) 50%,
+    var(--color-brand-yellow) 100%
+  );
+}
+
+/* Text gradient variant for headings */
+.text-gradient-brand-heading {
+  background: linear-gradient(to right,
+    var(--color-brand-accent) 0%,
+    var(--color-brand-accent-dark) 50%,
+    var(--color-brand-yellow) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* ========== CARD STYLES ========== */
+
+/**
+ * Dark translucent card
+ * Based on: Benefits section cards, dark overlays
+ * Usage: Benefits (cards on dark background)
+ * Colors: Semi-transparent white with backdrop blur
+ */
+.card-dark-translucent {
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ========== BADGE STYLES ========== */
+
+/**
+ * Brand badge (light theme)
+ * Based on: Section badges across light sections
+ * Usage: Hero, Catalog, ProblemSolution, WhyFreshBox, HowItWorks, Reviews, Configurator, B2B, FAQ, OrderForm
+ * Colors: Orange-yellow-green gradient with light background
+ */
+.badge-brand {
+  background: linear-gradient(to right,
+    rgba(249, 115, 22, 0.1) 0%,    /* brand-accent/10 */
+    rgba(234, 88, 12, 0.1) 50%,    /* brand-accent-dark/10 */
+    rgba(253, 224, 71, 0.1) 100%   /* brand-yellow/10 */
+  );
+  border: 1px solid rgba(249, 115, 22, 0.2);  /* brand-accent/20 */
+  color: var(--color-brand-accent);
+}
+
+/**
+ * Brand badge (dark theme)
+ * Based on: Footer badges, dark section badges
+ * Usage: Benefits, Footer
+ * Colors: Dark green background with subtle glow
+ */
+.badge-brand-dark {
+  background: linear-gradient(to bottom,
+    var(--color-brand-text) 0%,     /* #064E3B */
+    var(--color-brand-text-soft) 100% /* #115E59 */
+  );
+  border: 1px solid rgba(22, 163, 74, 0.3);  /* brand-green/30 */
+  color: var(--color-text-inverse);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.15);  /* Subtle green glow */
+}

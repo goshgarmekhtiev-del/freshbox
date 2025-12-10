@@ -28,7 +28,12 @@ const App: React.FC = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
+  
+  // Toast система зарезервирована для error-сценариев (сетевые ошибки, проблемы оформления и т.п.)
+  // Success toast при добавлении в корзину убран для премиального UX
+  // @ts-ignore - Reserved for future error toasts
   const [showToast, setShowToast] = useState(false);
+  // @ts-ignore - Reserved for future error toasts  
   const [toastMessage, setToastMessage] = useState('');
   
   const [lastOrder, setLastOrder] = useState<NotificationData | null>(null);
@@ -130,9 +135,12 @@ const App: React.FC = () => {
       return [...prev, { ...product, quantity }];
     });
     
-    // Show toast notification
-    setToastMessage(`${product.name} добавлен в корзину`);
-    setShowToast(true);
+    // ✅ Toast убран для более премиального UX
+    // Визуальная обратная связь:
+    // - Кнопка "Добавлено" с зелёной галочкой
+    // - Обновление счётчика корзины
+    // - Confetti эффект
+    // - MiniCart виджет
     
     if (e) fireConfetti(e);
   };
@@ -162,13 +170,6 @@ const App: React.FC = () => {
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
-
-  const handleGoToCheckout = () => {
-    const orderFormElement = document.getElementById('order-form');
-    if (orderFormElement) {
-      orderFormElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
 
   /**
    * Determines if the floating cart widget should be visible
@@ -264,10 +265,12 @@ const App: React.FC = () => {
           Only shown when:
           1. Cart has items
           2. User is NOT in the order/checkout section
+          
+          Click behavior: Opens CartSidebar for quick access
       */}
       <MiniCart 
         cart={cart}
-        onCheckout={handleGoToCheckout}
+        onCheckout={() => setIsCartOpen(true)}
         isVisible={shouldShowFloatingCart()}
       />
 

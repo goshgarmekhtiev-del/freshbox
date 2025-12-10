@@ -24,7 +24,7 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
 
   return (
     <div 
-      className="group relative flex flex-col h-full bg-white rounded-3xl overflow-hidden border-2 border-brand-text/5 hover:border-brand-accent/30 transition-all duration-500 hover:shadow-xl hover:scale-105 cursor-pointer"
+      className="group relative flex flex-col h-full bg-white rounded-3xl overflow-hidden border-2 border-brand-text/10 hover:border-brand-green/40 transition-all duration-500 hover:shadow-xl hover:scale-105 cursor-pointer"
       onClick={onQuickView}
     >
       {/* Product Image - Fixed Aspect Ratio with LazyImage */}
@@ -63,12 +63,12 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
 
         {/* Tag Badge */}
         {product.tag && (
-          <div className="absolute top-4 right-4 px-3 py-2 rounded-full bg-white/95 backdrop-blur-sm text-brand-accent text-xs font-black uppercase tracking-wide border border-brand-accent/20 shadow-md flex items-center gap-1">
+          <div className="absolute top-4 right-4 px-3 py-1.5 rounded-full badge-brand-dark text-xs font-bold uppercase tracking-widest shadow-sm flex items-center gap-1">
             {product.tag.includes('Новинка') ? 
-              <Sparkles size={12} className="inline" fill="currentColor" strokeWidth={2.5} /> : 
-              <Flame size={12} className="inline" fill="currentColor" strokeWidth={2.5} />
+              <Sparkles size={12} className="inline text-white" fill="currentColor" strokeWidth={2.5} /> : 
+              <Flame size={12} className="inline text-white" fill="currentColor" strokeWidth={2.5} />
             }
-            {product.tag}
+            <span className="text-white">{product.tag}</span>
           </div>
         )}
       </div>

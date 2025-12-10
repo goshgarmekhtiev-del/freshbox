@@ -4,7 +4,7 @@ import type { CartItem } from '@/types';
 
 interface MiniCartProps {
   cart: CartItem[];
-  onCheckout: () => void;
+  onCheckout: () => void; // Opens CartSidebar for quick cart access
   isVisible: boolean;
 }
 
@@ -31,6 +31,7 @@ const MiniCart: React.FC<MiniCartProps> = ({ cart, onCheckout, isVisible }) => {
       <div className="hidden lg:block fixed bottom-6 right-6 z-50">
         <button
           onClick={onCheckout}
+          aria-label={`Открыть корзину: ${getBoxesText(totalItems)} на сумму ${totalPrice.toLocaleString()} рублей`}
           className="
             group
             flex items-center gap-4
@@ -69,6 +70,7 @@ const MiniCart: React.FC<MiniCartProps> = ({ cart, onCheckout, isVisible }) => {
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 animate-fade-in-up">
         <button
           onClick={onCheckout}
+          aria-label={`Открыть корзину: ${getBoxesText(totalItems)} на сумму ${totalPrice.toLocaleString()} рублей`}
           className="
             w-full
             flex items-center justify-between

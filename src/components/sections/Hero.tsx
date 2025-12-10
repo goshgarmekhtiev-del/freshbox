@@ -35,7 +35,7 @@ const Hero: React.FC = () => {
           <div ref={heroRef as React.RefObject<HTMLDivElement>} className={`text-center lg:text-left space-y-6 md:space-y-7 lg:space-y-8 lg:max-w-[600px] opacity-0 animate-fade-in ${heroVisible ? '' : ''}`} style={{ animationDelay: '0.1s', animationFillMode: 'forwards' }}>
             
             {/* Badge - Gift Focused */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-brand-accent/10 to-brand-yellow/10 border border-brand-accent/20 text-brand-accent font-black text-xs uppercase tracking-widest">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-brand font-bold text-xs uppercase tracking-widest shadow-sm">
               <Gift size={14} className="fill-brand-accent" strokeWidth={2.5} />
               <span>Подарочная доставка по Москве</span>
             </div>
@@ -45,7 +45,7 @@ const Hero: React.FC = () => {
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[0.95] tracking-tighter text-brand-text">
                 Премиальные<br />
                 фруктовые{' '}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">
+                <span className="text-gradient-brand-heading">
                   боксы‑подарки
                 </span>
               </h1>

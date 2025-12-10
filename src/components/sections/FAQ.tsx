@@ -31,13 +31,13 @@ const FAQ: React.FC = () => {
         
         {/* Header */}
         <div ref={headerRef as React.RefObject<HTMLDivElement>} className={`text-center mb-10 reveal reveal-fade-in ${headerVisible ? 'reveal-visible' : ''}`}>
-          <div className="inline-flex items-center rounded-full bg-brand-accent-light/60 px-4 py-1 text-sm font-medium text-brand-text mb-4">
+          <div className="inline-flex items-center rounded-full badge-brand px-4 py-1.5 text-xs font-bold uppercase tracking-widest mb-4 shadow-sm">
             FAQ
           </div>
           
           <h2 className="text-center text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-text mb-4">
             Есть{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">
+            <span className="text-gradient-brand-heading">
               вопросы
             </span>?
           </h2>
@@ -60,8 +60,8 @@ const FAQ: React.FC = () => {
                   transition-all duration-300 shrink-0
                   ${
                     activeCategory === category
-                      ? 'bg-gradient-to-r from-brand-accent to-brand-yellow text-white shadow-lg scale-105'
-                      : 'bg-white/70 text-brand-text-soft border border-transparent hover:bg-white hover:border-brand-accent-light/30'
+                      ? 'badge-brand shadow-lg scale-105'
+                      : 'badge-brand-dark hover:bg-white/10'
                   }
                 `}
               >

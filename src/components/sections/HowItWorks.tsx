@@ -27,11 +27,11 @@ const HowItWorks: React.FC = () => {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header - Centered */}
         <div className="text-center mb-12 md:mb-16 lg:mb-20">
-          <div className="inline-block px-4 py-1.5 rounded-full bg-brand-accent/8 border border-brand-accent/15 text-brand-accent font-bold text-xs uppercase tracking-widest mb-8">
+          <div className="inline-block px-4 py-1.5 rounded-full badge-brand font-bold text-xs uppercase tracking-widest mb-8 shadow-sm">
             Процесс
           </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-brand-text leading-[0.95] mb-4 max-w-4xl mx-auto">
-            Как мы <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow">работаем</span>
+            Как мы <span className="text-gradient-brand-heading">работаем</span>
           </h2>
           <p className="text-lg md:text-xl lg:text-2xl text-brand-text-soft max-w-3xl mx-auto leading-relaxed font-semibold">
             От клика до «Вау!» — <span className="text-brand-accent font-bold">~2 часа</span> ⚡

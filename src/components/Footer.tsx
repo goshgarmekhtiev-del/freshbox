@@ -72,7 +72,7 @@ const Footer: React.FC = () => {
     <footer
       id="contacts"
       ref={footerRef}
-      className={`relative bg-gradient-to-b from-[#064E3B] via-[#065F46] to-[#064E3B] text-white py-16 lg:py-20 reveal overflow-hidden ${
+      className={`relative bg-section-dark text-white py-16 lg:py-20 reveal overflow-hidden ${
         footerVisible ? 'reveal-visible' : ''
       }`}
     >
@@ -87,7 +87,7 @@ const Footer: React.FC = () => {
           
           {/* Left Column: Heading & Benefits */}
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-brand-accent text-xs font-bold uppercase tracking-wider mb-5">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-brand font-bold text-xs uppercase tracking-widest mb-5 shadow-sm">
               <Sparkles size={12} strokeWidth={2.5} />
               Секретные акции
             </div>

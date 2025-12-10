@@ -166,7 +166,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
     return isValid;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     setTouched({
@@ -185,7 +185,35 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
     
     setStatus('loading');
     
-    setTimeout(() => {
+    try {
+      // Отправляем заказ на serverless endpoint
+      const response = await fetch('/api/send-lead', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'Order',
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          address: formData.address,
+          deliveryTime: formData.deliveryTime,
+          comment: formData.comment || '',
+          cart: cart.map(item => ({
+            title: item.name,
+            quantity: item.quantity,
+            price: item.price,
+          })),
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to send order');
+      }
+
+      // Успешная отправка
       setStatus('success');
       
       const randomItem = cart[Math.floor(Math.random() * cart.length)];
@@ -210,7 +238,11 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
         setTouched({});
         setStatus('idle');
       }, 3000);
-    }, 1500);
+    } catch (err) {
+      console.error('Error sending order:', err);
+      setStatus('idle');
+      alert('Ошибка отправки заказа. Пожалуйста, попробуйте ещё раз.');
+    }
   };
 
   return (
@@ -233,9 +265,9 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
             
             {/* Empty Cart Alert */}
             {cart.length === 0 && (
-              <div className="p-4 bg-red-50 border-2 border-red-200 rounded-2xl flex items-start gap-3 mb-4">
-                <AlertCircle size={20} strokeWidth={2.5} className="text-red-500 flex-shrink-0 mt-0.5" />
-                <p className="text-sm font-semibold text-red-700">
+              <div className="p-4 bg-[#e34a28]/10 border-2 border-[#e34a28]/30 rounded-2xl flex items-start gap-3 mb-4">
+                <AlertCircle size={20} strokeWidth={2.5} className="text-[#e34a28] flex-shrink-0 mt-0.5" />
+                <p className="text-sm font-semibold text-[#e34a28]">
                   Сначала добавьте боксы в корзину, а затем вернитесь к оформлению.
                 </p>
               </div>
@@ -243,6 +275,9 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
 
             {/* Header */}
             <div>
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-brand-dark font-bold text-xs uppercase tracking-widest mb-4 shadow-sm">
+                <span>Шаг 2 из 2</span>
+              </div>
               <h3 className="text-3xl font-black text-brand-text mb-2">Оформление</h3>
               <p className="text-base text-brand-text-soft">Осталось пару шагов до витаминного рая</p>
             </div>
@@ -270,13 +305,13 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
                       onBlur={() => handleBlur('name')}
                       className={`w-full px-4 py-3 rounded-xl border-2 ${
                         touched.name && errors.name
-                          ? 'border-red-400 bg-red-50'
+                          ? 'border-[#e34a28]/50 bg-[#e34a28]/10'
                           : 'border-emerald-200 bg-white focus:border-brand-accent'
                       } outline-none transition-all text-brand-text placeholder-brand-text-soft/50 font-medium`}
                       placeholder="Иван Иванов"
                     />
                     {touched.name && errors.name && (
-                      <p className="mt-1 text-xs font-semibold text-red-500">{errors.name}</p>
+                      <p className="mt-1 text-xs font-semibold text-[#e34a28]">{errors.name}</p>
                     )}
                   </div>
                   
@@ -291,13 +326,13 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
                       onBlur={() => handleBlur('phone')}
                       className={`w-full px-4 py-3 rounded-xl border-2 ${
                         touched.phone && errors.phone
-                          ? 'border-red-400 bg-red-50'
+                          ? 'border-[#e34a28]/50 bg-[#e34a28]/10'
                           : 'border-emerald-200 bg-white focus:border-brand-accent'
                       } outline-none transition-all text-brand-text placeholder-brand-text-soft/50 font-medium`}
                       placeholder="+7 (999) 000-00-00"
                     />
                     {touched.phone && errors.phone && (
-                      <p className="mt-1 text-xs font-semibold text-red-500">{errors.phone}</p>
+                      <p className="mt-1 text-xs font-semibold text-[#e34a28]">{errors.phone}</p>
                     )}
                   </div>
                   
@@ -313,13 +348,13 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
                       onBlur={() => handleBlur('email')}
                       className={`w-full px-4 py-3 rounded-xl border-2 ${
                         touched.email && errors.email
-                          ? 'border-red-400 bg-red-50'
+                          ? 'border-[#e34a28]/50 bg-[#e34a28]/10'
                           : 'border-emerald-200 bg-white focus:border-brand-accent'
                       } outline-none transition-all text-brand-text placeholder-brand-text-soft/50 font-medium`}
                       placeholder="ivan@example.com"
                     />
                     {touched.email && errors.email && (
-                      <p className="mt-1 text-xs font-semibold text-red-500">{errors.email}</p>
+                      <p className="mt-1 text-xs font-semibold text-[#e34a28]">{errors.email}</p>
                     )}
                   </div>
                 </div>
@@ -348,13 +383,13 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
                     onBlur={() => handleBlur('address')}
                     className={`w-full px-4 py-3 rounded-xl border-2 ${
                       touched.address && errors.address
-                        ? 'border-red-400 bg-red-50'
+                        ? 'border-[#e34a28]/50 bg-[#e34a28]/10'
                         : 'border-amber-200 bg-white focus:border-brand-accent'
                     } outline-none transition-all text-brand-text placeholder-brand-text-soft/50 font-medium`}
                     placeholder="Улица, дом, подъезд, квартира"
                   />
                   {touched.address && errors.address && (
-                    <p className="mt-1 text-xs font-semibold text-red-500">{errors.address}</p>
+                    <p className="mt-1 text-xs font-semibold text-[#e34a28]">{errors.address}</p>
                   )}
                 </div>
 
@@ -367,7 +402,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
                     onClick={() => setShowCalendar(!showCalendar)}
                     className={`w-full px-4 py-3 rounded-xl border-2 cursor-pointer flex items-center justify-between transition-all ${
                       touched.deliveryTime && errors.deliveryTime
-                        ? 'border-red-400 bg-red-50'
+                        ? 'border-[#e34a28]/50 bg-[#e34a28]/10'
                         : showCalendar || formData.deliveryTime 
                           ? 'border-brand-accent bg-white' 
                           : 'border-amber-200 bg-white hover:border-brand-accent'
@@ -379,7 +414,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
                     <ChevronRight size={18} strokeWidth={2.5} className={`text-brand-text-soft transition-transform ${showCalendar ? 'rotate-90' : ''}`} />
                   </div>
                   {touched.deliveryTime && errors.deliveryTime && (
-                    <p className="mt-1 text-xs font-semibold text-red-500">{errors.deliveryTime}</p>
+                    <p className="mt-1 text-xs font-semibold text-[#e34a28]">{errors.deliveryTime}</p>
                   )}
 
                   {/* Inline Calendar with smooth animation */}
@@ -554,7 +589,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
                 </span>
               </label>
               {touched.agreement && errors.agreement && (
-                <p className="text-xs font-semibold text-red-500 -mt-2">{errors.agreement}</p>
+                <p className="text-xs font-semibold text-[#e34a28] -mt-2">{errors.agreement}</p>
               )}
 
               {/* Submit Button */}

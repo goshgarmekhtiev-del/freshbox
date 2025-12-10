@@ -60,7 +60,7 @@ const WhyFreshBox: React.FC = () => {
         {/* Header */}
         <div className={`text-center mb-10 md:mb-14 reveal reveal-fade-up ${sectionVisible ? 'reveal-visible' : ''}`}>
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-brand-yellow/15 via-brand-accent/10 to-brand-green/15 border border-brand-accent/20 text-brand-accent font-bold text-sm uppercase tracking-wide mb-6 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-brand font-bold text-xs uppercase tracking-widest mb-6 shadow-sm">
             <Heart size={16} strokeWidth={2.5} fill="currentColor" />
             <span>почему нас любят 💛</span>
           </div>
@@ -68,7 +68,7 @@ const WhyFreshBox: React.FC = () => {
           {/* Title */}
           <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-brand-text leading-tight mb-4 px-4">
             Свежесть и любовь{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-green via-brand-accent to-brand-yellow">
+            <span className="text-gradient-brand-heading">
               в каждой коробке
             </span>
           </h2>
@@ -83,7 +83,7 @@ const WhyFreshBox: React.FC = () => {
         <div className={`mb-10 md:mb-12 reveal reveal-fade-up ${sectionVisible ? 'reveal-visible' : ''}`}>
           {/* Main Badge */}
           <div className="text-center mb-4">
-            <div className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-brand-accent to-brand-accent-dark text-white font-bold text-sm uppercase tracking-wide shadow-lg">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full badge-brand font-bold text-xs uppercase tracking-widest shadow-sm">
               <Zap size={16} strokeWidth={2.5} fill="currentColor" />
               <span>Главное преимущество</span>
             </div>
@@ -157,19 +157,19 @@ const WhyFreshBox: React.FC = () => {
           ))}
         </div>
 
-        {/* Social Proof */}
+        {/* Social Proof - Repeat Customer Badge */}
         <div className={`flex justify-center reveal reveal-fade-up ${sectionVisible ? 'reveal-visible' : ''}`}>
-          <div className="inline-flex items-center gap-4 px-6 py-4 rounded-full bg-white/90 backdrop-blur-sm border-2 border-brand-green/20 shadow-md">
-            <div className="relative flex-shrink-0">
+          <div className="inline-flex items-start gap-4 px-6 py-4 rounded-full bg-white/90 backdrop-blur-sm border-2 border-brand-green/20 shadow-md max-w-2xl">
+            <div className="relative flex-shrink-0 mt-1">
               <div className="absolute inset-0 rounded-full bg-brand-green/20 animate-ping-slow"></div>
               <CheckCircle2 size={32} className="text-brand-green relative z-10" strokeWidth={2.5} fill="currentColor" />
             </div>
             <div className="text-left">
-              <div className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-green via-brand-accent to-brand-yellow leading-none mb-0.5">
-                500+
+              <div className="text-base md:text-lg font-bold text-brand-text leading-tight mb-1">
+                8 из 10 клиентов заказывают повторно
               </div>
-              <p className="text-xs md:text-sm font-semibold text-brand-text-soft">
-                счастливых клиентов 🎉
+              <p className="text-xs md:text-sm font-medium text-brand-text-soft leading-relaxed">
+                FreshBox дарят на праздники, заказывают домой и в офис — снова и снова.
               </p>
             </div>
           </div>
