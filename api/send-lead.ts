@@ -193,6 +193,9 @@ ${data.deliveryTime ? `<b>Время доставки:</b> ${data.deliveryTime}`
           user: smtpUser,
           pass: smtpPass, // Пароль приложения Яндекс
         },
+        tls: {
+          rejectUnauthorized: false, // критично для Vercel + Яндекс
+        },
       });
     } catch (err) {
       console.error('Failed to create email transporter:', err);
@@ -226,7 +229,11 @@ ${data.deliveryTime ? `<b>Время доставки:</b> ${data.deliveryTime}`
 
     // Telegram отправлен успешно, теперь отправляем email (если настроен)
     // Ошибки email НЕ должны ломать основной процесс - Telegram уже отправлен
-    if (emailTransporter && emailReceiver) {
+    let emailStatus: string | undefined = undefined;
+    
+    if (!emailTransporter) {
+      console.error('SMTP transporter not initialized');
+    } else if (emailReceiver) {
       try {
         const emailHtml = formatEmailHtml(data);
         const emailSubject = data.type === 'Order' 
@@ -241,15 +248,17 @@ ${data.deliveryTime ? `<b>Время доставки:</b> ${data.deliveryTime}`
         });
 
         console.log('Email sent successfully');
+        emailStatus = 'ok';
       } catch (emailErr) {
         // Логируем ошибку, но не прерываем процесс
         // Telegram уже отправлен, поэтому возвращаем успех
-        console.error('Email send error:', emailErr);
+        console.error('SMTP ERROR:', emailErr);
+        emailStatus = 'error';
       }
     }
 
     // Возвращаем успешный ответ
-    return res.status(200).json({ status: 'ok' });
+    return res.status(200).json({ status: 'ok', emailStatus });
   } catch (err) {
     console.error('Telegram error:', err);
     return res.status(500).json({ 
