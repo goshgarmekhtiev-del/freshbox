@@ -1,10 +1,10 @@
-# 📱 Настройка Telegram API для отправки заявок
+# 📱 Настройка Telegram API и Email (SMTP) для отправки заявок
 
 ## ✅ Созданная функция
 
 **Файл:** `/api/send-lead.ts`
 
-Serverless-функция для отправки заявок из форм сайта в Telegram.
+Serverless-функция для отправки заявок из форм сайта в Telegram и на email через SMTP (Яндекс).
 
 ---
 
@@ -15,17 +15,36 @@ Serverless-функция для отправки заявок из форм с�
 Создайте файл `.env.local` в корне проекта:
 
 ```env
+# Telegram Bot Configuration (обязательно)
 TG_BOT_TOKEN=8504360654:AAFxjpDGycPWWzGV2XDtuD0IUulbuYNbAGo
 TG_CHAT_ID=785231354
+
+# SMTP Configuration (опционально, для отправки на email)
+SMTP_HOST=smtp.yandex.ru
+SMTP_PORT=465
+SMTP_USER=your_yandex_email@yandex.ru
+SMTP_PASS=your_yandex_app_password_here
+EMAIL_RECEIVER=recipient@example.com
 ```
+
+**Важно:** `SMTP_PASS` — это пароль приложения Яндекс, а не обычный пароль от почты.
 
 ### Для Vercel
 
 1. Перейдите в настройки проекта на Vercel
 2. Откройте раздел **Environment Variables**
 3. Добавьте переменные:
+
+**Обязательные (Telegram):**
    - `TG_BOT_TOKEN` = `8504360654:AAFxjpDGycPWWzGV2XDtuD0IUulbuYNbAGo`
    - `TG_CHAT_ID` = `785231354`
+
+**Опциональные (Email через SMTP):**
+   - `SMTP_HOST` = `smtp.yandex.ru`
+   - `SMTP_PORT` = `465`
+   - `SMTP_USER` = `your_yandex_email@yandex.ru`
+   - `SMTP_PASS` = `your_yandex_app_password_here` (пароль приложения!)
+   - `EMAIL_RECEIVER` = `recipient@example.com`
 
 ---
 
