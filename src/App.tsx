@@ -1,6 +1,7 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
-import { Hero, ProblemSolution, Catalog, WhyFreshBox } from '@/components/sections';
+import { Hero, ProblemSolution, Catalog, WhyFreshBox, SuccessPage, FailPage } from '@/components/sections';
 import CartSidebar from '@/components/CartSidebar';
 import QuickViewModal from '@/components/QuickViewModal';
 import SocialProof from '@/components/SocialProof';
@@ -181,13 +182,9 @@ const App: React.FC = () => {
     return cart.length > 0 && !isInOrderSection;
   };
 
-  return (
-    <div className="min-h-screen bg-brand-bg text-brand-text font-sans selection:bg-brand-accent selection:text-white overflow-x-hidden">
-      {/* Premium Decorative Background - NO scroll dependencies */}
-      <DecorativeBackground />
-      
-      <Navbar cartCount={cartCount} onOpenCart={() => setIsCartOpen(true)} />
-      
+  // Main Home Page Component
+  const HomePage = () => (
+    <>
       <main className="relative z-10 pt-20">
         {/* 
           🎯 CONVERSION FUNNEL FOR COLD TRAFFIC (TikTok/Reels/Shorts)
@@ -282,6 +279,21 @@ const App: React.FC = () => {
       >
         <ArrowUp size={24} strokeWidth={3} />
       </button>
+    </>
+  );
+
+  return (
+    <div className="min-h-screen bg-brand-bg text-brand-text font-sans selection:bg-brand-accent selection:text-white overflow-x-hidden">
+      {/* Premium Decorative Background - NO scroll dependencies */}
+      <DecorativeBackground />
+      
+      <Navbar cartCount={cartCount} onOpenCart={() => setIsCartOpen(true)} />
+      
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/success" element={<SuccessPage />} />
+        <Route path="/fail" element={<FailPage />} />
+      </Routes>
     </div>
   );
 };

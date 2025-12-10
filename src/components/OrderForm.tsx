@@ -213,6 +213,52 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
         throw new Error(errorData.message || 'Failed to send order');
       }
 
+      // Если выбран способ оплаты "картой", создаём платеж через YooKassa
+      if (formData.paymentMethod === 'card') {
+        try {
+          // Вычисляем сумму заказа
+          const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+          const shipping = subtotal >= 2000 ? 0 : 300;
+          const total = subtotal + shipping;
+
+          // Формируем описание из товаров корзины
+          const description = cart.map(i => `${i.name} x${i.quantity}`).join(', ');
+
+          // Создаём платеж через YooKassa
+          const paymentResponse = await fetch('/api/create-payment', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              amount: total,
+              orderId: Date.now(),
+              description: description,
+            }),
+          });
+
+          if (!paymentResponse.ok) {
+            throw new Error('Failed to create payment');
+          }
+
+          const paymentData = await paymentResponse.json();
+
+          // Если получен confirmation_url, перенаправляем пользователя на оплату
+          if (paymentData.confirmation_url) {
+            window.location.href = paymentData.confirmation_url;
+            return; // Прерываем выполнение, так как происходит редирект
+          } else {
+            throw new Error('No confirmation URL received');
+          }
+        } catch (paymentErr) {
+          console.error('Error creating payment:', paymentErr);
+          setStatus('idle');
+          alert('Не удалось создать платеж. Попробуйте позже.');
+          return;
+        }
+      }
+
+      // Если оплата наличными или платеж не требуется
       // Успешная отправка
       setStatus('success');
       
@@ -601,7 +647,7 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
                 {status === 'loading' ? (
                   <>
                     <Loader2 className="animate-spin" size={22} strokeWidth={2.5} /> 
-                    Отправляем заказ...
+                    {formData.paymentMethod === 'card' ? 'Создаём платёж...' : 'Отправляем заказ...'}
                   </>
                 ) : (
                   <>
