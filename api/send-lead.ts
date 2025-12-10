@@ -185,6 +185,7 @@ ${data.deliveryTime ? `<b>Время доставки:</b> ${data.deliveryTime}`
   // Инициализируем email transporter только если все переменные настроены
   if (smtpHost && smtpPort && smtpUser && smtpPass && emailReceiver) {
     try {
+      console.log('Creating SMTP transporter...');
       emailTransporter = nodemailer.createTransport({
         host: smtpHost,
         port: Number(smtpPort),
@@ -234,25 +235,31 @@ ${data.deliveryTime ? `<b>Время доставки:</b> ${data.deliveryTime}`
     if (!emailTransporter) {
       console.error('SMTP transporter not initialized');
     } else if (emailReceiver) {
-      try {
-        const emailHtml = formatEmailHtml(data);
-        const emailSubject = data.type === 'Order' 
-          ? 'Новый заказ с сайта FreshBox'
-          : 'Новая B2B-заявка FreshBox';
+      // Логируем конфигурацию SMTP перед отправкой
+      console.log('SMTP CONFIG:', {
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS ? 'SET' : 'EMPTY',
+        receiver: process.env.EMAIL_RECEIVER,
+      });
 
-        await emailTransporter.sendMail({
-          from: `"FreshBox" <${smtpUser}>`,
-          to: emailReceiver,
+      const emailHtml = formatEmailHtml(data);
+      const emailSubject = data.type === 'Order' 
+        ? 'Новый заказ с сайта FreshBox'
+        : 'Новая B2B-заявка FreshBox';
+
+      try {
+        const info = await emailTransporter.sendMail({
+          from: `"FreshBox" <${process.env.SMTP_USER}>`,
+          to: process.env.EMAIL_RECEIVER,
           subject: emailSubject,
           html: emailHtml,
         });
-
-        console.log('Email sent successfully');
+        console.log('SMTP SUCCESS:', info);
         emailStatus = 'ok';
-      } catch (emailErr) {
-        // Логируем ошибку, но не прерываем процесс
-        // Telegram уже отправлен, поэтому возвращаем успех
-        console.error('SMTP ERROR:', emailErr);
+      } catch (error) {
+        console.error('SMTP ERROR:', error);
         emailStatus = 'error';
       }
     }
