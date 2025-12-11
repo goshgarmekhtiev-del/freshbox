@@ -193,8 +193,8 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
         ) : (
           /* Two-Column Layout on Desktop, Single Column on Mobile */
           <div className="h-full flex flex-col lg:flex-row">
-            {/* LEFT COLUMN - Products List (60-65% on desktop) */}
-            <div className="flex flex-col lg:w-2/3 lg:border-r lg:border-emerald-50 overflow-hidden">
+            {/* LEFT COLUMN - Products List (60-65% on desktop, full width on step 2) */}
+            <div className={`flex flex-col ${step === 2 ? 'lg:w-full' : 'lg:w-2/3 lg:border-r lg:border-emerald-50'} overflow-hidden`}>
               {/* Header - Always visible */}
               <header className="px-6 md:px-8 pt-6 md:pt-7 pb-4 border-b border-emerald-50 flex items-start justify-between gap-4 flex-shrink-0">
                 <div className="flex-1">
