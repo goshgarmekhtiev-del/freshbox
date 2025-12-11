@@ -317,9 +317,9 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
   if (isCompact) {
     return (
       <form onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)] lg:items-start">
-          {/* Right Column: Order Summary (first on mobile, second on desktop) */}
-          <aside className="lg:order-2 mt-4 lg:mt-0 lg:sticky lg:top-24 flex flex-col gap-4">
+        <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(320px,1fr)_minmax(0,2fr)] lg:items-start px-6 md:px-8">
+          {/* Left Column: Order Summary (first on mobile, first on desktop) */}
+          <aside className="lg:order-1 mt-4 lg:mt-0 lg:sticky lg:top-24 flex flex-col gap-4">
             {/* Order Summary Card */}
             <OrderSummaryCompact cart={cart} />
             
@@ -329,8 +329,8 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
             </p>
           </aside>
 
-          {/* Left Column: All form sections (second on mobile, first on desktop) */}
-          <div className="lg:order-1 flex flex-col gap-6">
+          {/* Right Column: All form sections (second on mobile, second on desktop) */}
+          <div className="lg:order-2 flex flex-col gap-6">
             {/* Section 1: Customer Info */}
             <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-50/50 to-lime-50/50 border border-emerald-100 space-y-4">
               <div className="flex items-center gap-3">
