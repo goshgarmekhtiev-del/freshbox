@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type { CartItem, Product, NotificationData } from '@/types';
-import { X, Trash2, Plus, Minus, ShoppingBag, Truck, ArrowRight, ArrowLeft, Sparkles, CheckCircle2, Eye, ChevronLeft } from 'lucide-react';
+import { X, Trash2, Plus, Minus, ShoppingBag, Truck, ArrowRight, ArrowLeft, Sparkles, CheckCircle2, Eye, ChevronLeft, Loader2, CreditCard } from 'lucide-react';
 import { useFocusTrap } from '@/hooks';
 import { LazyImage } from '@/components/ui';
-import CheckoutForm from '@/components/checkout/CheckoutForm';
+import CheckoutForm, { type CheckoutFormHandle } from '@/components/checkout/CheckoutForm';
+import OrderSummaryCompact from '@/components/checkout/OrderSummaryCompact';
+import { calculateOrderTotals } from '@/utils/cart';
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -49,14 +51,18 @@ const AnimatedPrice: React.FC<{ value: number }> = ({ value }) => {
 const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemove, onUpdateQty, onQuickView, onOrderComplete }) => {
   const [itemToRemove, setItemToRemove] = useState<string | null>(null);
   const [step, setStep] = useState<1 | 2>(1);
+  const [checkoutStatus, setCheckoutStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const modalRef = useFocusTrap({ isOpen, onClose });
+  const checkoutFormRef = useRef<CheckoutFormHandle>(null);
   
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const totalBoxes = cart.reduce((sum, item) => sum + item.quantity, 0);
   
-  const FREE_SHIPPING_THRESHOLD = 5000;
-  const progress = Math.min((total / FREE_SHIPPING_THRESHOLD) * 100, 100);
-  const remainingForFreeShipping = FREE_SHIPPING_THRESHOLD - total;
+  // Используем утилиту для расчёта сумм (для прогресс-бара используем старый порог 5000)
+  const totals = calculateOrderTotals(cart);
+  const FREE_SHIPPING_THRESHOLD_PROGRESS = 5000; // Для прогресс-бара на шаге 1
+  const progress = Math.min((total / FREE_SHIPPING_THRESHOLD_PROGRESS) * 100, 100);
+  const remainingForFreeShipping = FREE_SHIPPING_THRESHOLD_PROGRESS - total;
   const freeShippingActivated = remainingForFreeShipping <= 0;
 
   const handleProceedToCheckout = () => {
@@ -67,6 +73,24 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
       drawer.scrollTop = 0;
     }
   };
+
+  const handleStickySubmit = async () => {
+    if (checkoutFormRef.current) {
+      setCheckoutStatus('loading');
+      await checkoutFormRef.current.submit();
+      // Статус обновляется через ref
+      const status = checkoutFormRef.current.getStatus();
+      setCheckoutStatus(status);
+    }
+  };
+
+  // Синхронизируем статус формы с локальным состоянием
+  useEffect(() => {
+    if (checkoutFormRef.current) {
+      const status = checkoutFormRef.current.getStatus();
+      setCheckoutStatus(status);
+    }
+  }, [step]);
 
   // Helper function for pluralization
   const getBoxesText = (count: number) => {
@@ -218,7 +242,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                     </p>
                   )}
                   {/* Progress Bar */}
-                  <div className="h-2 w-full bg-white/60 rounded-full overflow-hidden shadow-inner" role="progressbar" aria-valuemin={0} aria-valuemax={FREE_SHIPPING_THRESHOLD} aria-valuenow={total}>
+                  <div className="h-2 w-full bg-white/60 rounded-full overflow-hidden shadow-inner" role="progressbar" aria-valuemin={0} aria-valuemax={FREE_SHIPPING_THRESHOLD_PROGRESS} aria-valuenow={total}>
                     <div 
                       className="h-full bg-gradient-to-r from-brand-accent via-brand-yellow to-brand-green transition-all duration-500 ease-out shadow-sm"
                       style={{ width: `${progress}%` }}
@@ -229,8 +253,13 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
 
               {/* Step 2: Checkout Form */}
               {step === 2 ? (
-                <div className="flex-1 overflow-y-auto px-6 md:px-8 py-6">
+                <div className="flex-1 overflow-y-auto px-6 md:px-8 py-6 pb-24">
+                  {/* Order Summary Compact */}
+                  <OrderSummaryCompact cart={cart} />
+                  
+                  {/* Checkout Form */}
                   <CheckoutForm 
+                    ref={checkoutFormRef}
                     cart={cart} 
                     onOrderComplete={onOrderComplete || (() => {})}
                     layout="compact"
@@ -509,6 +538,40 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
               </div>
             </div>
             )}
+          </div>
+        )}
+
+        {/* Sticky Bottom Panel - Only on Step 2 */}
+        {step === 2 && (
+          <div className="sticky bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-t-2 border-emerald-100 shadow-[0_-4px_20px_rgba(15,118,110,0.1)] px-6 md:px-8 py-4 z-10">
+            <div className="flex items-center justify-between gap-4">
+              {/* Total */}
+              <div className="flex-1">
+                <p className="text-xs text-[#115E59] font-semibold mb-1">Итого</p>
+                <p className="text-2xl font-black text-[#064E3B]">
+                  {totals.total.toLocaleString()} ₽
+                </p>
+              </div>
+
+              {/* CTA Button */}
+              <button
+                onClick={handleStickySubmit}
+                disabled={checkoutStatus === 'loading' || cart.length === 0}
+                className="flex-1 py-3 px-6 bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow text-white font-black text-base rounded-xl transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
+              >
+                {checkoutStatus === 'loading' ? (
+                  <>
+                    <Loader2 className="animate-spin" size={20} strokeWidth={2.5} />
+                    <span>Создаём платёж...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Оформить заказ и перейти к оплате</span>
+                    <CreditCard size={20} strokeWidth={2.5} />
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         )}
       </aside>

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { CartItem, NotificationData } from '@/types';
 import { Loader2, CreditCard, Calendar, ChevronLeft, ChevronRight, User, MapPin, MessageSquare, Zap } from 'lucide-react';
+import { calculateOrderTotals } from '@/utils/cart';
 
 interface CheckoutFormProps {
   cart: CartItem[];
@@ -9,7 +10,13 @@ interface CheckoutFormProps {
   layout?: 'full' | 'compact';
 }
 
-const CheckoutForm: React.FC<CheckoutFormProps> = ({ cart, onOrderComplete, layout = 'full' }) => {
+export interface CheckoutFormHandle {
+  submit: () => void;
+  getStatus: () => 'idle' | 'loading' | 'success' | 'error';
+}
+
+const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
+  ({ cart, onOrderComplete, layout = 'full' }, ref) => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -163,9 +170,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cart, onOrderComplete, layo
     return isValid;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const performSubmit = async () => {
     setTouched({
       name: true,
       phone: true,
@@ -218,10 +223,8 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cart, onOrderComplete, layo
       // Если выбран способ оплаты "картой", создаём платеж через YooKassa
       if (formData.paymentMethod === 'card') {
         try {
-          // Вычисляем сумму заказа
-          const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-          const shipping = subtotal >= 2000 ? 0 : 300;
-          const total = subtotal + shipping;
+          // Вычисляем сумму заказа используя утилиту
+          const totals = calculateOrderTotals(cart);
 
           // Формируем описание из товаров корзины
           const description = cart.map(i => `${i.name} x${i.quantity}`).join(', ');
@@ -233,7 +236,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cart, onOrderComplete, layo
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              amount: total,
+              amount: totals.total,
               orderId: Date.now(),
               description: description,
             }),
@@ -293,6 +296,17 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cart, onOrderComplete, layo
       alert('Ошибка отправки заказа. Пожалуйста, попробуйте ещё раз.');
     }
   };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await performSubmit();
+  };
+
+  // Пробрасываем функцию сабмита наружу через ref
+  useImperativeHandle(ref, () => ({
+    submit: performSubmit,
+    getStatus: () => status,
+  }));
 
   const isCompact = layout === 'compact';
 
@@ -608,24 +622,26 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cart, onOrderComplete, layo
         <p className="text-xs font-semibold text-[#e34a28] -mt-2">{errors.agreement}</p>
       )}
 
-      {/* Submit Button */}
-      <button
-        type="submit"
-        disabled={!formData.agreement || status === 'loading' || cart.length === 0}
-        className={`w-full ${isCompact ? 'py-3' : 'py-4'} bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow text-white font-black ${isCompact ? 'text-base' : 'text-lg'} rounded-${isCompact ? 'xl' : 'full'} transition-all shadow-xl hover:shadow-2xl hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-3 active:scale-[0.98]`}
-      >
-        {status === 'loading' ? (
-          <>
-            <Loader2 className="animate-spin" size={22} strokeWidth={2.5} /> 
-            {formData.paymentMethod === 'card' ? 'Создаём платёж...' : 'Отправляем заказ...'}
-          </>
-        ) : (
-          <>
-            {isCompact ? 'Оформить заказ и перейти к оплате' : 'Оформить заказ'}
-            <CreditCard size={22} strokeWidth={2.5} />
-          </>
-        )}
-      </button>
+      {/* Submit Button - Hidden in compact mode (using sticky panel instead) */}
+      {!isCompact && (
+        <button
+          type="submit"
+          disabled={!formData.agreement || status === 'loading' || cart.length === 0}
+          className="w-full py-4 bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow text-white font-black text-lg rounded-full transition-all shadow-xl hover:shadow-2xl hover:scale-[1.02] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-3 active:scale-[0.98]"
+        >
+          {status === 'loading' ? (
+            <>
+              <Loader2 className="animate-spin" size={22} strokeWidth={2.5} /> 
+              {formData.paymentMethod === 'card' ? 'Создаём платёж...' : 'Отправляем заказ...'}
+            </>
+          ) : (
+            <>
+              Оформить заказ
+              <CreditCard size={22} strokeWidth={2.5} />
+            </>
+          )}
+        </button>
+      )}
 
       {!isCompact && (
         <p className="text-xs text-center text-brand-text-soft leading-relaxed">
@@ -634,7 +650,9 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ cart, onOrderComplete, layo
       )}
     </form>
   );
-};
+});
+
+CheckoutForm.displayName = 'CheckoutForm';
 
 export default CheckoutForm;
 
