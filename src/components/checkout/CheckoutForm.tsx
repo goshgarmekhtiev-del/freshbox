@@ -316,10 +316,10 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
   // For compact mode, wrap in two-column layout on desktop
   if (isCompact) {
     return (
-      <form onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(320px,1fr)_minmax(0,2fr)] lg:items-start px-6 md:px-8">
-          {/* Left Column: Order Summary (first on mobile, first on desktop) */}
-          <aside className="lg:order-1 mt-4 lg:mt-0 lg:sticky lg:top-24 flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="w-full">
+        <div className="w-full flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(320px,1fr)_minmax(0,2fr)] lg:items-start">
+          {/* Правая колонка: Ваш заказ (на десктопе справа, на мобилке сверху) */}
+          <aside className="lg:order-2 mt-4 lg:mt-0 lg:sticky lg:top-24 flex flex-col gap-4">
             {/* Order Summary Card */}
             <OrderSummaryCompact cart={cart} />
             
@@ -329,9 +329,9 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
             </p>
           </aside>
 
-          {/* Right Column: All form sections (second on mobile, second on desktop) */}
-          <div className="lg:order-2 flex flex-col gap-6">
-            {/* Section 1: Customer Info */}
+          {/* Левая колонка: вся форма */}
+          <div className="lg:order-1 flex flex-col gap-4">
+            {/* Секция Контактные данные */}
             <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-50/50 to-lime-50/50 border border-emerald-100 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-brand-accent to-brand-accent-dark flex items-center justify-center text-white">
@@ -407,7 +407,7 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
               </div>
             </div>
 
-            {/* Section 2: Delivery Info */}
+            {/* Секция Адрес доставки */}
             <div className="p-4 rounded-2xl bg-gradient-to-br from-amber-50/50 to-orange-50/50 border border-amber-100 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-brand-yellow to-brand-accent flex items-center justify-center text-white">
@@ -541,7 +541,7 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
         </div>
             </div>
 
-            {/* Section 3: Payment Method */}
+            {/* Секция Способ оплаты */}
             <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-50/50 to-indigo-50/50 border border-blue-100 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white">

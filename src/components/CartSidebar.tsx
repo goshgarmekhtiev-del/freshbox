@@ -285,7 +285,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
 
               {/* Step 2: Checkout Form */}
               {step === 2 ? (
-                <div className="flex-1 overflow-y-auto px-0 py-6 pb-24">
+                <div className="flex-1 overflow-y-auto px-4 sm:px-6 md:px-8 py-6 pb-24">
                   <CheckoutForm 
                     ref={checkoutFormRef}
                     cart={cart} 
