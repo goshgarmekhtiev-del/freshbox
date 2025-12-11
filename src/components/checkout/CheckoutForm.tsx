@@ -317,20 +317,9 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
   if (isCompact) {
     return (
       <form onSubmit={handleSubmit} className="w-full">
-        <div className="w-full flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(320px,1fr)_minmax(0,2fr)] lg:items-start">
-          {/* Правая колонка: Ваш заказ (на десктопе справа, на мобилке сверху) */}
-          <aside className="lg:order-2 mt-4 lg:mt-0 lg:sticky lg:top-24 flex flex-col gap-4">
-            {/* Order Summary Card */}
-            <OrderSummaryCompact cart={cart} />
-            
-            {/* Reassurance Text */}
-            <p className="text-sm text-brand-text-soft leading-relaxed">
-              Оформление заказа займёт 1–2 минуты. После подтверждения мы переадресуем вас на безопасную страницу оплаты ЮKassa.
-            </p>
-          </aside>
-
-          {/* Левая колонка: вся форма */}
-          <div className="lg:order-1 flex flex-col gap-4">
+        <div className="w-full flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start">
+          {/* Левая колонка: Вся форма */}
+          <div className="flex flex-col gap-6">
             {/* Секция Контактные данные */}
             <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-50/50 to-lime-50/50 border border-emerald-100 space-y-4">
               <div className="flex items-center gap-3">
@@ -628,6 +617,14 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
               <p className="text-xs font-semibold text-[#e34a28] -mt-2">{errors.agreement}</p>
             )}
           </div>
+
+          {/* Правая колонка: Ваш заказ */}
+          <aside className="lg:sticky lg:top-24 flex flex-col gap-4">
+            <OrderSummaryCompact cart={cart} />
+            <p className="text-sm text-brand-text-soft leading-relaxed">
+              Оформление заказа займёт 1–2 минуты. После подтверждения мы переадресуем вас на безопасную страницу оплаты ЮKassa.
+            </p>
+          </aside>
         </div>
       </form>
     );
