@@ -11,7 +11,7 @@ const OrderSummaryCompact: React.FC<OrderSummaryCompactProps> = ({ cart }) => {
   const totals = calculateOrderTotals(cart);
 
   return (
-    <div className="mb-6 p-5 rounded-2xl bg-gradient-to-br from-emerald-50/80 to-lime-50/60 border-2 border-emerald-100/50 shadow-md">
+    <div className="p-5 rounded-2xl bg-gradient-to-br from-emerald-50/80 to-lime-50/60 border-2 border-emerald-100/50 shadow-md">
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-accent to-brand-accent-dark flex items-center justify-center shadow-sm">

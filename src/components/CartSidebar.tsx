@@ -288,9 +288,9 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
               {step === 2 ? (
                 <div className="flex-1 overflow-y-auto px-6 md:px-8 py-6 pb-24">
                   {/* Two-column layout on desktop, single column on mobile */}
-                  <div className="lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)] lg:gap-6">
-                    {/* Left Column: Checkout Form */}
-                    <div className="lg:pr-2">
+                  <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+                    {/* Left Column: Checkout Form (all form fields) */}
+                    <div>
                       <CheckoutForm 
                         ref={checkoutFormRef}
                         cart={cart} 
@@ -299,14 +299,14 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                       />
                     </div>
 
-                    {/* Right Column: Order Summary (sticky on desktop) */}
-                    <aside className="mt-6 lg:mt-0 lg:pl-2">
-                      <div className="lg:sticky lg:top-4">
-                        {/* Order Summary */}
+                    {/* Right Column: Order Summary Card (sticky on desktop) */}
+                    <aside>
+                      <div className="lg:sticky lg:top-24 space-y-3">
+                        {/* Order Summary Card */}
                         <OrderSummaryCompact cart={cart} />
                         
                         {/* Reassurance Text */}
-                        <p className="mt-4 text-sm text-brand-text-soft leading-relaxed">
+                        <p className="text-sm text-brand-text-soft leading-relaxed">
                           Оформление заказа займёт 1–2 минуты. После подтверждения мы переадресуем вас на безопасную страницу оплаты ЮKassa.
                         </p>
                       </div>
