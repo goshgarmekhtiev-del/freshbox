@@ -21,7 +21,6 @@ const HowItWorks = lazy(() => import(/* webpackChunkName: "how-it-works" */ '@/c
 const Reviews = lazy(() => import(/* webpackChunkName: "reviews" */ '@/components/sections/Reviews'));
 const B2B = lazy(() => import(/* webpackChunkName: "b2b" */ '@/components/sections/B2B'));
 const FAQ = lazy(() => import(/* webpackChunkName: "faq" */ '@/components/sections/FAQ'));
-const OrderForm = lazy(() => import(/* webpackChunkName: "order-form" */ '@/components/OrderForm'));
 const Footer = lazy(() => import(/* webpackChunkName: "footer" */ '@/components/Footer'));
 
 const App: React.FC = () => {
@@ -159,12 +158,6 @@ const App: React.FC = () => {
     }));
   };
 
-  const handleOrderSubmit = (formData: any) => {
-    console.log('Order submitted:', { formData, cart });
-    setCart([]);
-    localStorage.removeItem('freshbox_cart');
-  };
-  
   const handleOrderComplete = (data: NotificationData) => {
     setLastOrder(data);
   };
@@ -219,13 +212,6 @@ const App: React.FC = () => {
           <Configurator onAddCustom={(p, e) => addToCart(p, 1, e)} />
           <B2B />
           <FAQ />
-          <OrderForm 
-            cart={cart} 
-            onSubmit={handleOrderSubmit} 
-            onOrderComplete={handleOrderComplete}
-            onUpdateQty={updateQuantity}
-            onRemove={removeFromCart}
-          />
           <Footer />
         </Suspense>
       </main>
@@ -240,6 +226,7 @@ const App: React.FC = () => {
         onRemove={removeFromCart}
         onUpdateQty={updateQuantity}
         onQuickView={setQuickViewProduct}
+        onOrderComplete={handleOrderComplete}
       />
 
       <QuickViewModal 

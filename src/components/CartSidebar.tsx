@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import type { CartItem, Product } from '@/types';
-import { X, Trash2, Plus, Minus, ShoppingBag, Truck, ArrowRight, ArrowLeft, Sparkles, CheckCircle2, Eye } from 'lucide-react';
+import type { CartItem, Product, NotificationData } from '@/types';
+import { X, Trash2, Plus, Minus, ShoppingBag, Truck, ArrowRight, ArrowLeft, Sparkles, CheckCircle2, Eye, ChevronLeft } from 'lucide-react';
 import { useFocusTrap } from '@/hooks';
 import { LazyImage } from '@/components/ui';
+import CheckoutForm from '@/components/checkout/CheckoutForm';
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface CartSidebarProps {
   onRemove: (id: string) => void;
   onUpdateQty: (id: string, delta: number) => void;
   onQuickView?: (product: Product) => void;
+  onOrderComplete?: (data: NotificationData) => void;
 }
 
 // Helper component for smooth number counting
@@ -44,8 +46,9 @@ const AnimatedPrice: React.FC<{ value: number }> = ({ value }) => {
   return <>{displayValue.toLocaleString()}</>;
 };
 
-const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemove, onUpdateQty, onQuickView }) => {
+const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemove, onUpdateQty, onQuickView, onOrderComplete }) => {
   const [itemToRemove, setItemToRemove] = useState<string | null>(null);
+  const [step, setStep] = useState<1 | 2>(1);
   const modalRef = useFocusTrap({ isOpen, onClose });
   
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -56,9 +59,13 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
   const remainingForFreeShipping = FREE_SHIPPING_THRESHOLD - total;
   const freeShippingActivated = remainingForFreeShipping <= 0;
 
-  const scrollToOrder = () => {
-    onClose();
-    document.getElementById('order-form')?.scrollIntoView({ behavior: 'smooth' });
+  const handleProceedToCheckout = () => {
+    setStep(2);
+    // Прокручиваем к началу шторки при переходе на шаг 2
+    const drawer = modalRef.current;
+    if (drawer) {
+      drawer.scrollTop = 0;
+    }
   };
 
   // Helper function for pluralization
@@ -75,9 +82,12 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
     { icon: <CheckCircle2 size={16} strokeWidth={2.5} className="text-brand-green" />, text: 'Вернём деньги, если что-то пойдёт не так' },
   ];
 
-  // Reset removal state when cart changes or closes
+  // Reset removal state and step when cart changes or closes
   useEffect(() => {
-    if (!isOpen) setItemToRemove(null);
+    if (!isOpen) {
+      setItemToRemove(null);
+      setStep(1);
+    }
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -152,24 +162,37 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
               <header className="px-6 md:px-8 pt-6 md:pt-7 pb-4 border-b border-emerald-50 flex items-start justify-between gap-4 flex-shrink-0">
                 <div className="flex-1">
                   <div className="flex items-center gap-2.5 mb-2">
+                    {step === 2 && (
+                      <button
+                        onClick={() => setStep(1)}
+                        className="p-1.5 hover:bg-brand-accent/10 rounded-lg transition-colors mr-1"
+                        aria-label="Вернуться к корзине"
+                      >
+                        <ChevronLeft size={20} strokeWidth={2.5} className="text-brand-accent" />
+                      </button>
+                    )}
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-brand-accent to-brand-accent-dark flex items-center justify-center shadow-md">
                       <ShoppingBag size={20} strokeWidth={2.5} className="text-white" />
                     </div>
                     <h2 id="cart-title" className="text-[28px] leading-tight font-bold text-[#064E3B]">
-                      Корзина
+                      {step === 1 ? 'Корзина' : 'Оформление заказа'}
                     </h2>
-                    {/* Badge with quantity */}
-                    <div className="px-3 py-1 bg-gradient-to-r from-brand-accent to-brand-yellow text-white text-xs font-black rounded-full shadow-sm">
-                      {getBoxesText(totalBoxes)}
-                    </div>
+                    {step === 1 && (
+                      /* Badge with quantity */
+                      <div className="px-3 py-1 bg-gradient-to-r from-brand-accent to-brand-yellow text-white text-xs font-black rounded-full shadow-sm">
+                        {getBoxesText(totalBoxes)}
+                      </div>
+                    )}
                   </div>
                   <p className="text-sm text-[#115E59] font-semibold mb-1">
-                    Шаг 1 из 2: проверяем заказ
+                    {step === 1 ? 'Шаг 1 из 2: проверяем заказ' : 'Шаг 2 из 2: оформление заказа'}
                   </p>
                   {/* Emotional tagline */}
-                  <p className="text-xs text-[#115E59] leading-snug">
-                    Твой фруктовый праздник почти готов 🍊
-                  </p>
+                  {step === 1 && (
+                    <p className="text-xs text-[#115E59] leading-snug">
+                      Твой фруктовый праздник почти готов 🍊
+                    </p>
+                  )}
                 </div>
                 <button 
                   onClick={onClose} 
@@ -180,31 +203,43 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                 </button>
               </header>
 
-              {/* Progress Bar Section - Always visible */}
-              <section className="px-6 md:px-8 py-4 border-b border-emerald-50 bg-amber-50/80 flex-shrink-0">
-                {!freeShippingActivated ? (
-                  <p id="cart-description" className="text-sm font-bold text-[#064E3B] mb-3 flex items-center gap-2 leading-snug">
-                    <Truck size={18} strokeWidth={2.5} className="text-brand-accent flex-shrink-0" />
-                    До бесплатной доставки осталось <span className="text-brand-accent"><AnimatedPrice value={remainingForFreeShipping} /> ₽</span> 🚚
-                  </p>
-                ) : (
-                  <p id="cart-description" className="text-sm font-bold text-brand-green mb-3 flex items-center gap-2 leading-snug">
-                    <Truck size={18} strokeWidth={2.5} className="flex-shrink-0" />
-                    Бесплатная доставка активирована! 🚚
-                  </p>
-                )}
-                {/* Progress Bar */}
-                <div className="h-2 w-full bg-white/60 rounded-full overflow-hidden shadow-inner" role="progressbar" aria-valuemin={0} aria-valuemax={FREE_SHIPPING_THRESHOLD} aria-valuenow={total}>
-                  <div 
-                    className="h-full bg-gradient-to-r from-brand-accent via-brand-yellow to-brand-green transition-all duration-500 ease-out shadow-sm"
-                    style={{ width: `${progress}%` }}
-                  ></div>
-                </div>
-              </section>
+              {/* Progress Bar Section - Always visible (only on step 1) */}
+              {step === 1 && (
+                <section className="px-6 md:px-8 py-4 border-b border-emerald-50 bg-amber-50/80 flex-shrink-0">
+                  {!freeShippingActivated ? (
+                    <p id="cart-description" className="text-sm font-bold text-[#064E3B] mb-3 flex items-center gap-2 leading-snug">
+                      <Truck size={18} strokeWidth={2.5} className="text-brand-accent flex-shrink-0" />
+                      До бесплатной доставки осталось <span className="text-brand-accent"><AnimatedPrice value={remainingForFreeShipping} /> ₽</span> 🚚
+                    </p>
+                  ) : (
+                    <p id="cart-description" className="text-sm font-bold text-brand-green mb-3 flex items-center gap-2 leading-snug">
+                      <Truck size={18} strokeWidth={2.5} className="flex-shrink-0" />
+                      Бесплатная доставка активирована! 🚚
+                    </p>
+                  )}
+                  {/* Progress Bar */}
+                  <div className="h-2 w-full bg-white/60 rounded-full overflow-hidden shadow-inner" role="progressbar" aria-valuemin={0} aria-valuemax={FREE_SHIPPING_THRESHOLD} aria-valuenow={total}>
+                    <div 
+                      className="h-full bg-gradient-to-r from-brand-accent via-brand-yellow to-brand-green transition-all duration-500 ease-out shadow-sm"
+                      style={{ width: `${progress}%` }}
+                    ></div>
+                  </div>
+                </section>
+              )}
 
-              {/* Scrollable Cart Items List */}
-              <div className="flex-1 overflow-y-auto px-6 md:px-8 py-6 space-y-3 lg:pr-4">
-                {cart.map((item) => (
+              {/* Step 2: Checkout Form */}
+              {step === 2 ? (
+                <div className="flex-1 overflow-y-auto px-6 md:px-8 py-6">
+                  <CheckoutForm 
+                    cart={cart} 
+                    onOrderComplete={onOrderComplete || (() => {})}
+                    layout="compact"
+                  />
+                </div>
+              ) : (
+                /* Step 1: Scrollable Cart Items List */
+                <div className="flex-1 overflow-y-auto px-6 md:px-8 py-6 space-y-3 lg:pr-4">
+                  {cart.map((item) => (
                   <div 
                     key={item.id} 
                     className={`group rounded-2xl p-3 shadow-md border-2 transition-all duration-300 ${
@@ -333,11 +368,13 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
 
-              {/* Mobile-only: Show guarantees and CTA in single column */}
-              <div className="lg:hidden">
+              {/* Mobile-only: Show guarantees and CTA in single column (only on step 1) */}
+              {step === 1 && (
+                <div className="lg:hidden">
                 {/* Guarantee Block */}
                 <div className="px-6 md:px-8 pb-6">
                   <div className="p-4 bg-gradient-to-r from-lime-50 to-yellow-50 rounded-3xl border border-brand-green/20 shadow-sm">
@@ -379,7 +416,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
 
                   {/* CTA Button */}
                   <button 
-                    onClick={scrollToOrder}
+                    onClick={handleProceedToCheckout}
                     className="w-full py-4 bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow text-white font-black text-lg rounded-2xl transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 flex items-center justify-center gap-2 group mb-3"
                   >
                     Оформить заказ
@@ -401,10 +438,12 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                   </button>
                 </footer>
               </div>
+              )}
             </div>
 
-            {/* RIGHT COLUMN - Summary & Guarantees (35-40% on desktop, hidden on mobile) */}
-            <div className="hidden lg:flex lg:flex-col lg:w-1/3 px-6 py-7">
+            {/* RIGHT COLUMN - Summary & Guarantees (35-40% on desktop, hidden on mobile, only on step 1) */}
+            {step === 1 && (
+              <div className="hidden lg:flex lg:flex-col lg:w-1/3 px-6 py-7">
               {/* Guarantee Block - "Почему можно не переживать" */}
               <div className="p-5 bg-gradient-to-r from-lime-50 to-yellow-50 rounded-3xl border border-brand-green/20 shadow-md mb-6">
                 <h4 className="text-sm font-black text-[#064E3B] mb-3 uppercase tracking-wide">
@@ -447,7 +486,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
 
                 {/* CTA Button */}
                 <button 
-                  onClick={scrollToOrder}
+                  onClick={handleProceedToCheckout}
                   className="w-full py-4 bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow text-white font-black text-lg rounded-2xl transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 flex items-center justify-center gap-2 group"
                 >
                   Оформить заказ
@@ -469,6 +508,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                 </button>
               </div>
             </div>
+            )}
           </div>
         )}
       </aside>
