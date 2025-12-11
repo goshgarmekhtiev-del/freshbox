@@ -215,6 +215,11 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                     <h2 id="cart-title" className="text-[28px] leading-tight font-bold text-[#064E3B]">
                       {step === 1 ? 'Корзина' : 'Оформление заказа'}
                     </h2>
+                    {step === 2 && (
+                      <p className="mt-1 text-sm text-brand-text-soft">
+                        Заполните данные и перейдите к безопасной оплате в ЮKassa.
+                      </p>
+                    )}
                     {step === 1 && (
                       /* Badge with quantity */
                       <div className="px-3 py-1 bg-gradient-to-r from-brand-accent to-brand-yellow text-white text-xs font-black rounded-full shadow-sm">
@@ -282,16 +287,31 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
               {/* Step 2: Checkout Form */}
               {step === 2 ? (
                 <div className="flex-1 overflow-y-auto px-6 md:px-8 py-6 pb-24">
-                  {/* Order Summary Compact */}
-                  <OrderSummaryCompact cart={cart} />
-                  
-                  {/* Checkout Form */}
-                  <CheckoutForm 
-                    ref={checkoutFormRef}
-                    cart={cart} 
-                    onOrderComplete={onOrderComplete || (() => {})}
-                    layout="compact"
-                  />
+                  {/* Two-column layout on desktop, single column on mobile */}
+                  <div className="lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)] lg:gap-6">
+                    {/* Left Column: Checkout Form */}
+                    <div className="lg:pr-2">
+                      <CheckoutForm 
+                        ref={checkoutFormRef}
+                        cart={cart} 
+                        onOrderComplete={onOrderComplete || (() => {})}
+                        layout="compact"
+                      />
+                    </div>
+
+                    {/* Right Column: Order Summary (sticky on desktop) */}
+                    <aside className="mt-6 lg:mt-0 lg:pl-2">
+                      <div className="lg:sticky lg:top-4">
+                        {/* Order Summary */}
+                        <OrderSummaryCompact cart={cart} />
+                        
+                        {/* Reassurance Text */}
+                        <p className="mt-4 text-sm text-brand-text-soft leading-relaxed">
+                          Оформление заказа займёт 1–2 минуты. После подтверждения мы переадресуем вас на безопасную страницу оплаты ЮKassa.
+                        </p>
+                      </div>
+                    </aside>
+                  </div>
                 </div>
               ) : (
                 /* Step 1: Scrollable Cart Items List */

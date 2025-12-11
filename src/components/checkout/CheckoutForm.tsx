@@ -313,7 +313,7 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
   const isCompact = layout === 'compact';
 
   return (
-    <form onSubmit={handleSubmit} className={isCompact ? 'space-y-4' : 'space-y-6'}>
+    <form onSubmit={handleSubmit} className={isCompact ? 'space-y-4 lg:space-y-3' : 'space-y-6'}>
       {/* Section 1: Customer Info */}
       <div className={`${isCompact ? 'p-4' : 'p-5'} rounded-2xl bg-gradient-to-br from-emerald-50/50 to-lime-50/50 border border-emerald-100 space-y-4`}>
         <div className="flex items-center gap-3">
