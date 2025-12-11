@@ -317,7 +317,7 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
   if (isCompact) {
     return (
       <form onSubmit={handleSubmit} className="w-full">
-        <div className="w-full flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start">
+        <div className="w-full flex flex-col gap-6 lg:grid lg:grid-cols-[1fr_auto] lg:items-start lg:gap-6">
           {/* Левая колонка: Вся форма (вторая на мобильных, первая на десктопе) */}
           <div className="order-2 lg:order-1 flex flex-col gap-6">
             {/* Секция Контактные данные */}
@@ -619,7 +619,7 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
           </div>
 
           {/* Правая колонка: Ваш заказ (первая на мобильных, вторая на десктопе) */}
-          <aside className="order-1 lg:order-2 lg:sticky lg:top-24 flex flex-col gap-4">
+          <aside className="order-1 lg:order-2 lg:sticky lg:top-24 flex flex-col gap-4 lg:w-[320px] lg:flex-shrink-0">
             <OrderSummaryCompact cart={cart} />
             <p className="text-sm text-brand-text-soft leading-relaxed">
               Оформление заказа займёт 1–2 минуты. После подтверждения мы переадресуем вас на безопасную страницу оплаты ЮKassa.
