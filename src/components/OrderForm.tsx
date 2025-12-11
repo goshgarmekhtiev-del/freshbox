@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { CartItem, NotificationData } from '@/types';
 import { Loader2, CreditCard, Truck, Calendar, ChevronLeft, ChevronRight, User, MapPin, MessageSquare, Zap, AlertCircle } from 'lucide-react';
 import { useReveal } from '@/hooks';
@@ -14,6 +15,7 @@ interface OrderFormProps {
 
 const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrderComplete, onUpdateQty, onRemove }) => {
   const { ref: sectionRef, isVisible: sectionVisible } = useReveal({ threshold: 0.1 });
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -257,9 +259,10 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
             throw new Error('No confirmation URL received');
           }
         } catch (paymentErr) {
-          console.error('Error creating payment:', paymentErr);
+          console.error('PAYMENT CREATE FAILED', paymentErr);
           setStatus('idle');
-          alert('Не удалось создать платеж. Попробуйте позже.');
+          // Перенаправляем на страницу ошибки вместо alert
+          navigate('/fail');
           return;
         }
       }

@@ -19,12 +19,12 @@ const FailPage: React.FC = () => {
 
         {/* Heading */}
         <h1 className="text-3xl font-bold text-brand-text text-center mt-6">
-          Платёж не выполнен
+          Оплата не прошла
         </h1>
 
         {/* Subheading */}
         <p className="text-brand-text-soft text-center mt-2 text-lg">
-          Что-то пошло не так. Попробуйте оплатить ещё раз.
+          Что-то пошло не так при создании платежа. Попробуйте ещё раз или выберите оплату при получении.
         </p>
 
         {/* CTA Button */}
@@ -32,7 +32,7 @@ const FailPage: React.FC = () => {
           onClick={() => navigate(-1)}
           className="bg-brand-accent text-white rounded-xl py-3 px-6 mt-8 font-semibold hover:bg-brand-accent-dark transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
         >
-          Попробовать снова
+          Вернуться к оформлению заказа
         </button>
       </div>
     </div>
