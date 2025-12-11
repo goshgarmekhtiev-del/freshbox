@@ -12,6 +12,7 @@ import { Toast } from '@/components/ui';
 import type { Product, CartItem, NotificationData } from '@/types';
 import { ArrowUp } from 'lucide-react';
 import { fireConfetti } from '@/utils/confetti';
+import { sendEvent } from '@/utils/metrics';
 
 // Lazy load heavy components that are below the fold
 // These components load ONLY when user scrolls to them, reducing initial bundle size
@@ -134,6 +135,9 @@ const App: React.FC = () => {
       }
       return [...prev, { ...product, quantity }];
     });
+    
+    // Отправляем событие в Яндекс Метрику
+    sendEvent("Add_To_Cart", { id: product.id, name: product.name });
     
     // ✅ Toast убран для более премиального UX
     // Визуальная обратная связь:

@@ -3,6 +3,7 @@ import { ArrowRight, Star, ShoppingBag, Gift, CheckCircle2, Truck, Package, Chev
 import { JUICY_IMAGES } from '@/constants';
 import { Button, LazyImage, Container } from '@/components/ui';
 import { useReveal } from '@/hooks';
+import { sendEvent } from '@/utils/metrics';
 
 const Hero: React.FC = () => {
   const { ref: heroRef, isVisible: heroVisible } = useReveal({ threshold: 0.1 });
@@ -76,7 +77,10 @@ const Hero: React.FC = () => {
               <div className="relative">
                 <Button
                   size="lg"
-                  onClick={() => scrollTo('catalog')}
+                  onClick={() => {
+                    sendEvent("Hero_CTA_Click");
+                    scrollTo('catalog');
+                  }}
                   icon={<ShoppingBag size={22} strokeWidth={2.5} />}
                   iconPosition="left"
                   className="text-lg md:text-xl px-8 md:px-10 py-5 md:py-6 bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow hover:brightness-110 shadow-[0_20px_50px_rgba(249,115,22,0.3)] hover:shadow-[0_24px_60px_rgba(249,115,22,0.4)] hover:scale-[1.03] hover:-translate-y-1 transition-all duration-300 font-black rounded-full"

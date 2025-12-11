@@ -4,6 +4,7 @@ import type { CartItem, NotificationData } from '@/types';
 import { Loader2, CreditCard, Calendar, ChevronLeft, ChevronRight, User, MapPin, MessageSquare, Zap } from 'lucide-react';
 import { calculateOrderTotals } from '@/utils/cart';
 import OrderSummaryCompact from '@/components/checkout/OrderSummaryCompact';
+import { sendEvent } from '@/utils/metrics';
 
 interface CheckoutFormProps {
   cart: CartItem[];
@@ -269,6 +270,10 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
       // Если оплата наличными или платеж не требуется
       // Успешная отправка
       setStatus('success');
+      
+      // Отправляем событие успешного заказа в Яндекс Метрику
+      const totals = calculateOrderTotals(cart);
+      sendEvent("Order_Success", { price: totals.total });
       
       const randomItem = cart[Math.floor(Math.random() * cart.length)];
       onOrderComplete({

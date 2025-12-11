@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import type { Product } from '@/types';
 import { Plus, Flame, Sparkles, Eye, ShoppingBag, Check } from 'lucide-react';
 import { LazyImage } from '@/components/ui';
+import { sendEvent } from '@/utils/metrics';
 
 interface CatalogCardProps {
   product: Product;
@@ -15,6 +16,7 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
   const handleAdd = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsAdded(true);
+    sendEvent("Add_To_Cart", { id: product.id, name: product.name });
     onAdd(e);
 
     setTimeout(() => {
@@ -25,7 +27,10 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
   return (
     <div 
       className="group relative flex flex-col h-full bg-white rounded-3xl overflow-hidden border-2 border-brand-text/10 hover:border-brand-green/40 transition-all duration-500 hover:shadow-xl hover:scale-105 cursor-pointer"
-      onClick={onQuickView}
+      onClick={() => {
+        sendEvent("Open_Product", { id: product.id, name: product.name });
+        onQuickView();
+      }}
     >
       {/* Product Image - Fixed Aspect Ratio with LazyImage */}
       <div className="relative overflow-hidden">

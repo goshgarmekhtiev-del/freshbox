@@ -5,6 +5,7 @@ import { useFocusTrap } from '@/hooks';
 import { LazyImage } from '@/components/ui';
 import CheckoutForm, { type CheckoutFormHandle } from '@/components/checkout/CheckoutForm';
 import { calculateOrderTotals } from '@/utils/cart';
+import { sendEvent } from '@/utils/metrics';
 
 interface CartSidebarProps {
   isOpen: boolean;
@@ -67,6 +68,8 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
 
   const handleProceedToCheckout = () => {
     setStep(2);
+    // Отправляем событие начала оформления заказа
+    sendEvent("Checkout_Started");
     // Прокручиваем к началу шторки при переходе на шаг 2
     const drawer = modalRef.current;
     if (drawer) {
