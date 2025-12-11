@@ -52,6 +52,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
   const [itemToRemove, setItemToRemove] = useState<string | null>(null);
   const [step, setStep] = useState<1 | 2>(1);
   const [checkoutStatus, setCheckoutStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'cash'>('card');
   const modalRef = useFocusTrap({ isOpen, onClose });
   const checkoutFormRef = useRef<CheckoutFormHandle>(null);
   
@@ -84,11 +85,24 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
     }
   };
 
-  // Синхронизируем статус формы с локальным состоянием
+  // Синхронизируем статус формы и способ оплаты с локальным состоянием на шаге 2
   useEffect(() => {
-    if (checkoutFormRef.current) {
-      const status = checkoutFormRef.current.getStatus();
-      setCheckoutStatus(status);
+    if (step === 2 && checkoutFormRef.current) {
+      const updateStatus = () => {
+        if (checkoutFormRef.current) {
+          const status = checkoutFormRef.current.getStatus();
+          const method = checkoutFormRef.current.getPaymentMethod();
+          setCheckoutStatus(status);
+          setPaymentMethod(method);
+        }
+      };
+      // Обновляем статус сразу и затем периодически
+      updateStatus();
+      const interval = setInterval(updateStatus, 200);
+      return () => clearInterval(interval);
+    } else {
+      setCheckoutStatus('idle');
+      setPaymentMethod('card');
     }
   }, [step]);
 
@@ -211,10 +225,24 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                   <p className="text-sm text-[#115E59] font-semibold mb-1">
                     {step === 1 ? 'Шаг 1 из 2: проверяем заказ' : 'Шаг 2 из 2: оформление заказа'}
                   </p>
-                  {/* Emotional tagline */}
-                  {step === 1 && (
-                    <p className="text-xs text-[#115E59] leading-snug">
-                      Твой фруктовый праздник почти готов 🍊
+                  
+                  {/* Mini Progress: Корзина → Оформление → Оплата */}
+                  <div className="text-xs text-brand-text-soft mb-2">
+                    <span className={step === 1 ? 'font-bold text-brand-text' : ''}>Корзина</span>
+                    {' → '}
+                    <span className={step === 2 ? 'font-bold text-brand-text' : ''}>Оформление</span>
+                    {' → '}
+                    <span>Оплата</span>
+                  </div>
+                  
+                  {/* Microtext under step title */}
+                  {step === 1 ? (
+                    <p className="text-sm text-brand-text-soft leading-snug">
+                      Проверьте состав боксов и сумму перед оформлением.
+                    </p>
+                  ) : (
+                    <p className="text-sm text-brand-text-soft leading-snug">
+                      Остался последний шаг — заполните данные для доставки.
                     </p>
                   )}
                 </div>
@@ -518,7 +546,7 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                   onClick={handleProceedToCheckout}
                   className="w-full py-4 bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow text-white font-black text-lg rounded-2xl transition-all shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 flex items-center justify-center gap-2 group"
                 >
-                  Оформить заказ
+                  Перейти к оформлению
                   <ArrowRight size={22} strokeWidth={2.5} className="group-hover:translate-x-1 transition-transform" />
                 </button>
 
@@ -562,12 +590,17 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
                 {checkoutStatus === 'loading' ? (
                   <>
                     <Loader2 className="animate-spin" size={20} strokeWidth={2.5} />
-                    <span>Создаём платёж...</span>
+                    <span>{paymentMethod === 'card' ? 'Создаём платёж...' : 'Отправляем заказ...'}</span>
                   </>
                 ) : (
                   <>
-                    <span>Оформить заказ и перейти к оплате</span>
-                    <CreditCard size={20} strokeWidth={2.5} />
+                    <span>
+                      {paymentMethod === 'card' 
+                        ? `Оплатить ${totals.total.toLocaleString()} ₽`
+                        : 'Подтвердить заказ'
+                      }
+                    </span>
+                    {paymentMethod === 'card' && <CreditCard size={20} strokeWidth={2.5} />}
                   </>
                 )}
               </button>

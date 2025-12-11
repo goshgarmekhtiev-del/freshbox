@@ -13,6 +13,7 @@ interface CheckoutFormProps {
 export interface CheckoutFormHandle {
   submit: () => void;
   getStatus: () => 'idle' | 'loading' | 'success' | 'error';
+  getPaymentMethod: () => 'card' | 'cash';
 }
 
 const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
@@ -306,6 +307,7 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
   useImperativeHandle(ref, () => ({
     submit: performSubmit,
     getStatus: () => status,
+    getPaymentMethod: () => formData.paymentMethod as 'card' | 'cash',
   }));
 
   const isCompact = layout === 'compact';
@@ -576,6 +578,13 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
             </div>
           </button>
         </div>
+        
+        {/* Trust text for payment security */}
+        {isCompact && (
+          <p className="text-xs text-brand-text-soft leading-relaxed mt-2">
+            Оплата проходит через защищённый сервис ЮKassa. Мы не храним данные вашей карты.
+          </p>
+        )}
       </div>
 
       {/* Section 4: Additional */}
