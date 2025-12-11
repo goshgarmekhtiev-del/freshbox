@@ -4,7 +4,6 @@ import { X, Trash2, Plus, Minus, ShoppingBag, Truck, ArrowRight, ArrowLeft, Spar
 import { useFocusTrap } from '@/hooks';
 import { LazyImage } from '@/components/ui';
 import CheckoutForm, { type CheckoutFormHandle } from '@/components/checkout/CheckoutForm';
-import OrderSummaryCompact from '@/components/checkout/OrderSummaryCompact';
 import { calculateOrderTotals } from '@/utils/cart';
 
 interface CartSidebarProps {
@@ -287,31 +286,12 @@ const CartSidebar: React.FC<CartSidebarProps> = ({ isOpen, onClose, cart, onRemo
               {/* Step 2: Checkout Form */}
               {step === 2 ? (
                 <div className="flex-1 overflow-y-auto px-6 md:px-8 py-6 pb-24">
-                  {/* Two-column layout on desktop, single column on mobile */}
-                  <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-                    {/* Left Column: Checkout Form (all form fields) */}
-                    <div>
-                      <CheckoutForm 
-                        ref={checkoutFormRef}
-                        cart={cart} 
-                        onOrderComplete={onOrderComplete || (() => {})}
-                        layout="compact"
-                      />
-                    </div>
-
-                    {/* Right Column: Order Summary Card (sticky on desktop) */}
-                    <aside>
-                      <div className="lg:sticky lg:top-24 space-y-3">
-                        {/* Order Summary Card */}
-                        <OrderSummaryCompact cart={cart} />
-                        
-                        {/* Reassurance Text */}
-                        <p className="text-sm text-brand-text-soft leading-relaxed">
-                          Оформление заказа займёт 1–2 минуты. После подтверждения мы переадресуем вас на безопасную страницу оплаты ЮKassa.
-                        </p>
-                      </div>
-                    </aside>
-                  </div>
+                  <CheckoutForm 
+                    ref={checkoutFormRef}
+                    cart={cart} 
+                    onOrderComplete={onOrderComplete || (() => {})}
+                    layout="compact"
+                  />
                 </div>
               ) : (
                 /* Step 1: Scrollable Cart Items List */
