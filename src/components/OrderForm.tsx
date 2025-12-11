@@ -187,33 +187,39 @@ const OrderForm: React.FC<OrderFormProps> = ({ cart, onSubmit: _onSubmit, onOrde
     
     try {
       // Отправляем заказ на serverless endpoint
-      const response = await fetch('/api/send-lead', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          type: 'Order',
-          name: formData.name,
-          phone: formData.phone,
-          email: formData.email,
-          address: formData.address,
-          deliveryTime: formData.deliveryTime,
-          comment: formData.comment || '',
-          cart: cart.map(item => ({
-            title: item.name,
-            quantity: item.quantity,
-            price: item.price,
-          })),
-        }),
-      });
+      // В dev-режиме пропускаем отправку, так как endpoint недоступен локально
+      if (import.meta.env.DEV) {
+        console.log('DEV MODE: skipping send-lead');
+      } else {
+        const response = await fetch('/api/send-lead', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            type: 'Order',
+            name: formData.name,
+            phone: formData.phone,
+            email: formData.email,
+            address: formData.address,
+            deliveryTime: formData.deliveryTime,
+            comment: formData.comment || '',
+            cart: cart.map(item => ({
+              title: item.name,
+              quantity: item.quantity,
+              price: item.price,
+            })),
+          }),
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to send order');
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message || 'Failed to send order');
+        }
       }
 
       // Если выбран способ оплаты "картой", создаём платеж через YooKassa
+      
       if (formData.paymentMethod === 'card') {
         try {
           // Вычисляем сумму заказа
