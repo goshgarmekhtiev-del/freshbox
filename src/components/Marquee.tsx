@@ -39,7 +39,8 @@ const Marquee: React.FC<MarqueeProps> = ({
       {/* Content wrapper with diagonal skew */}
       <div className="relative w-full h-full overflow-hidden md:skew-y-[-3deg]">
         {/* Content - smooth horizontal scroll, absolutely positioned for perfect centering */}
-        <div className={`absolute inset-0 flex items-center ${speedClass} whitespace-nowrap will-change-transform`}>
+        {/* 🔧 ФИКС: Анимация только через CSS, без setInterval. Поддержка prefers-reduced-motion через CSS media query */}
+        <div className={`absolute inset-0 flex items-center whitespace-nowrap will-change-transform ${speedClass}`}>
           {duplicatedItems.map((item, idx) => (
             <div 
               key={idx} 

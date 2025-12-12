@@ -49,9 +49,10 @@ const Toast: React.FC<ToastProps> = ({
     error: <X size={20} strokeWidth={2.5} className="flex-shrink-0" />
   };
 
+  // 🔧 ФИКС: Понижен z-index чтобы не перекрывать модалку (модалка z-[100])
   return (
     <div 
-      className={`fixed bottom-8 right-8 z-[9999] transition-[transform,opacity] duration-300 ${
+      className={`fixed bottom-8 right-8 z-[60] transition-[transform,opacity] duration-300 ${
         isVisible 
           ? 'translate-y-0 opacity-100 pointer-events-auto' 
           : 'translate-y-4 opacity-0 pointer-events-none'

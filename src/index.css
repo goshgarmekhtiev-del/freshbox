@@ -452,6 +452,15 @@ body {
   animation: marquee-fast 20s linear infinite;
 }
 
+/* 🔧 ФИКС: Отключение анимации для пользователей с prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-marquee-slow,
+  .animate-marquee-fast {
+    animation: none;
+  }
+}
+
 .tracking-tightest {
   letter-spacing: -0.05em;
 }

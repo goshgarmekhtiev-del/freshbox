@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Product } from '@/types';
 import { X, Plus, Minus, ShoppingBag, Flame, Star, Leaf, CheckCircle2, Sparkles, Gift, Heart, TrendingUp } from 'lucide-react';
 import { useFocusTrap } from '@/hooks';
@@ -14,6 +14,40 @@ interface QuickViewModalProps {
 const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen, onClose, onAddToCart }) => {
   const [qty, setQty] = useState(1);
   const modalRef = useFocusTrap({ isOpen, onClose });
+
+  // 🔧 ФИКС: Блокировка скролла body при открытии модалки
+  useEffect(() => {
+    if (isOpen) {
+      console.log('[MODAL] Opening modal', { productId: product?.id });
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      
+      return () => {
+        console.log('[MODAL] Closing modal');
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen, product?.id]);
+
+  // 🔧 ФИКС: Обработчик клика на backdrop
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      console.log('[MODAL] Backdrop clicked, closing');
+      onClose();
+    }
+  };
+
+  // 🔧 ФИКС: Обработчик клика на крестик
+  const handleCloseClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log('[MODAL] Close button clicked');
+    onClose();
+  };
+
+  // 🔧 ФИКС: Предотвращаем всплытие кликов внутри модалки
+  const handleModalClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
 
   if (!isOpen || !product) return null;
 
@@ -52,11 +86,13 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen, onClos
   const reviewsCount = 42;
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center p-0 md:p-4 lg:p-6">
-      {/* Backdrop */}
+    <div 
+      className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-4 lg:p-6"
+      onClick={handleBackdropClick}
+    >
+      {/* Backdrop - принимает клики для закрытия */}
       <div 
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 animate-fade-in-up" 
-        onClick={onClose}
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 pointer-events-auto"
         aria-hidden="true"
       ></div>
 
@@ -67,13 +103,15 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen, onClos
         aria-modal="true"
         aria-labelledby="quick-view-title"
         aria-describedby="quick-view-description"
-        className="relative bg-white w-full h-full md:h-auto md:max-w-5xl md:max-h-[90vh] lg:max-h-[calc(100vh-80px)] md:rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row animate-fade-in-up"
+        className="relative bg-white w-full h-full md:h-auto md:max-w-5xl md:max-h-[90vh] lg:max-h-[calc(100vh-80px)] md:rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row pointer-events-auto"
+        onClick={handleModalClick}
       >
         {/* Close Button */}
         <button 
-          onClick={onClose}
+          type="button"
+          onClick={handleCloseClick}
           aria-label="Закрыть быстрый просмотр"
-          className="absolute top-4 right-4 z-30 p-2.5 bg-white/90 backdrop-blur-sm rounded-full hover:bg-brand-accent hover:text-white transition-all duration-300 shadow-lg hover:scale-110"
+          className="absolute top-4 right-4 z-30 p-2.5 bg-white/90 backdrop-blur-sm rounded-full hover:bg-brand-accent hover:text-white transition-all duration-300 shadow-lg hover:scale-110 pointer-events-auto"
         >
           <X size={24} strokeWidth={2.5} />
         </button>
