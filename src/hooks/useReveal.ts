@@ -32,27 +32,60 @@ export const useReveal = (options: UseRevealOptions = {}) => {
   const [isVisible, setIsVisible] = useState(false);
   // 🔧 ФИКС: Ref для хранения предыдущего значения, чтобы не вызывать setState без необходимости
   const prevIsVisibleRef = useRef(false);
+  // 🔧 ФИКС: Флаг для отслеживания, был ли уже reveal при triggerOnce=true
+  const hasRevealedRef = useRef(false);
 
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
 
+    // 🔧 ФИКС: Сбрасываем флаг при изменении зависимостей (новый элемент/настройки)
+    hasRevealedRef.current = false;
+    prevIsVisibleRef.current = false;
+
+    // 🔧 ФИКС: Улучшенные настройки observer для предотвращения ложных срабатываний
+    // Используем threshold (по умолчанию 0.15 - элемент должен быть виден минимум на 15%) и небольшой отрицательный rootMargin
+    const optimizedThreshold = threshold !== undefined ? threshold : 0.15;
+    const optimizedRootMargin = rootMargin !== undefined ? rootMargin : '0px 0px -10% 0px'; // Элемент считается видимым только когда реально вошёл в область
+
     // Create observer with optimized settings for performance
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          // 🔧 ФИКС: Если triggerOnce=true и уже был reveal - полностью игнорируем callbacks
+          if (triggerOnce && hasRevealedRef.current) {
+            if (DEBUG_BLINK) {
+              console.log('[useReveal] Ignoring callback - already revealed (triggerOnce=true)', {
+                isIntersecting: entry.isIntersecting,
+                intersectionRatio: entry.intersectionRatio
+              });
+            }
+            return;
+          }
+
           if (DEBUG_BLINK) {
             console.log('[useReveal] IntersectionObserver callback', {
               isIntersecting: entry.isIntersecting,
               intersectionRatio: entry.intersectionRatio,
               triggerOnce,
+              hasRevealed: hasRevealedRef.current,
               currentIsVisible: prevIsVisibleRef.current
             });
           }
+
           if (entry.isIntersecting) {
-            // 🔧 ФИКС: Вызываем setState только если значение реально изменилось
-            if (!prevIsVisibleRef.current) {
+            // 🔧 ФИКС: Вызываем setState только если значение реально изменилось И ещё не было reveal
+            if (!prevIsVisibleRef.current && !hasRevealedRef.current) {
               prevIsVisibleRef.current = true;
+              
+              // 🔧 ФИКС: При triggerOnce=true помечаем, что reveal уже произошёл
+              if (triggerOnce) {
+                hasRevealedRef.current = true;
+                // 🔧 ФИКС: Немедленно отключаем observer, чтобы callbacks больше не приходили
+                observer.unobserve(element);
+                observer.disconnect();
+              }
+
               // Apply delay if specified
               if (delay > 0) {
                 setTimeout(() => {
@@ -63,11 +96,6 @@ export const useReveal = (options: UseRevealOptions = {}) => {
                 if (DEBUG_BLINK) console.log('[useReveal] setIsVisible(true) immediately');
                 setIsVisible(true);
               }
-            }
-
-            // Disconnect after first trigger if triggerOnce is true
-            if (triggerOnce) {
-              observer.unobserve(element);
             }
           } else if (!triggerOnce) {
             // 🔧 ФИКС: Вызываем setState только если значение реально изменилось
@@ -80,8 +108,8 @@ export const useReveal = (options: UseRevealOptions = {}) => {
         });
       },
       {
-        threshold,
-        rootMargin
+        threshold: optimizedThreshold,
+        rootMargin: optimizedRootMargin
       }
     );
 
@@ -89,6 +117,9 @@ export const useReveal = (options: UseRevealOptions = {}) => {
 
     return () => {
       observer.disconnect();
+      // 🔧 ФИКС: Сбрасываем флаги при размонтировании
+      hasRevealedRef.current = false;
+      prevIsVisibleRef.current = false;
     };
   }, [threshold, rootMargin, triggerOnce, delay]);
 
