@@ -39,23 +39,20 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ policyUrl }) => {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-[55] px-4 py-4 md:px-6 md:py-5 animate-fade-in-up">
-      <div className="max-w-7xl mx-auto">
-        <div className="bg-white rounded-2xl md:rounded-3xl shadow-xl border-2 border-brand-accent/10 p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
-          {/* Иконка cookie (опционально, для визуального акцента) */}
-          <div className="hidden md:flex shrink-0">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand-accent/10 to-brand-yellow/10 flex items-center justify-center">
-              <Cookie size={24} strokeWidth={2.5} className="text-brand-accent" />
+    <div className="fixed bottom-0 left-0 right-0 z-[55] px-4 py-3 animate-fade-in-up">
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-lg border-2 border-brand-accent/10 px-4 py-3 md:px-4 md:py-3 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+          {/* Иконка cookie (компактная, только на десктопе) */}
+          <div className="hidden sm:flex shrink-0">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-accent/10 to-brand-yellow/10 flex items-center justify-center">
+              <Cookie size={18} strokeWidth={2.5} className="text-brand-accent" />
             </div>
           </div>
 
           {/* Текстовая часть */}
           <div className="flex-1 min-w-0">
-            <h3 className="text-base md:text-lg font-bold text-brand-text mb-1 md:mb-2">
-              Мы используем cookies
-            </h3>
-            <p className="text-sm md:text-base text-brand-text-soft leading-relaxed mb-2 md:mb-0">
-              Мы используем файлы cookies и сервисы аналитики (в том числе Яндекс.Метрику), чтобы улучшать сайт и показывать более релевантную рекламу. Продолжая пользоваться сайтом, вы соглашаетесь с обработкой данных.
+            <p className="text-xs sm:text-sm text-brand-text-soft leading-snug">
+              Мы используем cookies, чтобы сайт работал лучше. Продолжая пользоваться сайтом, вы соглашаетесь с этим.
               {policyUrl && (
                 <>
                   {' '}
@@ -73,13 +70,12 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ policyUrl }) => {
           </div>
 
           {/* Кнопка принятия */}
-          <div className="w-full md:w-auto flex-shrink-0">
+          <div className="w-full sm:w-auto flex-shrink-0">
             <button
               onClick={handleAccept}
-              className="w-full md:w-auto px-6 py-3 bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow text-white font-bold text-sm md:text-base rounded-xl md:rounded-full shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow text-white font-bold text-sm rounded-lg sm:rounded-full shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2"
             >
               <span>Понятно</span>
-              <X size={18} strokeWidth={2.5} className="md:hidden" />
             </button>
           </div>
         </div>
