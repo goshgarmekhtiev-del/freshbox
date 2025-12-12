@@ -1,13 +1,45 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ArrowRight, Star, ShoppingBag, Gift, CheckCircle2, Truck, Package, ChevronDown, Sparkles } from 'lucide-react';
 import { JUICY_IMAGES } from '@/constants';
 import { Button, LazyImage, Container } from '@/components/ui';
 import { useReveal } from '@/hooks';
 import { sendEvent } from '@/utils/metrics';
 
+// 🔧 ДИАГНОСТИКА: Флаг для включения логов (localStorage.DEBUG_BLINK=1)
+const DEBUG_BLINK = typeof window !== 'undefined' && localStorage.getItem('DEBUG_BLINK') === '1';
+
 // 🔧 ФИКС: Мемоизируем Hero, чтобы он не перерендеривался от изменений корзины/скролла
 const Hero: React.FC = React.memo(() => {
   const { ref: heroRef, isVisible: heroVisible } = useReveal({ threshold: 0.1 });
+  
+  // 🔧 ДИАГНОСТИКА: Счётчик ререндеров
+  const renderCountRef = useRef(0);
+  const mountTimeRef = useRef<number | null>(null);
+  
+  useEffect(() => {
+    renderCountRef.current += 1;
+    if (DEBUG_BLINK) {
+      console.log(`[HERO] RENDER #${renderCountRef.current}`, {
+        heroVisible,
+        timestamp: Date.now()
+      });
+    }
+  });
+  
+  useEffect(() => {
+    mountTimeRef.current = Date.now();
+    if (DEBUG_BLINK) {
+      console.log('[HERO] MOUNT', { timestamp: mountTimeRef.current });
+    }
+    return () => {
+      if (DEBUG_BLINK) {
+        console.log('[HERO] UNMOUNT', { 
+          lifetime: mountTimeRef.current ? Date.now() - mountTimeRef.current : 0,
+          totalRenders: renderCountRef.current
+        });
+      }
+    };
+  }, []);
 
   const scrollTo = (id: string) => {
     const element = document.getElementById(id);
@@ -64,7 +96,7 @@ const Hero: React.FC = React.memo(() => {
             {/* Trust Triggers - 3 items in one row */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 md:gap-4">
               {trustTriggers.map((trigger, idx) => (
-                <div key={idx} className="flex items-center gap-2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2.5 border border-brand-accent/10 shadow-sm group hover:border-brand-accent/30 hover:shadow-md transition-all duration-300">
+                <div key={idx} className="flex items-center gap-2 bg-white/90 backdrop-blur-sm rounded-full px-4 py-2.5 border border-brand-accent/10 shadow-sm group hover:border-brand-accent/30 hover:shadow-md transition-[border-color,box-shadow] duration-300">
                   <div className="group-hover:scale-110 transition-transform duration-300 shrink-0">
                     {trigger.icon}
                   </div>
@@ -84,7 +116,7 @@ const Hero: React.FC = React.memo(() => {
                   }}
                   icon={<ShoppingBag size={22} strokeWidth={2.5} />}
                   iconPosition="left"
-                  className="text-lg md:text-xl px-8 md:px-10 py-5 md:py-6 bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow hover:brightness-110 shadow-[0_20px_50px_rgba(249,115,22,0.3)] hover:shadow-[0_24px_60px_rgba(249,115,22,0.4)] hover:scale-[1.03] hover:-translate-y-1 transition-all duration-300 font-black rounded-full"
+                  className="text-lg md:text-xl px-8 md:px-10 py-5 md:py-6 bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow hover:brightness-110 shadow-[0_20px_50px_rgba(249,115,22,0.3)] hover:shadow-[0_24px_60px_rgba(249,115,22,0.4)] hover:scale-[1.03] hover:-translate-y-1 transition-[transform,box-shadow,filter] duration-300 font-black rounded-full"
                 >
                   Собрать бокс
                   <ArrowRight size={22} strokeWidth={2.5} className="group-hover:translate-x-1 transition-transform duration-300" />
@@ -134,7 +166,7 @@ const Hero: React.FC = React.memo(() => {
                     alt="Премиальный подарочный фруктовый бокс FreshBox"
                     priority={true}
                     aspectRatio="w-full aspect-[4/3]"
-                    imgClassName="object-cover rounded-[32px] shadow-[0_24px_80px_rgba(249,115,22,0.2)] transition-all duration-700 hover:scale-[1.02] hover:shadow-[0_32px_100px_rgba(249,115,22,0.25)]"
+                    imgClassName="object-cover rounded-[32px] shadow-[0_24px_80px_rgba(249,115,22,0.2)] transition-[transform,box-shadow] duration-700 hover:scale-[1.02] hover:shadow-[0_32px_100px_rgba(249,115,22,0.25)]"
                     skeletonClassName="bg-gradient-to-br from-orange-100/70 via-yellow-100/60 to-amber-100/70 rounded-[32px]"
                   />
                   

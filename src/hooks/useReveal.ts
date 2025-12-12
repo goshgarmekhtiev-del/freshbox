@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 
+// 🔧 ДИАГНОСТИКА: Флаг для включения логов
+const DEBUG_BLINK = typeof window !== 'undefined' && localStorage.getItem('DEBUG_BLINK') === '1';
+
 interface UseRevealOptions {
   threshold?: number;
   rootMargin?: string;
@@ -27,6 +30,8 @@ export const useReveal = (options: UseRevealOptions = {}) => {
 
   const ref = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  // 🔧 ФИКС: Ref для хранения предыдущего значения, чтобы не вызывать setState без необходимости
+  const prevIsVisibleRef = useRef(false);
 
   useEffect(() => {
     const element = ref.current;
@@ -36,12 +41,28 @@ export const useReveal = (options: UseRevealOptions = {}) => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          if (DEBUG_BLINK) {
+            console.log('[useReveal] IntersectionObserver callback', {
+              isIntersecting: entry.isIntersecting,
+              intersectionRatio: entry.intersectionRatio,
+              triggerOnce,
+              currentIsVisible: prevIsVisibleRef.current
+            });
+          }
           if (entry.isIntersecting) {
-            // Apply delay if specified
-            if (delay > 0) {
-              setTimeout(() => setIsVisible(true), delay);
-            } else {
-              setIsVisible(true);
+            // 🔧 ФИКС: Вызываем setState только если значение реально изменилось
+            if (!prevIsVisibleRef.current) {
+              prevIsVisibleRef.current = true;
+              // Apply delay if specified
+              if (delay > 0) {
+                setTimeout(() => {
+                  if (DEBUG_BLINK) console.log('[useReveal] setIsVisible(true) after delay', delay);
+                  setIsVisible(true);
+                }, delay);
+              } else {
+                if (DEBUG_BLINK) console.log('[useReveal] setIsVisible(true) immediately');
+                setIsVisible(true);
+              }
             }
 
             // Disconnect after first trigger if triggerOnce is true
@@ -49,7 +70,12 @@ export const useReveal = (options: UseRevealOptions = {}) => {
               observer.unobserve(element);
             }
           } else if (!triggerOnce) {
-            setIsVisible(false);
+            // 🔧 ФИКС: Вызываем setState только если значение реально изменилось
+            if (prevIsVisibleRef.current) {
+              prevIsVisibleRef.current = false;
+              if (DEBUG_BLINK) console.log('[useReveal] setIsVisible(false) - element left viewport');
+              setIsVisible(false);
+            }
           }
         });
       },

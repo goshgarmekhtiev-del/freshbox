@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+// 🔧 ДИАГНОСТИКА: Флаг для включения логов
+const DEBUG_BLINK = typeof window !== 'undefined' && localStorage.getItem('DEBUG_BLINK') === '1';
+
 interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
   alt: string;
@@ -46,9 +49,14 @@ const LazyImage: React.FC<LazyImageProps> = ({
   const isLoadedRef = useRef<boolean>(false);
 
   // Optimize image URL if autoOptimize is enabled
+  // 🔧 ФИКС: Не обновляем imageSrc если src не изменился реально
   useEffect(() => {
     if (!autoOptimize) {
-      setImageSrc(src);
+      // Если src не изменился - не трогаем imageSrc
+      if (imageSrc !== src && prevImageSrcRef.current !== src) {
+        if (DEBUG_BLINK) console.log('[LazyImage] Setting imageSrc to src (no optimization)', { src });
+        setImageSrc(src);
+      }
       return;
     }
 
@@ -56,7 +64,11 @@ const LazyImage: React.FC<LazyImageProps> = ({
 
     // Skip optimization if already webp
     if (src.endsWith('.webp') || src.includes('.webp?')) {
-      setImageSrc(src);
+      // Если src не изменился - не трогаем imageSrc
+      if (imageSrc !== src && prevImageSrcRef.current !== src) {
+        if (DEBUG_BLINK) console.log('[LazyImage] Setting imageSrc to src (already webp)', { src });
+        setImageSrc(src);
+      }
       return;
     }
 
@@ -87,8 +99,12 @@ const LazyImage: React.FC<LazyImageProps> = ({
       }
     }
 
-    setImageSrc(optimizedSrc);
-  }, [src, autoOptimize]);
+    // Обновляем только если оптимизированный URL отличается от текущего
+    if (optimizedSrc !== imageSrc && optimizedSrc !== prevImageSrcRef.current) {
+      if (DEBUG_BLINK) console.log('[LazyImage] Setting optimized imageSrc', { src, optimizedSrc });
+      setImageSrc(optimizedSrc);
+    }
+  }, [src, autoOptimize, imageSrc]);
 
   // Check if image is already cached and load instantly
   // 🔧 ФИКС: Не сбрасываем isLoaded если imageSrc не изменился реально
@@ -98,7 +114,16 @@ const LazyImage: React.FC<LazyImageProps> = ({
     
     // Если imageSrc не изменился и изображение уже загружено - не трогаем
     if (imageSrc === prevImageSrcRef.current && isLoadedRef.current) {
+      if (DEBUG_BLINK) console.log('[LazyImage] Skipping reset - imageSrc unchanged and already loaded', { imageSrc });
       return;
+    }
+    
+    if (DEBUG_BLINK) {
+      console.log('[LazyImage] Image src changed or not loaded', {
+        prev: prevImageSrcRef.current,
+        new: imageSrc,
+        wasLoaded: isLoadedRef.current
+      });
     }
     
     prevImageSrcRef.current = imageSrc;
@@ -111,17 +136,20 @@ const LazyImage: React.FC<LazyImageProps> = ({
     
     // If image is already in cache (complete), show it immediately
     if (img.complete && img.naturalHeight !== 0) {
+      if (DEBUG_BLINK) console.log('[LazyImage] Image already cached, setting loaded immediately');
       setIsLoaded(true);
       isLoadedRef.current = true;
     }
   }, [imageSrc]);
 
   const handleLoad = () => {
+    if (DEBUG_BLINK) console.log('[LazyImage] handleLoad called', { imageSrc });
     setIsLoaded(true);
     isLoadedRef.current = true;
   };
 
   const handleError = () => {
+    if (DEBUG_BLINK) console.log('[LazyImage] handleError called', { imageSrc });
     // On error, mark as loaded to show alt text
     setIsLoaded(true);
     isLoadedRef.current = true;

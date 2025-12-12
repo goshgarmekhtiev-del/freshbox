@@ -26,6 +26,19 @@ const B2B = lazy(() => import(/* webpackChunkName: "b2b" */ '@/components/sectio
 const FAQ = lazy(() => import(/* webpackChunkName: "faq" */ '@/components/sections/FAQ'));
 const Footer = lazy(() => import(/* webpackChunkName: "footer" */ '@/components/Footer'));
 
+// 🔧 ДИАГНОСТИКА: Флаг для включения логов (localStorage.DEBUG_BLINK=1)
+const DEBUG_BLINK = typeof window !== 'undefined' && localStorage.getItem('DEBUG_BLINK') === '1';
+
+// 🔧 ДИАГНОСТИКА: Throttle для логов (не чаще 1 раза в 500ms)
+let lastLogTime = 0;
+const throttledLog = (key: string, value: any) => {
+  if (!DEBUG_BLINK) return;
+  const now = Date.now();
+  if (now - lastLogTime < 500) return;
+  lastLogTime = now;
+  console.log(`[APP STATE] ${key}:`, value);
+};
+
 const App: React.FC = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -208,8 +221,16 @@ const App: React.FC = () => {
    * - User is NOT in the order/checkout section
    */
   const shouldShowFloatingCart = useCallback(() => {
-    return cart.length > 0 && !isInOrderSection;
+    const result = cart.length > 0 && !isInOrderSection;
+    throttledLog('shouldShowFloatingCart', { result, cartLength: cart.length, isInOrderSection });
+    return result;
   }, [cart.length, isInOrderSection]);
+
+  // 🔧 ФИКС: Hero вынесен в отдельный мемоизированный компонент, который не зависит от cart/menu состояний
+  // Это предотвращает ререндер Hero при изменениях корзины, floating cart, меню и т.д.
+  const HeroSection = React.useMemo(() => {
+    return <Hero />;
+  }, []); // Пустой массив зависимостей - Hero рендерится только один раз
 
   // Main Home Page Component
   // Мемоизирован для предотвращения ремаунта при изменении состояний
@@ -224,7 +245,8 @@ const App: React.FC = () => {
         */}
         
         {/* Step 1: HERO - Hook & Value Proposition (3-5 sec) */}
-        <Hero />
+        {/* 🔧 ФИКС: Hero рендерится из мемоизированного компонента, не зависит от cart/menu */}
+        {HeroSection}
         
         {/* Step 2: MARQUEE - Social proof & trust triggers (2-3 sec) */}
         {/* 🔧 TEMP: Отключено для проверки моргания Hero */}
@@ -309,7 +331,7 @@ const App: React.FC = () => {
       </button>
     </> 
     );
-  }, [addToCart, setQuickViewProduct, lastOrder, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, handleOrderComplete, shouldShowFloatingCart, showScrollTop, scrollToTop, toastMessage, showToast, setShowToast]);
+  }, [addToCart, setQuickViewProduct, lastOrder, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, handleOrderComplete, shouldShowFloatingCart, showScrollTop, scrollToTop, toastMessage, showToast, setShowToast, HeroSection]);
 
   return (
     <div 
