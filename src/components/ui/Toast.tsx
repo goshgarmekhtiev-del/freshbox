@@ -35,8 +35,8 @@ const Toast: React.FC<ToastProps> = ({
     }
   }, [isVisible, duration, onClose]);
 
-  if (!isVisible) return null;
-
+  // 🔧 ФИКС CLS: Всегда монтируем компонент, скрываем через transform/opacity
+  // Не используем условный рендер, чтобы не менять layout
   const bgColors = {
     success: 'bg-brand-green',
     info: 'bg-brand-accent',
@@ -51,8 +51,10 @@ const Toast: React.FC<ToastProps> = ({
 
   return (
     <div 
-      className={`fixed bottom-8 right-8 z-[9999] animate-toast-slide-in ${
-        isVisible ? 'opacity-100' : 'opacity-0'
+      className={`fixed bottom-8 right-8 z-[9999] transition-[transform,opacity] duration-300 ${
+        isVisible 
+          ? 'translate-y-0 opacity-100 pointer-events-auto' 
+          : 'translate-y-4 opacity-0 pointer-events-none'
       }`}
       role="alert"
       aria-live="polite"

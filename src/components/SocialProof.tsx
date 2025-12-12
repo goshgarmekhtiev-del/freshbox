@@ -87,21 +87,18 @@ const SocialProof: React.FC<SocialProofProps> = ({ customNotification }) => {
     };
   }, [customNotification]);
 
-  if (!visible) return null;
-
+  // 🔧 ФИКС CLS: Всегда монтируем компонент, скрываем через transform/opacity
+  // Не используем условный рендер, чтобы не менять layout
   return (
     <div 
       role="status"
       aria-live="polite"
       aria-atomic="true"
-      className={`fixed bottom-6 left-4 md:bottom-20 md:left-8 z-40 transition-all duration-500 ${
+      className={`fixed bottom-6 left-4 md:bottom-20 md:left-8 z-40 transition-[transform,opacity] duration-500 ${
         visible 
-          ? 'translate-y-0 opacity-100' 
+          ? 'translate-y-0 opacity-100 pointer-events-auto' 
           : 'translate-y-8 opacity-0 pointer-events-none'
       }`}
-      style={{
-        animation: visible ? 'slideUpFade 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'none'
-      }}
     >
       <div className="glass rounded-3xl p-5 shadow-deep shadow-orange-400/30 border-2 border-orange-200/40 flex items-center gap-4 max-w-[380px] relative group hover:shadow-deep-xl hover:border-orange-300/50 transition-all duration-300 hover:scale-105">
         {/* Close Button */}

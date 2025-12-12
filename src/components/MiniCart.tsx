@@ -20,15 +20,18 @@ const MiniCart: React.FC<MiniCartProps> = ({ cart, onCheckout, isVisible }) => {
     return `${count} наборов`;
   };
 
-  // Don't render if cart is empty or if explicitly hidden
-  if (cart.length === 0 || !isVisible) {
-    return null;
-  }
+  // 🔧 ФИКС CLS: Всегда монтируем компонент, скрываем через transform/opacity
+  // Не используем условный рендер, чтобы не менять layout
+  const shouldShow = cart.length > 0 && isVisible;
 
   return (
     <>
       {/* Desktop Version - Bottom Right Corner */}
-      <div className="hidden lg:block fixed bottom-6 right-6 z-50">
+      <div className={`hidden lg:block fixed bottom-6 right-6 z-50 transition-[transform,opacity] duration-300 ${
+        shouldShow 
+          ? 'translate-y-0 opacity-100 pointer-events-auto' 
+          : 'translate-y-4 opacity-0 pointer-events-none'
+      }`}>
         <button
           onClick={onCheckout}
           aria-label={`Открыть корзину: ${getBoxesText(totalItems)} на сумму ${totalPrice.toLocaleString()} рублей`}
@@ -43,8 +46,7 @@ const MiniCart: React.FC<MiniCartProps> = ({ cart, onCheckout, isVisible }) => {
             hover:shadow-[0_24px_60px_rgba(249,115,22,0.5)]
             hover:scale-105
             active:scale-[0.98]
-            transition-all duration-300
-            animate-fade-in-up
+            transition-[transform,shadow] duration-300
           "
         >
           {/* Icon with badge */}
@@ -67,12 +69,17 @@ const MiniCart: React.FC<MiniCartProps> = ({ cart, onCheckout, isVisible }) => {
       </div>
 
       {/* Mobile Version - Bottom Bar Full Width */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 animate-fade-in-up">
+      {/* 🔧 ФИКС CLS: Фиксированная высота, всегда монтирован, скрыт через transform */}
+      <div className={`lg:hidden fixed bottom-0 left-0 right-0 z-50 h-20 transition-[transform,opacity] duration-300 ${
+        shouldShow 
+          ? 'translate-y-0 opacity-100 pointer-events-auto' 
+          : 'translate-y-full opacity-0 pointer-events-none'
+      }`}>
         <button
           onClick={onCheckout}
           aria-label={`Открыть корзину: ${getBoxesText(totalItems)} на сумму ${totalPrice.toLocaleString()} рублей`}
           className="
-            w-full
+            w-full h-full
             flex items-center justify-between
             px-5 py-4
             bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow
@@ -80,7 +87,7 @@ const MiniCart: React.FC<MiniCartProps> = ({ cart, onCheckout, isVisible }) => {
             shadow-[0_-10px_40px_rgba(249,115,22,0.3)]
             hover:shadow-[0_-12px_50px_rgba(249,115,22,0.4)]
             active:scale-[0.98]
-            transition-all duration-300
+            transition-[transform,shadow] duration-300
             border-t-2 border-white/20
           "
         >

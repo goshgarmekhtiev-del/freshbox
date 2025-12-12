@@ -76,6 +76,7 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
     <section
       id="catalog"
       className="py-20 md:py-24 lg:py-28 bg-gradient-to-b from-white via-brand-bg/30 to-white relative"
+      style={{ overflowAnchor: 'none' }}
     >
       {/* Section Header - Centered, Bold, More Breathing Space */}
       <div className="max-w-7xl mx-auto mb-8 md:mb-10 text-center px-4">

@@ -208,7 +208,8 @@ const App: React.FC = () => {
   const HomePage = React.useCallback(() => {
     return (
       <>
-        <main className="relative z-10 pt-20">
+        {/* 🔧 ФИКС CLS: Постоянный padding-bottom для мобильной панели корзины (h-20 = 5rem = 80px) */}
+        <main className="relative z-10 pt-20 pb-20 md:pb-0">
         {/* 
           🎯 CONVERSION FUNNEL FOR COLD TRAFFIC (TikTok/Reels/Shorts)
           Target: Get user to catalog in 10-15 seconds (1-2 swipes on mobile)
@@ -301,7 +302,10 @@ const App: React.FC = () => {
   }, [addToCart, setQuickViewProduct, lastOrder, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, handleOrderComplete, shouldShowFloatingCart, showScrollTop, scrollToTop, toastMessage, showToast, setShowToast]);
 
   return (
-    <div className="min-h-screen bg-brand-bg text-brand-text font-sans selection:bg-brand-accent selection:text-white overflow-x-hidden">
+    <div 
+      className="min-h-screen bg-brand-bg text-brand-text font-sans selection:bg-brand-accent selection:text-white overflow-x-hidden"
+      style={{ overflowAnchor: 'none' }}
+    >
       {/* Premium Decorative Background - NO scroll dependencies */}
       <DecorativeBackground />
       
