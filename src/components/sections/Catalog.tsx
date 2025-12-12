@@ -19,14 +19,22 @@ interface CatalogProps {
 }
 
 const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
+  // 🔍 ДИАГНОСТИКА: Логирование монтирования/размонтирования
+  useEffect(() => {
+    console.log("🟡 MOUNT Catalog");
+    return () => console.log("🔴 UNMOUNT Catalog");
+  }, []);
+
   const [activeCategory, setActiveCategory] = useState('all');
   const [sortOption, setSortOption] = useState('popularity');
   const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   // Только для первой загрузки - показываем skeleton один раз
   useEffect(() => {
+    console.log("📦 LOADING ON: initial load (first mount)", { isInitialLoading });
     const timer = setTimeout(() => {
       setIsInitialLoading(false);
+      console.log("✅ LOADING OFF: initial load complete");
     }, 500); // 500ms skeleton display только при первой загрузке
     
     return () => clearTimeout(timer);
@@ -104,6 +112,7 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
 
         {/* Premium Product Grid - Max 3 Columns */}
         {isInitialLoading ? (
+          // 🔍 ДИАГНОСТИКА: Skeleton показывается только при первой загрузке
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto px-4">
             {Array.from({ length: 6 }).map((_, index) => (
               <div

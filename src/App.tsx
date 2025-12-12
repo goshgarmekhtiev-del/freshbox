@@ -27,6 +27,12 @@ const FAQ = lazy(() => import(/* webpackChunkName: "faq" */ '@/components/sectio
 const Footer = lazy(() => import(/* webpackChunkName: "footer" */ '@/components/Footer'));
 
 const App: React.FC = () => {
+  // 🔍 ДИАГНОСТИКА: Логирование монтирования/размонтирования
+  useEffect(() => {
+    console.log("🔵 MOUNT App");
+    return () => console.log("🔴 UNMOUNT App");
+  }, []);
+
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -199,9 +205,11 @@ const App: React.FC = () => {
   };
 
   // Main Home Page Component
-  const HomePage = () => (
-    <>
-      <main className="relative z-10 pt-20">
+  // 🔍 ДИАГНОСТИКА: Используем useCallback для мемоизации HomePage
+  const HomePage = React.useCallback(() => {
+    return (
+      <>
+        <main className="relative z-10 pt-20">
         {/* 
           🎯 CONVERSION FUNNEL FOR COLD TRAFFIC (TikTok/Reels/Shorts)
           Target: Get user to catalog in 10-15 seconds (1-2 swipes on mobile)
@@ -289,8 +297,9 @@ const App: React.FC = () => {
       >
         <ArrowUp size={24} strokeWidth={3} />
       </button>
-    </>
-  );
+    </> 
+    );
+  }, [cart, addToCart, setQuickViewProduct, lastOrder, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, handleOrderComplete, shouldShowFloatingCart, showScrollTop, scrollToTop, toastMessage, showToast, setShowToast]);
 
   return (
     <div className="min-h-screen bg-brand-bg text-brand-text font-sans selection:bg-brand-accent selection:text-white overflow-x-hidden">

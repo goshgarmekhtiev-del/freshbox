@@ -46,22 +46,32 @@
     <!-- Yandex Metrika -->
     <script type="text/javascript">
       (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (let j = 0; j < document.scripts.length; j++) {
-          if (document.scripts[j].src === r) { return; }
+        try {
+          m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+          m[i].l=1*new Date();
+          for (let j = 0; j < document.scripts.length; j++) {
+            if (document.scripts[j].src === r) { return; }
+          }
+          k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        } catch (err) {
+          console.error("[METRIKA] Script loading error:", err);
         }
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
       })
       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
-      // Yandex Metrika initialization
-      ym(105798174, "init", {
-          clickmap:true,
-          trackLinks:true,
-          accurateTrackBounce:true,
-          webvisor:true
-      });
+      // Yandex Metrika initialization - wrapped in try/catch to prevent UI breakage
+      try {
+        if (typeof window.ym === 'function') {
+          window.ym(105798174, "init", {
+              clickmap:true,
+              trackLinks:true,
+              accurateTrackBounce:true,
+              webvisor:true
+          });
+        }
+      } catch (err) {
+        console.error("[METRIKA] Initialization error:", err);
+      }
     </script>
     <!-- /Yandex Metrika -->
     
