@@ -23,14 +23,17 @@ const MiniCart: React.FC<MiniCartProps> = ({ cart, onCheckout, isVisible }) => {
   // 🔧 ФИКС CLS: Всегда монтируем компонент, скрываем через transform/opacity
   // Не используем условный рендер, чтобы не менять layout
   const shouldShow = cart.length > 0 && isVisible;
+  
+  // 🔧 ФИКС: Если компонент скрыт - pointer-events-none чтобы не перехватывать клики модалки
+  const pointerEventsClass = shouldShow ? 'pointer-events-auto' : 'pointer-events-none';
 
   return (
     <>
       {/* Desktop Version - Bottom Right Corner */}
-      <div className={`hidden lg:block fixed bottom-6 right-6 z-50 transition-[transform,opacity] duration-300 ${
+      <div className={`hidden lg:block fixed bottom-6 right-6 z-50 transition-[transform,opacity] duration-300 ${pointerEventsClass} ${
         shouldShow 
-          ? 'translate-y-0 opacity-100 pointer-events-auto' 
-          : 'translate-y-4 opacity-0 pointer-events-none'
+          ? 'translate-y-0 opacity-100' 
+          : 'translate-y-4 opacity-0'
       }`}>
         <button
           onClick={onCheckout}
@@ -70,10 +73,10 @@ const MiniCart: React.FC<MiniCartProps> = ({ cart, onCheckout, isVisible }) => {
 
       {/* Mobile Version - Bottom Bar Full Width */}
       {/* 🔧 ФИКС CLS: Фиксированная высота, всегда монтирован, скрыт через transform */}
-      <div className={`lg:hidden fixed bottom-0 left-0 right-0 z-50 h-20 transition-[transform,opacity] duration-300 ${
+      <div className={`lg:hidden fixed bottom-0 left-0 right-0 z-50 h-20 transition-[transform,opacity] duration-300 ${pointerEventsClass} ${
         shouldShow 
-          ? 'translate-y-0 opacity-100 pointer-events-auto' 
-          : 'translate-y-full opacity-0 pointer-events-none'
+          ? 'translate-y-0 opacity-100' 
+          : 'translate-y-full opacity-0'
       }`}>
         <button
           onClick={onCheckout}

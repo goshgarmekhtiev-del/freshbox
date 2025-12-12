@@ -6,7 +6,7 @@ import CartSidebar from '@/components/CartSidebar';
 import QuickViewModal from '@/components/QuickViewModal';
 import SocialProof from '@/components/SocialProof';
 import DecorativeBackground from '@/components/DecorativeBackground';
-import Marquee from '@/components/Marquee';
+// import Marquee from '@/components/Marquee'; // 🔧 TEMP: Отключено для проверки моргания Hero
 import MiniCart from '@/components/MiniCart';
 import { Toast } from '@/components/ui';
 import CookieBanner from '@/components/CookieBanner';
@@ -219,7 +219,8 @@ const App: React.FC = () => {
         <Hero />
         
         {/* Step 2: MARQUEE - Social proof & trust triggers (2-3 sec) */}
-        <Marquee speed="normal" className="relative z-10" />
+        {/* 🔧 TEMP: Отключено для проверки моргания Hero */}
+        {/* <Marquee speed="normal" className="relative z-10" /> */}
         
         {/* Step 3: CATALOG - IMMEDIATE CONVERSION OPPORTUNITY (5-10 sec) 
             🚀 KEY CHANGE: Moved catalog right after hook to minimize friction
@@ -283,10 +284,11 @@ const App: React.FC = () => {
           
           Click behavior: Opens CartSidebar for quick access
       */}
+      {/* 🔧 ФИКС: MiniCart должен быть pointer-events-none когда модалка открыта */}
       <MiniCart 
         cart={cart}
         onCheckout={() => setIsCartOpen(true)}
-        isVisible={shouldShowFloatingCart()}
+        isVisible={shouldShowFloatingCart() && !quickViewProduct}
       />
 
       <button

@@ -31,6 +31,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen, onClos
 
   // 🔧 ФИКС: Обработчик клика на backdrop
   const handleBackdropClick = (e: React.MouseEvent) => {
+    // Закрываем только если клик именно на backdrop (не на дочерних элементах)
     if (e.target === e.currentTarget) {
       console.log('[MODAL] Backdrop clicked, closing');
       onClose();
@@ -39,6 +40,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen, onClos
 
   // 🔧 ФИКС: Обработчик клика на крестик
   const handleCloseClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
     console.log('[MODAL] Close button clicked');
     onClose();
@@ -49,6 +51,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen, onClos
     e.stopPropagation();
   };
 
+  // 🔧 ФИКС: Всегда монтируем компонент, но скрываем через условный рендер для мгновенного открытия
   if (!isOpen || !product) return null;
 
   const handleAdd = (e: React.MouseEvent) => {
@@ -86,26 +89,27 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen, onClos
   const reviewsCount = 42;
 
   return (
-    <div 
-      className="fixed inset-0 z-[100] flex items-center justify-center p-0 md:p-4 lg:p-6"
-      onClick={handleBackdropClick}
-    >
+    <div className="fixed inset-0 z-[100]">
       {/* Backdrop - принимает клики для закрытия */}
       <div 
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 pointer-events-auto"
+        className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300"
+        onClick={handleBackdropClick}
         aria-hidden="true"
       ></div>
 
       {/* Modal Content - Optimized for 1366x768 desktop without vertical scroll */}
       <div 
-        ref={modalRef}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="quick-view-title"
-        aria-describedby="quick-view-description"
-        className="relative bg-white w-full h-full md:h-auto md:max-w-5xl md:max-h-[90vh] lg:max-h-[calc(100vh-80px)] md:rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row pointer-events-auto"
-        onClick={handleModalClick}
+        className="fixed inset-0 flex items-center justify-center p-0 md:p-4 lg:p-6 pointer-events-none"
       >
+        <div 
+          ref={modalRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="quick-view-title"
+          aria-describedby="quick-view-description"
+          className="relative bg-white w-full h-full md:h-auto md:max-w-5xl md:max-h-[90vh] lg:max-h-[calc(100vh-80px)] md:rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row pointer-events-auto"
+          onClick={handleModalClick}
+        >
         {/* Close Button */}
         <button 
           type="button"
@@ -307,6 +311,7 @@ const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, isOpen, onClos
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
