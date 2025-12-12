@@ -16,7 +16,8 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
   const handleAdd = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsAdded(true);
-    sendEvent("Add_To_Cart", { id: product.id, name: product.name });
+    // Событие Add_To_Cart отправляется в App.tsx в функции addToCart
+    // Здесь не дублируем, чтобы избежать двойного события
     onAdd(e);
 
     setTimeout(() => {
@@ -24,13 +25,15 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
     }, 2000);
   };
 
+  const handleOpenProduct = () => {
+    sendEvent("Open_Product", { id: product.id, name: product.name });
+    onQuickView();
+  };
+
   return (
     <div 
       className="group relative flex flex-col h-full bg-white rounded-3xl overflow-hidden border-2 border-brand-text/10 hover:border-brand-green/40 transition-all duration-500 hover:shadow-xl hover:scale-105 cursor-pointer"
-      onClick={() => {
-        sendEvent("Open_Product", { id: product.id, name: product.name });
-        onQuickView();
-      }}
+      onClick={handleOpenProduct}
     >
       {/* Product Image - Fixed Aspect Ratio with LazyImage */}
       <div className="relative overflow-hidden">
@@ -49,7 +52,10 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
         {/* Quick View Overlay - Desktop Hover */}
         <div className="hidden md:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center">
           <button 
-            onClick={(e) => { e.stopPropagation(); onQuickView(); }}
+            onClick={(e) => { 
+              e.stopPropagation(); 
+              handleOpenProduct();
+            }}
             className="px-6 py-3 bg-white rounded-full flex items-center gap-2 text-brand-text font-bold text-sm shadow-lg hover:scale-110 transition-transform duration-300"
           >
             <Eye size={18} strokeWidth={2.5} />
@@ -59,7 +65,10 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
 
         {/* Mobile Quick View Button - Always Visible */}
         <button 
-          onClick={(e) => { e.stopPropagation(); onQuickView(); }}
+          onClick={(e) => { 
+            e.stopPropagation(); 
+            handleOpenProduct();
+          }}
           className="md:hidden absolute bottom-4 left-1/2 -translate-x-1/2 px-5 py-2.5 bg-white/95 backdrop-blur-sm rounded-full flex items-center gap-2 text-brand-text font-bold text-sm shadow-lg"
         >
           <Eye size={16} strokeWidth={2.5} />

@@ -13,10 +13,18 @@ declare global {
  * @param params - Optional parameters object (e.g., { id: "123", name: "Product" })
  */
 export const sendEvent = (eventName: string, params?: Record<string, any>) => {
+  // Всегда логируем вызов события для отладки (даже если ym недоступна)
+  console.log("[METRIKA] sendEvent:", eventName, params || {});
+  
   if (typeof window !== "undefined" && typeof window.ym === "function") {
-    window.ym(METRIC_ID, "reachGoal", eventName, params || {});
+    try {
+      window.ym(METRIC_ID, "reachGoal", eventName, params || {});
+      console.log("[METRIKA] Event sent successfully:", eventName);
+    } catch (error) {
+      console.error("[METRIKA] Error sending event:", eventName, error);
+    }
   } else {
-    console.warn("Yandex Metrika is not initialized yet:", eventName);
+    console.warn("[METRIKA] ym is not initialized", eventName);
   }
 };
 

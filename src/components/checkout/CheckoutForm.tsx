@@ -253,7 +253,13 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
 
           // Если получен confirmation_url, перенаправляем пользователя на оплату
           if (paymentData.confirmation_url) {
-            window.location.href = paymentData.confirmation_url;
+            // Отправляем событие успешного заказа перед редиректом на оплату
+            const totals = calculateOrderTotals(cart);
+            sendEvent("Order_Success", { price: totals.total, paymentMethod: 'card' });
+            // Небольшая задержка, чтобы событие успело отправиться перед редиректом
+            setTimeout(() => {
+              window.location.href = paymentData.confirmation_url;
+            }, 100);
             return; // Прерываем выполнение, так как происходит редирект
           } else {
             throw new Error('No confirmation URL received');
