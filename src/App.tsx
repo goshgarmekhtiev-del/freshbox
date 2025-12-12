@@ -244,9 +244,24 @@ const App: React.FC = () => {
     return <Hero />;
   }, []); // Пустой массив зависимостей - Hero рендерится только один раз
 
+  // 🔧 ФИКС: Используем useRef для хранения актуальных ссылок на функции
+  // Это позволяет HomePage не пересоздаваться, но иметь доступ к актуальным значениям
+  const handlersRef = useRef({
+    addToCart,
+    setQuickViewProduct
+  });
+
+  // Обновляем refs при изменении значений
+  useEffect(() => {
+    handlersRef.current = {
+      addToCart,
+      setQuickViewProduct
+    };
+  }, [addToCart, setQuickViewProduct]);
+
   // Main Home Page Component - стабильный компонент, который не пересоздаётся
-  // 🔧 ФИКС: Используем стабильную функцию-компонент, которая использует замыкания для доступа к актуальным значениям
-  // Функция не пересоздаётся, но имеет доступ к актуальным значениям через замыкания
+  // 🔧 ФИКС: Используем стабильную функцию-компонент, которая берёт актуальные значения из refs
+  // Функция не пересоздаётся, но имеет доступ к актуальным значениям через refs
   const HomePage = React.useCallback(() => {
     // 🔧 ДИАГНОСТИКА: Логи MOUNT/UNMOUNT для HomePage
     React.useEffect(() => {
@@ -259,6 +274,9 @@ const App: React.FC = () => {
         }
       };
     }, []);
+
+    // Используем актуальные значения из refs
+    const handlers = handlersRef.current;
 
     return (
       <>
@@ -281,7 +299,17 @@ const App: React.FC = () => {
             🚀 KEY CHANGE: Moved catalog right after hook to minimize friction
             User sees products BEFORE reading explanations = faster decision
         */}
-        <Catalog onAdd={(p, e) => addToCart(p, 1, e)} onQuickView={setQuickViewProduct} />
+        <Catalog 
+          onAdd={(p, e) => {
+            console.log('[HOMEPAGE] Catalog onAdd called', { productId: p.id });
+            handlers.addToCart(p, 1, e);
+          }} 
+          onQuickView={(product) => {
+            console.log('[HOMEPAGE] Catalog onQuickView called', { productId: product?.id, handlerType: typeof handlers.setQuickViewProduct });
+            handlers.setQuickViewProduct(product);
+            console.log('[HOMEPAGE] setQuickViewProduct called');
+          }} 
+        />
         
         {/* Step 4-5: SOCIAL PROOF & BENEFITS - Why choose us (for interested users) */}
         <ProblemSolution />
@@ -303,7 +331,32 @@ const App: React.FC = () => {
         </Suspense>
       </main>
 
-      {/* Global UI Elements */}
+      {/* Global UI Elements - вынесены из HomePage, чтобы они получали актуальные props */}
+      {/* Эти компоненты рендерятся на уровне App, поэтому они всегда получают актуальные значения */}
+    </> 
+    );
+    // 🔧 ФИКС: Только HeroSection в зависимостях - функция не пересоздаётся при изменении cart/menu
+    // Актуальные значения берём из refs, которые обновляются через useEffect
+  }, [HeroSection]);
+
+  return (
+    <div 
+      className="min-h-screen bg-brand-bg text-brand-text font-sans selection:bg-brand-accent selection:text-white overflow-x-hidden"
+      style={{ overflowAnchor: 'none' }}
+    >
+      {/* Premium Decorative Background - NO scroll dependencies */}
+      <DecorativeBackground />
+      
+      <Navbar cartCount={cartCount} onOpenCart={() => setIsCartOpen(true)} />
+      
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/success" element={<SuccessPage />} />
+        <Route path="/fail" element={<FailPage />} />
+      </Routes>
+
+      {/* 🔧 ФИКС: Global UI Elements вынесены из HomePage на уровень App */}
+      {/* Это гарантирует, что они получают актуальные props и не вызывают ремоунт HomePage */}
       <SocialProof customNotification={lastOrder} />
 
       <CartSidebar 
@@ -354,28 +407,6 @@ const App: React.FC = () => {
       >
         <ArrowUp size={24} strokeWidth={3} />
       </button>
-    </> 
-    );
-    // 🔧 ФИКС: НЕ включаем зависимости - функция использует замыкания для доступа к актуальным значениям
-    // Это предотвращает пересоздание функции и ремоунт компонента в React Router
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [HeroSection]); // Только HeroSection - стабильная зависимость
-
-  return (
-    <div 
-      className="min-h-screen bg-brand-bg text-brand-text font-sans selection:bg-brand-accent selection:text-white overflow-x-hidden"
-      style={{ overflowAnchor: 'none' }}
-    >
-      {/* Premium Decorative Background - NO scroll dependencies */}
-      <DecorativeBackground />
-      
-      <Navbar cartCount={cartCount} onOpenCart={() => setIsCartOpen(true)} />
-      
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/success" element={<SuccessPage />} />
-        <Route path="/fail" element={<FailPage />} />
-      </Routes>
 
       {/* Cookie Banner - показывается внизу экрана до согласия */}
       <CookieBanner />

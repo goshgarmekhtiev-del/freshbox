@@ -26,8 +26,11 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
   };
 
   const handleOpenProduct = () => {
+    console.log('[CATALOG_CARD] handleOpenProduct called', { productId: product.id, productName: product.name });
     sendEvent("Open_Product", { id: product.id, name: product.name });
+    console.log('[CATALOG_CARD] Calling onQuickView', { onQuickView: typeof onQuickView });
     onQuickView();
+    console.log('[CATALOG_CARD] onQuickView called');
   };
 
   return (
