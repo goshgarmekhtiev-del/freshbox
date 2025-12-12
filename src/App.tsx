@@ -9,6 +9,7 @@ import DecorativeBackground from '@/components/DecorativeBackground';
 import Marquee from '@/components/Marquee';
 import MiniCart from '@/components/MiniCart';
 import { Toast } from '@/components/ui';
+import CookieBanner from '@/components/CookieBanner';
 import type { Product, CartItem, NotificationData } from '@/types';
 import { ArrowUp } from 'lucide-react';
 import { fireConfetti } from '@/utils/confetti';
@@ -303,6 +304,9 @@ const App: React.FC = () => {
         <Route path="/success" element={<SuccessPage />} />
         <Route path="/fail" element={<FailPage />} />
       </Routes>
+
+      {/* Cookie Banner - показывается внизу экрана до согласия */}
+      <CookieBanner />
     </div>
   );
 };
