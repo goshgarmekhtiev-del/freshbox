@@ -5,6 +5,7 @@ import { Loader2, CreditCard, Calendar, ChevronLeft, ChevronRight, User, MapPin,
 import { calculateOrderTotals } from '@/utils/cart';
 import OrderSummaryCompact from '@/components/checkout/OrderSummaryCompact';
 import { sendEvent } from '@/utils/metrics';
+import { getEffectiveUtm } from '@/utils/utm';
 
 interface CheckoutFormProps {
   cart: CartItem[];
@@ -191,10 +192,14 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
     setStatus('loading');
     
     try {
+      // Получаем UTM-данные для заказа
+      const utm = getEffectiveUtm();
+      
       // Отправляем заказ на serverless endpoint
       // В dev-режиме пропускаем отправку, так как endpoint недоступен локально
       if (import.meta.env.DEV) {
         console.log('DEV MODE: skipping send-lead');
+        console.log('[UTM] Would send UTM data with order:', utm);
       } else {
         const response = await fetch('/api/send-lead', {
           method: 'POST',
@@ -214,6 +219,7 @@ const CheckoutForm = forwardRef<CheckoutFormHandle, CheckoutFormProps>(
               quantity: item.quantity,
               price: item.price,
             })),
+            utm, // Добавляем UTM-данные
           }),
         });
 

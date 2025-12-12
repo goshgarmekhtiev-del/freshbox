@@ -13,6 +13,7 @@ import type { Product, CartItem, NotificationData } from '@/types';
 import { ArrowUp } from 'lucide-react';
 import { fireConfetti } from '@/utils/confetti';
 import { sendEvent } from '@/utils/metrics';
+import { getCurrentUtmFromUrl, loadStoredUtm, saveUtmOnce, getEffectiveUtm } from '@/utils/utm';
 
 // Lazy load heavy components that are below the fold
 // These components load ONLY when user scrolls to them, reducing initial bundle size
@@ -101,6 +102,23 @@ const App: React.FC = () => {
       clearTimeout(timeoutId);
       orderObserver.disconnect();
     };
+  }, []);
+
+  // Инициализация UTM при первом заходе
+  useEffect(() => {
+    const utmFromUrl = getCurrentUtmFromUrl();
+    const stored = loadStoredUtm();
+    
+    if (!stored && Object.keys(utmFromUrl).length > 0) {
+      // Если есть UTM в URL и нет сохранённых данных — сохраняем
+      saveUtmOnce(utmFromUrl);
+    } else if (!stored && Object.keys(utmFromUrl).length === 0) {
+      // Если пользователь пришёл без UTM — всё равно сохраняем referrer и first_visit_time
+      saveUtmOnce({});
+    }
+    
+    // Логирование для отладки
+    console.log("[UTM] effective utm:", getEffectiveUtm());
   }, []);
 
   useEffect(() => {
