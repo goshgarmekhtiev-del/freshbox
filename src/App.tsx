@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, lazy, Suspense, useCallback, useMemo } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import { Hero, ProblemSolution, Catalog, WhyFreshBox, SuccessPage, FailPage } from '@/components/sections';
@@ -27,12 +27,6 @@ const FAQ = lazy(() => import(/* webpackChunkName: "faq" */ '@/components/sectio
 const Footer = lazy(() => import(/* webpackChunkName: "footer" */ '@/components/Footer'));
 
 const App: React.FC = () => {
-  // 🔍 ДИАГНОСТИКА: Логирование монтирования/размонтирования
-  useEffect(() => {
-    console.log("🔵 MOUNT App");
-    return () => console.log("🔴 UNMOUNT App");
-  }, []);
-
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -150,7 +144,8 @@ const App: React.FC = () => {
     localStorage.setItem('freshbox_cart', JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (product: Product, quantity = 1, e?: React.MouseEvent | React.TouchEvent) => {
+  // 🔧 ФИКС: Мемоизируем функции, чтобы они не пересоздавались при каждом рендере
+  const addToCart = useCallback((product: Product, quantity = 1, e?: React.MouseEvent | React.TouchEvent) => {
     setCart(prev => {
       const existing = prev.find(item => item.id === product.id);
       if (existing) {
@@ -172,27 +167,27 @@ const App: React.FC = () => {
     // - MiniCart виджет
     
     if (e) fireConfetti(e);
-  };
+  }, []);
 
-  const removeFromCart = (id: string) => {
+  const removeFromCart = useCallback((id: string) => {
     setCart(prev => prev.filter(item => item.id !== id));
-  };
+  }, []);
 
-  const updateQuantity = (id: string, delta: number) => {
+  const updateQuantity = useCallback((id: string, delta: number) => {
     setCart(prev => prev.map(item => {
       if (item.id === id) {
         return { ...item, quantity: Math.max(1, item.quantity + delta) };
       }
       return item;
     }));
-  };
+  }, []);
 
-  const handleOrderComplete = (data: NotificationData) => {
+  const handleOrderComplete = useCallback((data: NotificationData) => {
     setLastOrder(data);
-  };
+  }, []);
 
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-  const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const scrollToTop = useCallback(() => window.scrollTo({ top: 0, behavior: 'smooth' }), []);
+  const cartCount = useMemo(() => cart.reduce((acc, item) => acc + item.quantity, 0), [cart]);
 
   /**
    * Determines if the floating cart widget should be visible
@@ -200,12 +195,12 @@ const App: React.FC = () => {
    * - Cart has items
    * - User is NOT in the order/checkout section
    */
-  const shouldShowFloatingCart = () => {
+  const shouldShowFloatingCart = useCallback(() => {
     return cart.length > 0 && !isInOrderSection;
-  };
+  }, [cart.length, isInOrderSection]);
 
   // Main Home Page Component
-  // 🔍 ДИАГНОСТИКА: Используем useCallback для мемоизации HomePage
+  // Мемоизирован для предотвращения ремаунта при изменении состояний
   const HomePage = React.useCallback(() => {
     return (
       <>
@@ -299,7 +294,7 @@ const App: React.FC = () => {
       </button>
     </> 
     );
-  }, [cart, addToCart, setQuickViewProduct, lastOrder, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, handleOrderComplete, shouldShowFloatingCart, showScrollTop, scrollToTop, toastMessage, showToast, setShowToast]);
+  }, [addToCart, setQuickViewProduct, lastOrder, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, handleOrderComplete, shouldShowFloatingCart, showScrollTop, scrollToTop, toastMessage, showToast, setShowToast]);
 
   return (
     <div className="min-h-screen bg-brand-bg text-brand-text font-sans selection:bg-brand-accent selection:text-white overflow-x-hidden">

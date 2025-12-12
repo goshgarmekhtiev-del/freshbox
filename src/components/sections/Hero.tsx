@@ -6,12 +6,6 @@ import { useReveal } from '@/hooks';
 import { sendEvent } from '@/utils/metrics';
 
 const Hero: React.FC = () => {
-  // 🔍 ДИАГНОСТИКА: Логирование монтирования/размонтирования
-  useEffect(() => {
-    console.log("🟢 MOUNT Hero");
-    return () => console.log("🔴 UNMOUNT Hero");
-  }, []);
-
   const { ref: heroRef, isVisible: heroVisible } = useReveal({ threshold: 0.1 });
 
   const scrollTo = (id: string) => {

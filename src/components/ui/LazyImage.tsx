@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
@@ -42,6 +42,8 @@ const LazyImage: React.FC<LazyImageProps> = ({
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [imageSrc, setImageSrc] = useState(src);
+  const prevImageSrcRef = useRef<string>(src);
+  const isLoadedRef = useRef<boolean>(false);
 
   // Optimize image URL if autoOptimize is enabled
   useEffect(() => {
@@ -89,8 +91,16 @@ const LazyImage: React.FC<LazyImageProps> = ({
   }, [src, autoOptimize]);
 
   // Check if image is already cached and load instantly
+  // 🔧 ФИКС: Не сбрасываем isLoaded если imageSrc не изменился реально
   useEffect(() => {
+    // Если imageSrc не изменился и изображение уже загружено - не трогаем
+    if (imageSrc === prevImageSrcRef.current && isLoadedRef.current) {
+      return;
+    }
+    
+    prevImageSrcRef.current = imageSrc;
     setIsLoaded(false);
+    isLoadedRef.current = false;
     
     // Create a temporary image to check cache status
     const img = new Image();
@@ -99,16 +109,19 @@ const LazyImage: React.FC<LazyImageProps> = ({
     // If image is already in cache (complete), show it immediately
     if (img.complete && img.naturalHeight !== 0) {
       setIsLoaded(true);
+      isLoadedRef.current = true;
     }
   }, [imageSrc]);
 
   const handleLoad = () => {
     setIsLoaded(true);
+    isLoadedRef.current = true;
   };
 
   const handleError = () => {
     // On error, mark as loaded to show alt text
     setIsLoaded(true);
+    isLoadedRef.current = true;
   };
 
   return (

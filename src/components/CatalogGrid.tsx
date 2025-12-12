@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import type { Product } from '@/types';
 import CatalogCard from './CatalogCard';
 
@@ -15,11 +15,6 @@ interface CatalogGridProps {
  * Simple, reliable rendering for all devices
  */
 const CatalogGrid: React.FC<CatalogGridProps> = ({ products, onAdd, onQuickView }) => {
-  // 🔍 ДИАГНОСТИКА: Логирование монтирования/размонтирования
-  useEffect(() => {
-    console.log("🟠 MOUNT CatalogGrid", { productsCount: products.length });
-    return () => console.log("🔴 UNMOUNT CatalogGrid", { productsCount: products.length });
-  }, [products.length]);
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto px-4">
       {products.map((product) => (
