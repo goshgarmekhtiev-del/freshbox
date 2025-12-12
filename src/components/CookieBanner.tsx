@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Cookie } from 'lucide-react';
+import { Cookie } from 'lucide-react';
 import { sendEvent } from '@/utils/metrics';
 
 const COOKIE_CONSENT_KEY = 'FRESHBOX_COOKIE_CONSENT';
@@ -41,7 +41,7 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ policyUrl }) => {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[55] px-4 py-3 animate-fade-in-up">
       <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-xl md:rounded-2xl shadow-lg border-2 border-brand-accent/10 px-4 py-3 md:px-4 md:py-3 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-lg border-2 border-brand-accent/10 px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
           {/* Иконка cookie (компактная, только на десктопе) */}
           <div className="hidden sm:flex shrink-0">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-accent/10 to-brand-yellow/10 flex items-center justify-center">
@@ -49,7 +49,7 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ policyUrl }) => {
             </div>
           </div>
 
-          {/* Текстовая часть */}
+          {/* Текстовая часть - БЕЗ заголовка, только одна строка */}
           <div className="flex-1 min-w-0">
             <p className="text-xs sm:text-sm text-brand-text-soft leading-snug">
               Мы используем cookies, чтобы сайт работал лучше. Продолжая пользоваться сайтом, вы соглашаетесь с этим.
@@ -69,13 +69,13 @@ export const CookieBanner: React.FC<CookieBannerProps> = ({ policyUrl }) => {
             </p>
           </div>
 
-          {/* Кнопка принятия */}
+          {/* Кнопка принятия - компактная */}
           <div className="w-full sm:w-auto flex-shrink-0">
             <button
               onClick={handleAccept}
-              className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow text-white font-bold text-sm rounded-lg sm:rounded-full shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-4 py-2 bg-gradient-to-r from-brand-accent via-brand-accent-dark to-brand-yellow text-white font-bold text-sm rounded-lg sm:rounded-full shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center"
             >
-              <span>Понятно</span>
+              Понятно
             </button>
           </div>
         </div>
