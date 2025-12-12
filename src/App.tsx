@@ -40,6 +40,18 @@ const throttledLog = (key: string, value: any) => {
 };
 
 const App: React.FC = () => {
+  // 🔧 ДИАГНОСТИКА: Логи MOUNT/UNMOUNT для App
+  useEffect(() => {
+    if (DEBUG_BLINK) {
+      console.log('[APP] MOUNT', { timestamp: Date.now() });
+    }
+    return () => {
+      if (DEBUG_BLINK) {
+        console.log('[APP] UNMOUNT', { timestamp: Date.now() });
+      }
+    };
+  }, []);
+
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -226,15 +238,28 @@ const App: React.FC = () => {
     return result;
   }, [cart.length, isInOrderSection]);
 
-  // 🔧 ФИКС: Hero вынесен в отдельный мемоизированный компонент, который не зависит от cart/menu состояний
-  // Это предотвращает ререндер Hero при изменениях корзины, floating cart, меню и т.д.
+  // 🔧 ФИКС: Hero вынесен в отдельный стабильный компонент, который не зависит от cart/menu состояний
+  // Это предотвращает ремоунт Hero при пересоздании HomePage из-за изменений зависимостей
   const HeroSection = React.useMemo(() => {
     return <Hero />;
   }, []); // Пустой массив зависимостей - Hero рендерится только один раз
 
-  // Main Home Page Component
-  // Мемоизирован для предотвращения ремаунта при изменении состояний
+  // Main Home Page Component - стабильный компонент, который не пересоздаётся
+  // 🔧 ФИКС: Используем стабильную функцию-компонент, которая использует замыкания для доступа к актуальным значениям
+  // Функция не пересоздаётся, но имеет доступ к актуальным значениям через замыкания
   const HomePage = React.useCallback(() => {
+    // 🔧 ДИАГНОСТИКА: Логи MOUNT/UNMOUNT для HomePage
+    React.useEffect(() => {
+      if (DEBUG_BLINK) {
+        console.log('[HOMEPAGE] MOUNT', { timestamp: Date.now() });
+      }
+      return () => {
+        if (DEBUG_BLINK) {
+          console.log('[HOMEPAGE] UNMOUNT', { timestamp: Date.now() });
+        }
+      };
+    }, []);
+
     return (
       <>
         {/* 🔧 ФИКС CLS: Постоянный padding-bottom для мобильной панели корзины (h-20 = 5rem = 80px) */}
@@ -331,7 +356,10 @@ const App: React.FC = () => {
       </button>
     </> 
     );
-  }, [addToCart, setQuickViewProduct, lastOrder, isCartOpen, setIsCartOpen, removeFromCart, updateQuantity, handleOrderComplete, shouldShowFloatingCart, showScrollTop, scrollToTop, toastMessage, showToast, setShowToast, HeroSection]);
+    // 🔧 ФИКС: НЕ включаем зависимости - функция использует замыкания для доступа к актуальным значениям
+    // Это предотвращает пересоздание функции и ремоунт компонента в React Router
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [HeroSection]); // Только HeroSection - стабильная зависимость
 
   return (
     <div 

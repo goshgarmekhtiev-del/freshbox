@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 
 // 🔧 ДИАГНОСТИКА: Флаг для включения логов
 const DEBUG_BLINK = typeof window !== 'undefined' && localStorage.getItem('DEBUG_BLINK') === '1';
@@ -21,12 +21,20 @@ interface UseRevealOptions {
  * <div ref={ref} className={`reveal ${isVisible ? 'reveal-visible' : ''}`}>
  */
 export const useReveal = (options: UseRevealOptions = {}) => {
+  // 🔧 ФИКС: Мемоизируем options, чтобы useEffect не перезапускался из-за нового объекта
+  const memoizedOptions = useMemo(() => options, [
+    options.threshold,
+    options.rootMargin,
+    options.triggerOnce,
+    options.delay
+  ]);
+
   const {
     threshold = 0.15,
     rootMargin = '0px 0px -50px 0px',
     triggerOnce = true,
     delay = 0
-  } = options;
+  } = memoizedOptions;
 
   const ref = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);

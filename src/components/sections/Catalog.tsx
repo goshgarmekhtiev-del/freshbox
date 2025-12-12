@@ -19,6 +19,19 @@ interface CatalogProps {
 }
 
 const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
+  // 🔧 ДИАГНОСТИКА: Логи MOUNT/UNMOUNT для Catalog
+  const DEBUG_BLINK = typeof window !== 'undefined' && localStorage.getItem('DEBUG_BLINK') === '1';
+  
+  React.useEffect(() => {
+    if (DEBUG_BLINK) {
+      console.log('[CATALOG] MOUNT', { timestamp: Date.now() });
+    }
+    return () => {
+      if (DEBUG_BLINK) {
+        console.log('[CATALOG] UNMOUNT', { timestamp: Date.now() });
+      }
+    };
+  }, []);
   const [activeCategory, setActiveCategory] = useState('all');
   const [sortOption, setSortOption] = useState('popularity');
   const [isInitialLoading, setIsInitialLoading] = useState(true);
