@@ -93,6 +93,9 @@ const LazyImage: React.FC<LazyImageProps> = ({
   // Check if image is already cached and load instantly
   // 🔧 ФИКС: Не сбрасываем isLoaded если imageSrc не изменился реально
   useEffect(() => {
+    // SSR-safe: проверяем наличие window
+    if (typeof window === 'undefined') return;
+    
     // Если imageSrc не изменился и изображение уже загружено - не трогаем
     if (imageSrc === prevImageSrcRef.current && isLoadedRef.current) {
       return;

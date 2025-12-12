@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ArrowRight, Star, ShoppingBag, Gift, CheckCircle2, Truck, Package, ChevronDown, Sparkles } from 'lucide-react';
 import { JUICY_IMAGES } from '@/constants';
 import { Button, LazyImage, Container } from '@/components/ui';
