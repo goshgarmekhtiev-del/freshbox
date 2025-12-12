@@ -21,31 +21,19 @@ interface CatalogProps {
 const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [sortOption, setSortOption] = useState('popularity');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
-  // Simulate initial loading (in real app, this would be data fetching)
+  // Только для первой загрузки - показываем skeleton один раз
   useEffect(() => {
     const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 500); // 500ms skeleton display (reduced for mobile)
+      setIsInitialLoading(false);
+    }, 500); // 500ms skeleton display только при первой загрузке
     
     return () => clearTimeout(timer);
   }, []);
 
-  // Show skeleton when category/sort changes (simulate re-fetching)
-  useEffect(() => {
-    // Skip loading state on first render
-    if (activeCategory === 'all' && sortOption === 'popularity') {
-      return;
-    }
-    
-    setIsLoading(true);
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 300); // 300ms for filter changes (reduced for mobile)
-    
-    return () => clearTimeout(timer);
-  }, [activeCategory, sortOption]);
+  // УБРАН useEffect для фильтров/сортировки - данные уже в памяти, фильтрация синхронная
+  // Нет необходимости показывать skeleton при изменении фильтров
 
   const categories = [
     { id: 'all', label: 'Все боксы' },
@@ -115,7 +103,7 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
         />
 
         {/* Premium Product Grid - Max 3 Columns */}
-        {isLoading ? (
+        {isInitialLoading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto px-4">
             {Array.from({ length: 6 }).map((_, index) => (
               <div
@@ -135,7 +123,7 @@ const Catalog: React.FC<CatalogProps> = ({ onAdd, onQuickView }) => {
         )}
         
       {/* Empty State - Modern */}
-      {!isLoading && filteredProducts.length === 0 && (
+      {!isInitialLoading && filteredProducts.length === 0 && (
         <div className="text-center py-32 px-4">
           <div className="inline-flex items-center justify-center w-32 h-32 rounded-3xl bg-gradient-to-br from-brand-accent/10 to-brand-yellow/10 mb-8">
             <span className="text-6xl">🍊</span>

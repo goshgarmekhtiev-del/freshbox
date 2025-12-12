@@ -41,6 +41,7 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
             {categories.map((cat) => (
               <button
                 key={cat.id}
+                type="button"
                 onClick={() => setActiveCategory(cat.id)}
                 className={
                   activeCategory === cat.id
@@ -82,6 +83,7 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
         <div className="flex items-center gap-3 ml-auto lg:ml-0 justify-center lg:justify-end overflow-visible">
           <div className="relative group overflow-visible">
             <button 
+              type="button"
               className="
                 inline-flex items-center gap-2
                 px-5 py-2
@@ -107,6 +109,7 @@ const CatalogFilters: React.FC<CatalogFiltersProps> = ({
               {sortOptions.map((opt) => (
                 <button
                   key={opt.id}
+                  type="button"
                   onClick={() => setSortOption(opt.id)}
                   className={`
                     w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200

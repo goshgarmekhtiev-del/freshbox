@@ -52,6 +52,7 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
         {/* Quick View Overlay - Desktop Hover */}
         <div className="hidden md:flex absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center">
           <button 
+            type="button"
             onClick={(e) => { 
               e.stopPropagation(); 
               handleOpenProduct();
@@ -65,6 +66,7 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
 
         {/* Mobile Quick View Button - Always Visible */}
         <button 
+          type="button"
           onClick={(e) => { 
             e.stopPropagation(); 
             handleOpenProduct();
@@ -115,6 +117,7 @@ const CatalogCard: React.FC<CatalogCardProps> = ({ product, onAdd, onQuickView }
           
           {/* CTA Button */}
           <button 
+            type="button"
             onClick={handleAdd} 
             disabled={isAdded}
             className={`w-full sm:w-auto px-5 py-3 rounded-full text-white flex items-center justify-center gap-2 font-bold text-sm shadow-lg transition-all duration-300 hover:scale-105 ${
