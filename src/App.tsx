@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, lazy, Suspense, useCallback, useMemo, useRef } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import { Hero, ProblemSolution, Catalog, WhyFreshBox, SuccessPage, FailPage } from '@/components/sections';
@@ -44,6 +44,9 @@ const App: React.FC = () => {
   // Track if user is in the order/checkout section
   const [isInOrderSection, setIsInOrderSection] = useState(false);
 
+  // 🔧 ФИКС: Ref для хранения предыдущего значения showScrollTop, чтобы не вызывать setState на каждом скролле
+  const prevShowScrollTopRef = useRef(false);
+
   useEffect(() => {
     const observerOptions = {
       threshold: 0.1,
@@ -64,10 +67,15 @@ const App: React.FC = () => {
       sections.forEach(section => observer.observe(section));
     }, 100);
 
+    // 🔧 ФИКС: Вызываем setState только при реальном изменении значения
     const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
+      const newValue = window.scrollY > 400;
+      if (newValue !== prevShowScrollTopRef.current) {
+        prevShowScrollTopRef.current = newValue;
+        setShowScrollTop(newValue);
+      }
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
       clearTimeout(timeoutId);

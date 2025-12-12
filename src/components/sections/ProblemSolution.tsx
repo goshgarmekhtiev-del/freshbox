@@ -62,6 +62,9 @@ const ProblemSolution: React.FC = () => {
   ];
 
   // Handle horizontal scroll on mobile to track active card
+  // 🔧 ФИКС: Используем ref для предотвращения лишних setState
+  const prevActiveCardIndexRef = React.useRef(0);
+  
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
@@ -69,11 +72,15 @@ const ProblemSolution: React.FC = () => {
     const handleScroll = () => {
       const scrollLeft = container.scrollLeft;
       const cardWidth = container.offsetWidth;
-      const index = Math.round(scrollLeft / cardWidth);
-      setActiveCardIndex(index);
+      const newIndex = Math.round(scrollLeft / cardWidth);
+      // 🔧 ФИКС: Вызываем setState только при реальном изменении индекса
+      if (newIndex !== prevActiveCardIndexRef.current) {
+        prevActiveCardIndexRef.current = newIndex;
+        setActiveCardIndex(newIndex);
+      }
     };
 
-    container.addEventListener('scroll', handleScroll);
+    container.addEventListener('scroll', handleScroll, { passive: true });
     return () => container.removeEventListener('scroll', handleScroll);
   }, []);
 

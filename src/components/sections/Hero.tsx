@@ -5,7 +5,8 @@ import { Button, LazyImage, Container } from '@/components/ui';
 import { useReveal } from '@/hooks';
 import { sendEvent } from '@/utils/metrics';
 
-const Hero: React.FC = () => {
+// 🔧 ФИКС: Мемоизируем Hero, чтобы он не перерендеривался от изменений корзины/скролла
+const Hero: React.FC = React.memo(() => {
   const { ref: heroRef, isVisible: heroVisible } = useReveal({ threshold: 0.1 });
 
   const scrollTo = (id: string) => {
@@ -159,6 +160,8 @@ const Hero: React.FC = () => {
       </Container>
     </section>
   );
-};
+});
+
+Hero.displayName = 'Hero';
 
 export default Hero;

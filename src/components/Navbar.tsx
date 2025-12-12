@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ShoppingBasket, Menu, X, Phone } from 'lucide-react';
 
 interface NavbarProps {
@@ -12,10 +12,20 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount, onOpenCart }) => {
   const [scrolled, setScrolled] = useState(false);
   const [cartBounce, setCartBounce] = useState(false);
   const [prevCartCount, setPrevCartCount] = useState(cartCount);
+  
+  // 🔧 ФИКС: Ref для хранения предыдущего значения scrolled, чтобы не вызывать setState на каждом скролле
+  const prevScrolledRef = useRef(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
+    // 🔧 ФИКС: Вызываем setState только при реальном изменении значения
+    const handleScroll = () => {
+      const newValue = window.scrollY > 20;
+      if (newValue !== prevScrolledRef.current) {
+        prevScrolledRef.current = newValue;
+        setScrolled(newValue);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -38,7 +48,7 @@ const Navbar: React.FC<NavbarProps> = ({ cartCount, onOpenCart }) => {
 
   return (
     <nav 
-      className={`fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-6xl z-50 transition-all duration-500 ${
+      className={`fixed top-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-6xl z-50 transition-[backdrop-filter,background-color,border-color,box-shadow,border-radius,padding] duration-500 ${
         scrolled || isMenuOpen 
           ? 'backdrop-blur-xl bg-white/90 border border-brand-accent/10 shadow-[--shadow-elevated] rounded-2xl py-3 px-6' 
           : 'backdrop-blur-md bg-white/60 border border-white/20 shadow-[--shadow-soft] rounded-full py-3 px-4'
