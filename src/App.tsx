@@ -6,7 +6,7 @@ import CartSidebar from '@/components/CartSidebar';
 import QuickViewModal from '@/components/QuickViewModal';
 import SocialProof from '@/components/SocialProof';
 import DecorativeBackground from '@/components/DecorativeBackground';
-// import Marquee from '@/components/Marquee'; // 🔧 TEMP: Отключено для проверки моргания Hero
+import Marquee from '@/components/Marquee';
 import MiniCart from '@/components/MiniCart';
 import { Toast } from '@/components/ui';
 import CookieBanner from '@/components/CookieBanner';
@@ -292,8 +292,7 @@ const App: React.FC = () => {
         {HeroSection}
         
         {/* Step 2: MARQUEE - Social proof & trust triggers (2-3 sec) */}
-        {/* 🔧 TEMP: Отключено для проверки моргания Hero */}
-        {/* <Marquee speed="normal" className="relative z-10" /> */}
+        <Marquee speed="normal" className="relative z-10" />
         
         {/* Step 3: CATALOG - IMMEDIATE CONVERSION OPPORTUNITY (5-10 sec) 
             🚀 KEY CHANGE: Moved catalog right after hook to minimize friction
